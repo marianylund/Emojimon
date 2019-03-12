@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.progark.emojimon.Emojimon;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override
@@ -13,7 +12,7 @@ public class AndroidLauncher extends AndroidApplication {
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		initialize(new Emojimon(), config);
 
-		FireBaseController fb = new FireBaseController();
+		FirebaseController fb = new FirebaseController();
 		fb.Write();
 	}
 }
