@@ -2,6 +2,7 @@ package com.progark.emojimon.view;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.progark.emojimon.Emojimon;
 
 public class SetUpGameMenuScreen implements Screen {
 
