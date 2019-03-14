@@ -1,4 +1,4 @@
-package com.progark.emojimon.gameScreens;
+package com.progark.emojimon.view;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 

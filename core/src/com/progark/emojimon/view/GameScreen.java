@@ -1,20 +1,18 @@
-package com.progark.emojimon.gameScreens;
+package com.progark.emojimon.view;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
-public class SelectGameRulesMenuScreen {
-
+public class GameScreen {
 
     final Emojimon game;
 
     OrthographicCamera camera;
 
-    public SelectGameRulesMenuScreen(final Emojimon game) {
+    public GameScreen(final Emojimon game) {
         this.game = game;
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
 
     }
-
 }
