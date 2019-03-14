@@ -1,6 +1,7 @@
 package com.progark.emojimon.gameScreens;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.progark.emojimon.Emojimon;
 
 public class GameScreen {
 
