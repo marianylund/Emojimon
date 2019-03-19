@@ -1,6 +1,7 @@
 package com.progark.emojimon;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -14,5 +15,8 @@ public class AndroidLauncher extends AndroidApplication {
 
 		FirebaseController fb = new FirebaseController();
 		fb.Write();
+
+		Log.d("Test", "Hello");
+		fb.SetEmojiByPlayerID(0, "New l");
 	}
 }
