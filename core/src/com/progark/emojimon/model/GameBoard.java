@@ -17,7 +17,7 @@ public class GameBoard {
     private Position bar;
     private Player inBar;
     private int boardSize;
-    private MoveSetStrategy strategy;
+    private BasicMoveSetStrategy strategy;
 
     //constructor
     //(currently creating standard gameboard)
@@ -39,6 +39,10 @@ public class GameBoard {
         Die d2 = new SixSidedDie();
         dice.add(d1);
         dice.add(d2);
+
+        // create moveset strategy
+        // blot: piece/s that can be thrown out to bar
+        strategy = new BasicMoveSetStrategy(1); // standard blot = 1
 
         //create pieces
         //player0
