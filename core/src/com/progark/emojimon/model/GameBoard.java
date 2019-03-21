@@ -18,10 +18,11 @@ public class GameBoard {
     private Player inBar;
     private int boardSize;
     private BasicMoveSetStrategy strategy;
+    private int goalSize;
 
     //constructor
     //(currently creating standard gameboard)
-    public GameBoard(int boardSize){
+    public GameBoard(int boardSize, int goalSize){
         //create players
         player0 = new Player(18, 23, true);
         player1 = new Player(0, 5, false);

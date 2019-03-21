@@ -1,6 +1,7 @@
 package com.progark.emojimon.model;
 
 import com.progark.emojimon.model.interfaces.Die;
+import com.progark.emojimon.model.strategyPattern.MoveValidationStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,7 @@ public class Player {
     private int homeAreaStartIndex;
     private int homeAreaEndIndex;
     private boolean moveClockwise;
+    private MoveValidationStrategy moveValidationStrategy;
 
     public Player(int homeAreaStartIndex, int homeAreaEndIndex, boolean moveClockwise){
         this.homeAreaStartIndex = homeAreaStartIndex;
@@ -26,19 +28,17 @@ public class Player {
 
         //find all possible moves for player given die values in dice
         for(int positionIndex = 0; positionIndex < positions.size(); positionIndex++){
-            if(positions.get(positionIndex).getOwner() == this){
+            Position startPosition = positions.get(positionIndex);
+            if(startPosition.getOwner() == this){
                 //check for possible moves
                 for(int diceIndex = 0; diceIndex < dice.size(); diceIndex++){
                     int diceValue = dice.get(diceIndex).GetValue();
-                    int endPosition = moveClockwise ? (positionIndex + diceValue) : (positionIndex - diceValue);
-                    if(positions.get(endPosition).getOwner() == this){
-                        moves.add(new Move(positionIndex, endPosition));
-                    }
-                    else{
-                        //only add if number of enemy pieces on position does not exceed limit
-                        if(positions.get(endPosition).getPieceCount() < 1){
-                            moves.add(new Move(positionIndex, endPosition));
-                        }
+                    int endPositionIndex = moveClockwise ? (positionIndex + diceValue) : (positionIndex - diceValue);
+                    Position endPosition = positions.get(endPositionIndex);
+
+                    //apply move validation strategy to check if move is valid
+                    if(moveValidationStrategy.isAvailableMove(startPosition, endPosition)){
+                        moves.add(new Move(positionIndex, endPositionIndex));
                     }
                 }
             }
@@ -55,6 +55,10 @@ public class Player {
     //returns whether player is in a position to start clearing pieces
     public boolean canClear(List<Position> boardPositions, Position bar) {
         throw new NotImplementedException();
+    }
+
+    public boolean getMoveClockwise(){
+        return moveClockwise;
     }
 
 }
