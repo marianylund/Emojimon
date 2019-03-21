@@ -15,10 +15,11 @@ public class GameBoard {
     private List<Position> boardPositions;
     private Position bar;
     private int boardSize;
+    private int goalSize;
 
     //constructor
     //(currently creating standard gameboard)
-    public GameBoard(int boardSize){
+    public GameBoard(int boardSize, int goalSize){
         //create players
         player0 = new Player(18, 23, true);
         player1 = new Player(0, 5, false);
