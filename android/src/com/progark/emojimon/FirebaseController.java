@@ -1,5 +1,6 @@
 package com.progark.emojimon;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
@@ -8,73 +9,72 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.progark.emojimon.controller.FirebaseControllerInterface;
+import com.progark.emojimon.model.Player;
+
+import java.util.HashMap;
 
 public class FirebaseController implements FirebaseControllerInterface {
     // Needs to be initiated only once when sent to the core module by Android Launcher
 
     // Write a message to the db
-    FirebaseDatabase db = FirebaseDatabase.getInstance();
+    private FirebaseDatabase db = FirebaseDatabase.getInstance();
 
-    DatabaseReference myRef = db.getReference("message");
-    DatabaseReference Games = db.getReference("Games");
-    DatabaseReference Players = db.getReference("Players");
+    private DatabaseReference myRef = db.getReference("message");
+    private DatabaseReference Games = db.getReference("Games");
 
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+    private HashMap<String, GameData> gamesData = new HashMap<>();
+    private HashMap<String, LastTurnData> lastTurnData = new HashMap<>(); // the same key as the games id
 
 
     public void Write() {
         myRef.setValue("testingtesting");
     }
 
+    // TODO Where do emoji chosen by player are saved?
+    public void addNewGame(Player creatorPlayer, int[][] gameState){
+        GameData gd = new GameData(creatorPlayer, gameState);
 
-    public void getGameStatusByID(int id) {
-        final String GameID = "Game_" + id;
-        Players.addListenerForSingleValueEvent(new ValueEventListener() {
+        String gameID = Games.push().getKey();
+        Games.child(gameID).child("Player0").setValue(creatorPlayer);
+        Games.child(gameID).child("GameState").setValue(gameState);
 
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                if (snapshot.hasChild(GameID)) {
-                    String GameStatus = snapshot.child(GameID).child("Status").getValue().toString();
-                    Log.d("Test", GameStatus);
+        gamesData.put(gameID, gd);
 
-                } else {
-                    Log.e("Test", "Asked game does not exist", new IllegalArgumentException());
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TODO handle erros
-                Log.d("test", databaseError.getMessage());
-            }
-        });
+        addGameDataChangeListener(gameID); // Listen to changes of that game
     }
 
-    public void SetEmojiByPlayerID(int id, final String link) {
-        final String PlayerID = "Player_" + id;
-        //TODO check if the link is valid ?
+    public void addLastTurnByGameID(String gameID, Player player, String timeEnd, int[] dices, int[][] actions){
+        LastTurnData ltd = new LastTurnData(player, timeEnd, dices, actions);
 
-        Players.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                if (snapshot.hasChild(PlayerID)) {
-                    Log.d("Test", snapshot.child(PlayerID).getValue().toString());
-                    Players.child(PlayerID).child("Emoji").setValue(link);
-                } else {
-                    Log.e("Test", "Asked player does not exist", new IllegalArgumentException());
-                }
-            }
+        String ltdID = Games.child(gameID).push().getKey();
+        Games.child(gameID).child(ltdID).child("Player").setValue(player);
+        Games.child(gameID).child(ltdID).child("TimeEnd").setValue(timeEnd);
+        Games.child(gameID).child(ltdID).child("Dices").setValue(dices);
+        Games.child(gameID).child(ltdID).child("Actions").setValue(actions);
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TODO handle erros
-                Log.d("test", databaseError.getMessage());
-            }
-        });
+        lastTurnData.put(gameID, ltd);
     }
+
 
     @Override
-    public void getPlayerByID(int id) {
-        Log.d("test", "Got player by id");
+    public int[][] getGameStateByGameID(String id) {
+        return gamesData.get(id).getGameState();
+    }
+
+    private void addGameDataChangeListener(String gameID){
+        Games.child(gameID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //Update that gameData class
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }
