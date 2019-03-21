@@ -6,6 +6,12 @@ import java.util.List;
 //
 public class BasicMoveSetStrategy implements MoveSetStrategy {
 
+    private int blot; // piece/s that can be thrown out to bar
+
+    public BasicMoveSetStrategy(int blot){
+        this.blot = blot;
+    }
+
     @Override
     public void calculateMove(Move move, List<Position> boardPositions, Position bar, Player inBar) {
         Position startPosition = boardPositions.get(move.startPosition);
@@ -15,10 +21,10 @@ public class BasicMoveSetStrategy implements MoveSetStrategy {
         if(endPosition.getOwner() != startPosition.getOwner()){
 
             //move pieces on endposition to bar, if there's one piece
-            if (endPosition.getPieceCount() == 1){
-                bar.addPieces(1);
+            if (endPosition.getPieceCount() == blot){
+                bar.addPieces(blot);
                 inBar = endPosition.getOwner();
-                endPosition.removePieces(1);
+                endPosition.removePieces(blot);
             }
 
         }
