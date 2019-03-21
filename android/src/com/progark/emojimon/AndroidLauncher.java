@@ -11,7 +11,7 @@ public class AndroidLauncher extends AndroidApplication {
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		initialize(new Emojimon(), config);
+		initialize(new Emojimon(new FirebaseController()), config);
 
 		//FirebaseController fb = new FirebaseController();
 		//fb.Write();

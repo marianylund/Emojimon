@@ -1,5 +1,6 @@
 package com.progark.emojimon.controller;
 
+import com.progark.emojimon.Emojimon;
 import com.progark.emojimon.model.GameBoard;
 import com.progark.emojimon.model.Position;
 import com.progark.emojimon.model.interfaces.Die;

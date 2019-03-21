@@ -7,29 +7,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.progark.emojimon.controller.FirebaseControllerInterface;
 
-public class FirebaseController {
+public class FirebaseController implements FirebaseControllerInterface {
+    // Needs to be initiated only once when sent to the core module by Android Launcher
 
     // Write a message to the db
     FirebaseDatabase db = FirebaseDatabase.getInstance();
+
     DatabaseReference myRef = db.getReference("message");
-    DatabaseReference Players = db.getReference("Players");
     DatabaseReference Games = db.getReference("Games");
+    DatabaseReference Players = db.getReference("Players");
 
-    private static FirebaseController INSTANCE = null;
-
-    // Write a message to the database
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-
-    public static FirebaseController Instance () {
-        if (INSTANCE == null) {
-            INSTANCE = new FirebaseController();
-        }
-        return INSTANCE;
-    }
-
-    private void FirebaseController () {
-    }
 
 
     public void Write() {
@@ -81,6 +71,10 @@ public class FirebaseController {
                 Log.d("test", databaseError.getMessage());
             }
         });
+    }
 
+    @Override
+    public void getPlayerByID(int id) {
+        Log.d("test", "Got player by id");
     }
 }
