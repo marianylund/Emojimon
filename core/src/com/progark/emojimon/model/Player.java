@@ -1,6 +1,7 @@
 package com.progark.emojimon.model;
 
 import com.progark.emojimon.model.interfaces.Die;
+import com.progark.emojimon.model.strategyPattern.CanClearStrategy;
 import com.progark.emojimon.model.strategyPattern.MoveValidationStrategy;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ public class Player {
     private int homeAreaEndIndex;
     private boolean moveClockwise;
     private MoveValidationStrategy moveValidationStrategy;
+    private CanClearStrategy canClearStrategy;
 
     public Player(int homeAreaStartIndex, int homeAreaEndIndex, boolean moveClockwise){
         this.homeAreaStartIndex = homeAreaStartIndex;
@@ -47,6 +49,20 @@ public class Player {
         return moves;
     }
 
+    //GETTERS
+    public int getHomeAreaStartIndex() {
+        return homeAreaStartIndex;
+    }
+
+    public int getHomeAreaEndIndex() {
+        return homeAreaEndIndex;
+    }
+
+
+    public boolean getMoveClockwise(){
+        return moveClockwise;
+    }
+
     //returns whether player has cleared all of their pieces
     public boolean isDone() {
         throw new NotImplementedException();
@@ -54,11 +70,8 @@ public class Player {
 
     //returns whether player is in a position to start clearing pieces
     public boolean canClear(List<Position> boardPositions, Position bar) {
-        throw new NotImplementedException();
+        return canClearStrategy.canClear(this, boardPositions, bar);
     }
 
-    public boolean getMoveClockwise(){
-        return moveClockwise;
-    }
 
 }
