@@ -93,11 +93,15 @@ public class GameBoard {
         return dice;
     }
 
-    public List<Move> getBlackPlayerMoves(){
-        return player1.getAvailableMoves(dice, boardPositions, bar);
+    public Position getBar(){
+        return bar;
     }
 
-    public List<Move> getWhitePlayerMoves(){
+    public List<Move> getPlayer0Moves(){
         return player0.getAvailableMoves(dice, boardPositions, bar);
+    }
+
+    public List<Move> getPlayer1Moves(){
+        return player1.getAvailableMoves(dice, boardPositions, bar);
     }
 }
