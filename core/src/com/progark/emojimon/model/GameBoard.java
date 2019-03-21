@@ -2,7 +2,6 @@ package com.progark.emojimon.model;
 
 import com.progark.emojimon.model.interfaces.DiceRule;
 import com.progark.emojimon.model.interfaces.Die;
-import com.progark.emojimon.model.interfaces.Piece;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,15 +13,16 @@ public class GameBoard {
     private DiceRule diceRule;
     //includes all board positions indexed from bottom right to top right
     private List<Position> boardPositions;
+    private Position bar;
     private int boardSize;
 
     //constructor
     //(currently creating standard gameboard)
     public GameBoard(int boardSize){
         //create players
-        Player player1 = new Player(18, 23, true);
-        Player player0 = new Player(0, 5, false);
-
+        player0 = new Player(18, 23, true);
+        player1 = new Player(0, 5, false);
+        boardPositions = new ArrayList<Position>();
         this.boardSize = boardSize;
         //create all positions
         for(int i = 0; i < boardSize; i++){
@@ -38,40 +38,29 @@ public class GameBoard {
         dice.add(d2);
 
         //create pieces
-        //Player0
+        //player0
         //place white pieces according to standard piece placements
         for(int i = 0; i < 15; i++){
-            Piece p = new StandardPiece(player1);
-            if(i < 2){
-                boardPositions.get(0).placePiece(p);
-            }
-            else if(i < 7){
-                boardPositions.get(11).placePiece(p);
-            }
-            else if(i < 10){
-                boardPositions.get(16).placePiece(p);
-            }
-            else{
-                boardPositions.get(18).placePiece(p);
-            }
-            player1.addToBoardPieces(p);
+            boardPositions.get(0).addPieces(2);
+            boardPositions.get(0).setOwner(player0);
+            boardPositions.get(11).addPieces(5);
+            boardPositions.get(11).setOwner(player0);
+            boardPositions.get(16).addPieces(3);
+            boardPositions.get(16).setOwner(player0);
+            boardPositions.get(18).addPieces(5);
+            boardPositions.get(18).setOwner(player0);
         }
 
-        //place pieces of player 0 according to standard piece placements
+        //place player1 pieces according to standard piece placements
         for(int i = 0; i < 15; i++){
-            Piece p = new StandardPiece(player0);
-            if(i < 2){
-                boardPositions.get(23).placePiece(p);
-            }
-            else if(i < 7){
-                boardPositions.get(12).placePiece(p);
-            }
-            else if(i < 10){
-                boardPositions.get(7).placePiece(p);
-            }
-            else{
-                boardPositions.get(5).placePiece(p);
-            }
+            boardPositions.get(23).addPieces(2);
+            boardPositions.get(23).setOwner(player1);
+            boardPositions.get(12).addPieces(5);
+            boardPositions.get(12).setOwner(player1);
+            boardPositions.get(7).addPieces(3);
+            boardPositions.get(7).setOwner(player1);
+            boardPositions.get(5).addPieces(5);
+            boardPositions.get(5).setOwner(player1);
         }
 
     }
@@ -79,17 +68,15 @@ public class GameBoard {
     public void movePiece(Move move){
         Position startPosition = boardPositions.get(move.startPosition);
         Position endPosition = boardPositions.get(move.endPosition);
-        Piece p = startPosition.pop();
 
         //check if endPosition is owned by other player
-        if(endPosition.getOwner() != p.getOwner()){
-            //move pieces on endposition to bar
-            while(endPosition.getNumberOfPieces() > 0){
-                endPosition.getOwner().getBar().placePiece(endPosition.pop());
-            }
+        if(endPosition.getOwner() != startPosition.getOwner()){
+            //TODO: move pieces on endposition to bar
         }
 
-        boardPositions.get(move.endPosition).placePiece(p);
+        startPosition.addPieces(1);
+        startPosition.removePieces(1);
+        endPosition.addPieces(1);
     }
 
     public void rollDice(){
@@ -106,19 +93,15 @@ public class GameBoard {
         return dice;
     }
 
-    public Position getPlayer1Bar(){
-        return player1.getBar();
-    }
-
-    public Position getPlayer0Bar(){
-        return player0.getBar();
+    public Position getBar(){
+        return bar;
     }
 
     public List<Move> getPlayer0Moves(){
-        return player0.getAvailableMoves(dice, boardPositions);
+        return player0.getAvailableMoves(dice, boardPositions, bar);
     }
 
     public List<Move> getPlayer1Moves(){
-        return player1.getAvailableMoves(dice, boardPositions);
+        return player1.getAvailableMoves(dice, boardPositions, bar);
     }
 }

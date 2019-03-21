@@ -19,14 +19,6 @@ public class GameBoardController {
         return gameBoard.getBoardPositions();
     }
 
-    public Position getWhitePlayerBar(){
-        return gameBoard.getPlayer1Bar();
-    }
-
-    public Position getBlackPlayerBar(){
-        return gameBoard.getPlayer0Bar();
-    }
-
     public List<Die> getDice(){
         return gameBoard.getDice();
     }
