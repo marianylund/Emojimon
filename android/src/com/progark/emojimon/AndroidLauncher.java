@@ -13,10 +13,10 @@ public class AndroidLauncher extends AndroidApplication {
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		initialize(new Emojimon(), config);
 
-		FirebaseController fb = new FirebaseController();
-		fb.Write();
+		//FirebaseController fb = new FirebaseController();
+		//fb.Write();
 
 		Log.d("Test", "Hello");
-		fb.SetEmojiByPlayerID(0, "New l");
+		//fb.SetEmojiByPlayerID(0, "New l");
 	}
 }

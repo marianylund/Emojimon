@@ -16,17 +16,34 @@ public class FirebaseController {
     DatabaseReference Players = db.getReference("Players");
     DatabaseReference Games = db.getReference("Games");
 
-    public void Write(){
+    private static FirebaseController INSTANCE = null;
+
+    // Write a message to the database
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+    public static FirebaseController Instance () {
+        if (INSTANCE == null) {
+            INSTANCE = new FirebaseController();
+        }
+        return INSTANCE;
+    }
+
+    private void FirebaseController () {
+    }
+
+
+    public void Write() {
         myRef.setValue("testingtesting");
     }
 
-    public void getGameStatusByID(int id){
+
+    public void getGameStatusByID(int id) {
         final String GameID = "Game_" + id;
         Players.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                if(snapshot.hasChild(GameID)){
+                if (snapshot.hasChild(GameID)) {
                     String GameStatus = snapshot.child(GameID).child("Status").getValue().toString();
                     Log.d("Test", GameStatus);
 
@@ -34,35 +51,36 @@ public class FirebaseController {
                     Log.e("Test", "Asked game does not exist", new IllegalArgumentException());
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 //TODO handle erros
-                Log.d("test",databaseError.getMessage());
+                Log.d("test", databaseError.getMessage());
             }
         });
     }
 
-    public void SetEmojiByPlayerID(int id, final String link){
+    public void SetEmojiByPlayerID(int id, final String link) {
         final String PlayerID = "Player_" + id;
         //TODO check if the link is valid ?
 
         Players.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                if(snapshot.hasChild(PlayerID)){
+                if (snapshot.hasChild(PlayerID)) {
                     Log.d("Test", snapshot.child(PlayerID).getValue().toString());
                     Players.child(PlayerID).child("Emoji").setValue(link);
                 } else {
                     Log.e("Test", "Asked player does not exist", new IllegalArgumentException());
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 //TODO handle erros
-                Log.d("test",databaseError.getMessage());
+                Log.d("test", databaseError.getMessage());
             }
         });
-
 
     }
 }
