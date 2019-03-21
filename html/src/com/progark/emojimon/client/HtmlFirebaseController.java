@@ -1,10 +1,19 @@
 package com.progark.emojimon.client;
 
 import com.progark.emojimon.controller.FirebaseControllerInterface;
+import com.progark.emojimon.model.Player;
 
-public class FirebaseController implements FirebaseControllerInterface {
+import java.util.ArrayList;
+import java.util.List;
+
+public class HtmlFirebaseController implements FirebaseControllerInterface {
     @Override
-    public int[][] getGameStateByGameID(String id) {
-        return new int[0][];
+    public List<List<Integer>> getGameStateByGameID(String id) {
+        return new ArrayList<List<Integer>>();
+    }
+
+    @Override
+    public void addNewGame(Player creatorPlayer, List<List<Integer>> gameState) {
+
     }
 }

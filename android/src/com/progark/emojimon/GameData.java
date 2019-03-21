@@ -2,14 +2,17 @@ package com.progark.emojimon;
 
 import com.progark.emojimon.model.Player;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GameData {
     protected String status;
     protected Player player0;
     protected Player player1;
-    protected int[][] GameState;
+    protected List<List<Integer>> GameState;
 
 
-    public GameData(Player player0, int[][] gameState) {
+    public GameData(Player player0, List<List<Integer>> gameState) {
         this.status = "Waiting";
 
         // The player who has created the game
@@ -44,11 +47,11 @@ public class GameData {
         this.player1 = player1;
     }
 
-    public int[][] getGameState() {
+    public List<List<Integer>> getGameState() {
         return GameState;
     }
 
-    public void setGameState(int[][] gameState) {
+    public void setGameState(List<List<Integer>> gameState) {
         GameState = gameState;
     }
 }
