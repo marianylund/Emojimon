@@ -17,6 +17,7 @@ public class GameBoard {
     private Position bar;
     private Player inBar;
     private int boardSize;
+    private int blot = 1; // blot: piece/s that can be thrown out to bar, standard 1
     private BasicMoveSetStrategy strategy;
     private int goalSize;
 
@@ -42,8 +43,7 @@ public class GameBoard {
         dice.add(d2);
 
         // create moveset strategy
-        // blot: piece/s that can be thrown out to bar
-        strategy = new BasicMoveSetStrategy(1); // standard blot = 1
+        strategy = new BasicMoveSetStrategy(blot);
 
         //create pieces
         //player0
