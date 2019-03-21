@@ -1,16 +1,14 @@
 package com.progark.emojimon.model;
 
 import com.progark.emojimon.model.interfaces.Die;
-import com.progark.emojimon.model.interfaces.Piece;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 public class Player {
 
-    private List<Piece> boardPieces;
-    private List<Piece> clearedPieces;
-    private Position bar;
     private int homeAreaStartIndex;
     private int homeAreaEndIndex;
     private boolean moveClockwise;
@@ -19,15 +17,11 @@ public class Player {
         this.homeAreaStartIndex = homeAreaStartIndex;
         this.homeAreaEndIndex = homeAreaEndIndex;
         this.moveClockwise = moveClockwise;
-
-        boardPieces = new ArrayList<Piece>();
-        clearedPieces = new ArrayList<Piece>();
-        bar = new Position();
     }
 
     //Get all available moves
     //(currently only checking individual die, not combinations)
-    public List<Move> getAvailableMoves(List<Die> dice, List<Position> positions) {
+    public List<Move> getAvailableMoves(List<Die> dice, List<Position> positions, Position bar) {
         List<Move> moves = new ArrayList<Move>();
 
         //find all possible moves for player given die values in dice
@@ -42,7 +36,7 @@ public class Player {
                     }
                     else{
                         //only add if number of enemy pieces on position does not exceed limit
-                        if(positions.get(endPosition).getNumberOfPieces() < 1){
+                        if(positions.get(endPosition).getPieceCount() < 1){
                             moves.add(new Move(positionIndex, endPosition));
                         }
                     }
@@ -55,28 +49,12 @@ public class Player {
 
     //returns whether player has cleared all of their pieces
     public boolean isDone() {
-        return (boardPieces.size() == 0);
+        throw new NotImplementedException();
     }
 
     //returns whether player is in a position to start clearing pieces
-    public boolean canClear() {
-        //iterate over all pieces and check if their position is within range[homeAreaStartIndex, homeAreaEndIndex]
-        for(int i = 0; i < boardPieces.size(); i++){
-            int piecePositionIndex = boardPieces.get(i).getPosition().getPositionIndex();
-            if(piecePositionIndex < homeAreaStartIndex || piecePositionIndex > homeAreaEndIndex){
-                //piece is outside of home area, player can not clear
-                return false;
-            }
-        }
-        //all pieces are within home area, player can clear
-        return true;
+    public boolean canClear(List<Position> boardPositions, Position bar) {
+        throw new NotImplementedException();
     }
 
-    public Position getBar(){
-        return bar;
-    }
-
-    public void addToBoardPieces(Piece p){
-        this.boardPieces.add(p);
-    }
 }
