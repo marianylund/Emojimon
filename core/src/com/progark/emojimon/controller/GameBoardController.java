@@ -4,6 +4,7 @@ import com.progark.emojimon.model.GameBoard;
 import com.progark.emojimon.model.Position;
 import com.progark.emojimon.model.interfaces.Die;
 
+
 import java.util.List;
 
 public class GameBoardController {
@@ -18,11 +19,11 @@ public class GameBoardController {
     }
 
     public Position getWhitePlayerBar(){
-        return gameBoard.getWhitePlayerBar();
+        return gameBoard.getPlayer1Bar();
     }
 
     public Position getBlackPlayerBar(){
-        return gameBoard.getBlackPlayerBar();
+        return gameBoard.getPlayer0Bar();
     }
 
     public List<Die> getDice(){

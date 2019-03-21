@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameBoard {
-    private Player blackPlayer;
-    private Player whitePlayer;
+    private Player player0;
+    private Player player1;
     private List<Die> dice;
     private DiceRule diceRule;
     //includes all board positions indexed from bottom right to top right
@@ -20,8 +20,8 @@ public class GameBoard {
     //(currently creating standard gameboard)
     public GameBoard(int boardSize){
         //create players
-        Player whitePlayer = new Player(18, 23, true);
-        Player blackPlayer = new Player(0, 5, false);
+        Player player1 = new Player(18, 23, true);
+        Player player0 = new Player(0, 5, false);
 
         this.boardSize = boardSize;
         //create all positions
@@ -38,11 +38,10 @@ public class GameBoard {
         dice.add(d2);
 
         //create pieces
-        //whiteplayer
-        int whitePlayerPieceCount = 0;
+        //Player0
         //place white pieces according to standard piece placements
         for(int i = 0; i < 15; i++){
-            Piece p = new StandardPiece(whitePlayer);
+            Piece p = new StandardPiece(player1);
             if(i < 2){
                 boardPositions.get(0).placePiece(p);
             }
@@ -55,12 +54,12 @@ public class GameBoard {
             else{
                 boardPositions.get(18).placePiece(p);
             }
-            whitePlayer.addToBoardPieces(p);
+            player1.addToBoardPieces(p);
         }
 
-        //place black pieces according to standard piece placements
+        //place pieces of player 0 according to standard piece placements
         for(int i = 0; i < 15; i++){
-            Piece p = new StandardPiece(blackPlayer);
+            Piece p = new StandardPiece(player0);
             if(i < 2){
                 boardPositions.get(23).placePiece(p);
             }
@@ -107,19 +106,19 @@ public class GameBoard {
         return dice;
     }
 
-    public Position getWhitePlayerBar(){
-        return whitePlayer.getBar();
+    public Position getPlayer1Bar(){
+        return player1.getBar();
     }
 
-    public Position getBlackPlayerBar(){
-        return blackPlayer.getBar();
+    public Position getPlayer0Bar(){
+        return player0.getBar();
     }
 
-    public List<Move> getBlackPlayerMoves(){
-        return blackPlayer.getAvailableMoves(dice, boardPositions);
+    public List<Move> getPlayer0Moves(){
+        return player0.getAvailableMoves(dice, boardPositions);
     }
 
-    public List<Move> getWhitePlayerMoves(){
-        return whitePlayer.getAvailableMoves(dice, boardPositions);
+    public List<Move> getPlayer1Moves(){
+        return player1.getAvailableMoves(dice, boardPositions);
     }
 }
