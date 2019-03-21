@@ -7,6 +7,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.progark.emojimon.controller.FBC;
 import com.progark.emojimon.controller.FirebaseControllerInterface;
+import com.progark.emojimon.model.Player;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import sun.rmi.runtime.Log;
 
 public class Emojimon extends Game {
 	SpriteBatch batch;
@@ -20,6 +26,8 @@ public class Emojimon extends Game {
 	public void create () {
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
+		//test write to Firebase
+		FBC.I().get().addNewGame(new Player(0, 0, true), new ArrayList<List<Integer>>());
 	}
 
 	@Override

@@ -7,6 +7,6 @@ import com.progark.emojimon.Emojimon;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		new LwjglApplication(new Emojimon(), config);
+		new LwjglApplication(new Emojimon(new DesktopFirebaseController()), config);
 	}
 }

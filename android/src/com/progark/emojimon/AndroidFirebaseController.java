@@ -1,7 +1,6 @@
 package com.progark.emojimon;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -11,9 +10,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.progark.emojimon.controller.FirebaseControllerInterface;
 import com.progark.emojimon.model.Player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-public class FirebaseController implements FirebaseControllerInterface {
+public class AndroidFirebaseController implements FirebaseControllerInterface {
     // Needs to be initiated only once when sent to the core module by Android Launcher
 
     // Write a message to the db
@@ -33,7 +34,7 @@ public class FirebaseController implements FirebaseControllerInterface {
     }
 
     // TODO Where do emoji chosen by player are saved?
-    public void addNewGame(Player creatorPlayer, int[][] gameState){
+    public void addNewGame(Player creatorPlayer, List<List<Integer>> gameState){
         GameData gd = new GameData(creatorPlayer, gameState);
 
         String gameID = Games.push().getKey();
@@ -59,7 +60,7 @@ public class FirebaseController implements FirebaseControllerInterface {
 
 
     @Override
-    public int[][] getGameStateByGameID(String id) {
+    public List<List<Integer>> getGameStateByGameID(String id) {
         return gamesData.get(id).getGameState();
     }
 

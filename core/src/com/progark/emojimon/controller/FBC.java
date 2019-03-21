@@ -2,10 +2,9 @@ package com.progark.emojimon.controller;
 
 public class FBC {
 
-    // Comes from FirebaseController class in Android module
     private FirebaseControllerInterface firebase;
 
-    // Using Singleton pattern in order to access it from any class
+    // Using Singleton pattern in order to have only one instance of FirebaseController
     private static FBC INSTANCE = null;
 
     public static FBC I() {
