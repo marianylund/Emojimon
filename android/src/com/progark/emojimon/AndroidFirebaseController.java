@@ -1,5 +1,6 @@
 package com.progark.emojimon;
 
+import android.nfc.Tag;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -13,12 +14,14 @@ import com.progark.emojimon.model.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class AndroidFirebaseController implements FirebaseControllerInterface {
     // Needs to be initiated only once when sent to the core module by Android Launcher
 
     // Write a message to the db
+    private final String TAG = "sondre";
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
 
     private DatabaseReference myRef = db.getReference("message");
@@ -31,6 +34,8 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
 
     private HashMap<String, GameData> gamesData = new HashMap<>();
     private HashMap<String, LastTurnData> lastTurnData = new HashMap<>(); // the same key as the games id
+
+    String gameId = null;
 
 
     public void Write() {
@@ -117,4 +122,29 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
     }
 
     //endregion
+
+    // Finds the first game with status == waiting.
+    // Sets player 1 to true and subscribes to the gamedata
+    public void joinGame() {
+        Games.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snap : dataSnapshot.getChildren()){
+                    if(snap.child("Status").getValue().equals("waiting")) {
+                        addPlayerToGame(snap.getKey());
+                        addGameDataChangeListener(snap.getKey());
+                        break;
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        });
+    }
+
+    void addPlayerToGame(String gameId) {
+        Games.child(gameId + "/player1").setValue(true);
+    }
+
 }

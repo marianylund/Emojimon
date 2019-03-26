@@ -12,6 +12,7 @@ import com.progark.emojimon.model.Player;
 import java.util.ArrayList;
 import java.util.List;
 
+import jdk.nashorn.internal.runtime.regexp.joni.exception.SyntaxException;
 import sun.rmi.runtime.Log;
 
 public class Emojimon extends Game {
@@ -27,12 +28,14 @@ public class Emojimon extends Game {
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
 		//test write to Firebase
+
 		//FBC.I().get().addNewGame("Player0Olala");
 		tempLastTurn();
+		FBC.I().get().joinGame();
+
 	}
 
 	//debugging
-
     private void tempLastTurn(){
         List<Integer> dices = new ArrayList<Integer>();
         dices.add(5); dices.add(3);

@@ -16,5 +16,8 @@ public interface FirebaseControllerInterface {
 
     void addLastTurnByGameID(String gameID, boolean player, String timeEnd, List<Integer> dices, List<List<Integer>> actions);
 
+    void joinGame();
+
+
 
 }
