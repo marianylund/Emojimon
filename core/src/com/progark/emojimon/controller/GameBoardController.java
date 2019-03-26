@@ -12,7 +12,7 @@ public class GameBoardController {
     private GameBoard gameBoard;
 
     public GameBoardController(){
-        gameBoard = new GameBoard(24);
+        gameBoard = new GameBoard(24, 6);
     }
 
     public List<Position> getBoardPositions(){
