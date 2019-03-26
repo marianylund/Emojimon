@@ -1,10 +1,7 @@
-package com.progark.emojimon;
-
-import com.google.firebase.database.IgnoreExtraProperties;
+package com.progark.emojimon.model;
 
 import java.util.List;
 
-@IgnoreExtraProperties
 public class GameData {
     private String status;
     private String player0Key;

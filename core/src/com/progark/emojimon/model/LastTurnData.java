@@ -1,4 +1,4 @@
-package com.progark.emojimon;
+package com.progark.emojimon.model;
 
 import com.progark.emojimon.model.Player;
 

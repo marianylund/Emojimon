@@ -1,6 +1,5 @@
 package com.progark.emojimon;
 
-import android.nfc.Tag;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -10,11 +9,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.progark.emojimon.controller.FirebaseControllerInterface;
-import com.progark.emojimon.model.Player;
+import com.progark.emojimon.model.GameData;
+import com.progark.emojimon.model.LastTurnData;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
