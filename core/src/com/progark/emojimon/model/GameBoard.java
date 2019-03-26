@@ -2,6 +2,7 @@ package com.progark.emojimon.model;
 
 import com.progark.emojimon.model.interfaces.DiceRule;
 import com.progark.emojimon.model.interfaces.Die;
+import com.progark.emojimon.model.strategyPattern.MoveSetStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,9 @@ public class GameBoard {
     //includes all board positions indexed from bottom right to top right
     private List<Position> boardPositions;
     private Position bar;
+    private Player inBar;
     private int boardSize;
+    private BasicMoveSetStrategy strategy;
     private int goalSize;
 
     //constructor
@@ -37,6 +40,10 @@ public class GameBoard {
         Die d2 = new SixSidedDie();
         dice.add(d1);
         dice.add(d2);
+
+        // create moveset strategy
+        // blot: piece/s that can be thrown out to bar
+        strategy = new BasicMoveSetStrategy(1); // standard blot = 1
 
         //create pieces
         //player0
@@ -67,17 +74,7 @@ public class GameBoard {
     }
 
     public void movePiece(Move move){
-        Position startPosition = boardPositions.get(move.startPosition);
-        Position endPosition = boardPositions.get(move.endPosition);
-
-        //check if endPosition is owned by other player
-        if(endPosition.getOwner() != startPosition.getOwner()){
-            //TODO: move pieces on endposition to bar
-        }
-
-        startPosition.addPieces(1);
-        startPosition.removePieces(1);
-        endPosition.addPieces(1);
+        strategy.calculateMove(move, boardPositions, bar, inBar);
     }
 
     public void rollDice(){
