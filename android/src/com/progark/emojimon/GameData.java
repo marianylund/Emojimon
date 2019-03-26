@@ -11,8 +11,7 @@ public class GameData {
     private String player1Key;
     private List<List<Integer>> GameState;
 
-
-    public GameData(){}
+    public GameData(){} // Reguires for Firebase
 
     public GameData(String player0) {
         this.status = "Waiting";

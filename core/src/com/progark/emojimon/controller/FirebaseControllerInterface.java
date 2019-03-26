@@ -14,5 +14,7 @@ public interface FirebaseControllerInterface {
 
     void addGameDataChangeListener(String gameID);
 
+    void addLastTurnByGameID(String gameID, boolean player, String timeEnd, List<Integer> dices, List<List<Integer>> actions);
+
 
 }

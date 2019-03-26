@@ -27,9 +27,24 @@ public class Emojimon extends Game {
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
 		//test write to Firebase
-		FBC.I().get().addNewGame("Player0Olala");
-		//FBC.I().get().addGameDataChangeListener("Game_0");
+		//FBC.I().get().addNewGame("Player0Olala");
+		tempLastTurn();
 	}
+
+	//debugging
+
+    private void tempLastTurn(){
+        List<Integer> dices = new ArrayList<Integer>();
+        dices.add(5); dices.add(3);
+
+        List<Integer> action = new ArrayList<Integer>();
+        //from;to;
+        action.add(2);action.add(3);
+        List<List<Integer>> actions = new ArrayList<List<Integer>>();
+        actions.add(action);
+
+        FBC.I().get().addLastTurnByGameID("GameID00", false, "12:35", dices, actions);
+    }
 
 	@Override
 	public void render () {

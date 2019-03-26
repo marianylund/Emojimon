@@ -23,6 +23,7 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
 
     private DatabaseReference myRef = db.getReference("message");
     private DatabaseReference Games = db.getReference("Games");
+    private DatabaseReference LastTurns = db.getReference("LastTurns");
 
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
 
@@ -36,7 +37,7 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
         myRef.setValue("testingtesting");
     }
 
-    // TODO Where do emoji chosen by player are saved?
+    //region NEW GAME
     public void addNewGame(String creatorPlayer){
         GameData gd = new GameData(creatorPlayer);
 
@@ -46,20 +47,6 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
 
         addGameDataChangeListener(gameID); // Listen to changes of that game
     }
-
-    public void addLastTurnByGameID(String gameID, Player player, String timeEnd, int[] dices, int[][] actions){
-        LastTurnData ltd = new LastTurnData(player, timeEnd, dices, actions);
-
-        String ltdID = Games.child(gameID).push().getKey();
-
-        lastTurnData.put(gameID, ltd);
-    }
-
-
-    /*@Override
-    public List<List<Integer>> getGameStateByGameID(String id) {
-        return gamesData.get(id).getGameState();
-    }*/
 
     public void addGameDataChangeListener(final String gameID){
         Games.child(gameID).addValueEventListener(new ValueEventListener() {
@@ -86,4 +73,48 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
             }
         });
     }
+
+    //endregion
+
+    //region NEW LAST TURN
+    public void addLastTurnByGameID(String gameID, boolean player, String timeEnd, List<Integer> dices, List<List<Integer>> actions){
+        //TODO Better error handling on gameID
+        if(!gamesData.containsKey("gameID")){
+            Log.d("sondre", "There is no game with this GameID, jsyk");
+        }
+
+        LastTurnData ltd = new LastTurnData(player, timeEnd, dices, actions);
+        LastTurns.child(gameID).setValue(ltd);
+        lastTurnData.put(gameID, ltd);
+
+        addLastTurnDataChangeListener(gameID);
+    }
+
+    public void addLastTurnDataChangeListener(final String gameID){
+        LastTurns.child(gameID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                LastTurnData sm = dataSnapshot.getValue(LastTurnData.class);
+                lastTurnData.put(gameID, sm); //Update that LastTurnData class
+                // TODO Notify subscribers that the data has been changed?
+
+                //Debugging
+                /*if(sm == null){
+                    Log.d("sondre", "GD is null");
+                } else {
+                    Log.d("sondre", sm.toString());
+                    Log.d("sondre", "Last player turn: " + sm.getPlayer());
+                    Log.d("sondre", "Actions: " + sm.getActions());
+                }*/
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    //endregion
 }
