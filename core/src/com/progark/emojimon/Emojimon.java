@@ -27,7 +27,8 @@ public class Emojimon extends Game {
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
 		//test write to Firebase
-		FBC.I().get().addNewGame(new Player(0, 0, true), new ArrayList<List<Integer>>());
+		//FBC.I().get().addNewGame(new Player(0, 0, true), new ArrayList<List<Integer>>());
+		FBC.I().get().addGameDataChangeListener("Game_0");
 	}
 
 	@Override

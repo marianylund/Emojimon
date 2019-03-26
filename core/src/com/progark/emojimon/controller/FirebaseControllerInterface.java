@@ -12,5 +12,7 @@ public interface FirebaseControllerInterface {
 
     void addNewGame(Player creatorPlayer, List<List<Integer>> gameState);
 
+    void addGameDataChangeListener(String gameID);
+
 
 }
