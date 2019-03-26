@@ -4,20 +4,20 @@ import com.progark.emojimon.model.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public interface FirebaseControllerInterface {
-
-    // Returns all places with who's pieces and how many pieces there are
-
-
+    // Add new
     void addNewGame(String creatorPlayer);
-
-    void addGameDataChangeListener(String gameID);
-
+    void addGameDataChangeListener(String gameID); // TODO Do we need it here?
     void addLastTurnByGameID(String gameID, boolean player, String timeEnd, List<Integer> dices, List<List<Integer>> actions);
 
-    void joinGame();
+    // Setters
+    void setGameBoardByGameID(String gameID, List<List<Integer>> gameBoard);
+    void setGameStatusByGameID(String gameID, String newStatus);
 
+    void joinGame();
+    Object[] getGameIDs();
 
 
 }

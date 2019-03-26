@@ -9,7 +9,7 @@ public class GameData {
     private String status;
     private String player0Key;
     private String player1Key;
-    private List<List<Integer>> GameState;
+    private List<List<Integer>> GameBoard;
 
     public GameData(){} // Reguires for Firebase
 
@@ -45,12 +45,12 @@ public class GameData {
         this.player1Key = player1Key;
     }
 
-    public List<List<Integer>> getGameState() {
-        return GameState;
+    public List<List<Integer>> getGameBoard() {
+        return GameBoard;
     }
 
-    public void setGameState(List<List<Integer>> gameState) {
-        this.GameState = gameState;
+    public void setGameBoard(List<List<Integer>> gameBoard) {
+        this.GameBoard = gameBoard;
     }
 
     @Override

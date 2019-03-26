@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 public class AndroidFirebaseController implements FirebaseControllerInterface {
     // Needs to be initiated only once when sent to the core module by Android Launcher
@@ -59,6 +60,7 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 GameData sm = dataSnapshot.getValue(GameData.class);
                 gamesData.put(gameID, sm); //Update that gameData class
+                Log.d("sondre", "Game has been updated: " + sm.toString());
                 // TODO Notify subscribers that the data has been changed?
 
                 /* Debugging
@@ -67,7 +69,7 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
                 } else {
                     Log.d("sondre", sm.toString());
                     Log.d("sondre", "Player0" + sm.getPlayer0Key());
-                    Log.d("sondre", "GameState" + sm.getGameState());
+                    Log.d("sondre", "GameState" + sm.getGameBoard());
                 }*/
 
             }
@@ -123,6 +125,28 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
 
     //endregion
 
+    //region SETTERS
+
+    public void setGameStatusByGameID(String gameID, String newStatus){
+        //TODO Check if it is an allowed status to set
+        if(gamesData.containsKey(gameID)){
+            Games.child(gameID).child("status").setValue(newStatus);
+        }else{
+            throw new IllegalArgumentException("There is no game with the " + gameID + " ID");
+        }
+    }
+
+    public void setGameBoardByGameID(String gameID, List<List<Integer>> gameBoard){
+        //TODO Check if it is an allowed gameBoard format
+        if(gamesData.containsKey(gameID)){
+            Games.child(gameID).child("gameBoard").setValue(gameBoard);
+        }else{
+            throw new IllegalArgumentException("There is no game with the " + gameID + " ID");
+        }
+    }
+
+    //end region
+
     // Finds the first game with status == waiting.
     // Sets player 1 to true and subscribes to the gamedata
     public void joinGame() {
@@ -147,4 +171,7 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
         Games.child(gameId + "/player1").setValue(true);
     }
 
+    public Object[] getGameIDs(){
+        return gamesData.keySet().toArray();
+    }
 }
