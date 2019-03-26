@@ -12,6 +12,7 @@ import com.progark.emojimon.model.Player;
 import java.util.ArrayList;
 import java.util.List;
 
+import jdk.nashorn.internal.runtime.regexp.joni.exception.SyntaxException;
 import sun.rmi.runtime.Log;
 
 public class Emojimon extends Game {
@@ -29,6 +30,10 @@ public class Emojimon extends Game {
 		//test write to Firebase
 		FBC.I().get().addNewGame("Player0Olala");
 		//FBC.I().get().addGameDataChangeListener("Game_0");
+		//FBC.I().get().addNewGame(new Player(0, 0, true), new ArrayList<List<Integer>>());
+		//FBC.I().get().addGameDataChangeListener("Game_0");
+		FBC.I().get().joinGame();
+
 	}
 
 	@Override

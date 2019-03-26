@@ -14,5 +14,7 @@ public interface FirebaseControllerInterface {
 
     void addGameDataChangeListener(String gameID);
 
+    void joinGame();
+
 
 }
