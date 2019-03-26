@@ -1,25 +1,24 @@
 package com.progark.emojimon;
 
-import com.progark.emojimon.model.Player;
+import com.google.firebase.database.IgnoreExtraProperties;
 
-import java.util.ArrayList;
 import java.util.List;
 
+@IgnoreExtraProperties
 public class GameData {
-    protected String status;
-    protected Player player0;
-    protected Player player1;
-    protected List<List<Integer>> GameState;
+    private String status;
+    private String player0Key;
+    private String player1Key;
+    private List<List<Integer>> GameState;
 
 
-    public GameData(Player player0, List<List<Integer>> gameState) {
+    public GameData(){}
+
+    public GameData(String player0) {
         this.status = "Waiting";
 
         // The player who has created the game
-        this.player0 = player0;
-
-        // Standard start board ?
-        GameState = gameState;
+        this.player0Key = player0;
     }
 
 
@@ -31,20 +30,20 @@ public class GameData {
         this.status = status;
     }
 
-    public Player getPlayer0() {
-        return player0;
+    public String getPlayer0Key() {
+        return player0Key;
     }
 
-    public void setPlayer0(Player player0) {
-        this.player0 = player0;
+    public void setPlayer0Key(String player0Key) {
+        this.player0Key = player0Key;
     }
 
-    public Player getPlayer1() {
-        return player1;
+    public String getPlayer1Key() {
+        return player1Key;
     }
 
-    public void setPlayer1(Player player1) {
-        this.player1 = player1;
+    public void setPlayer1Key(String player1Key) {
+        this.player1Key = player1Key;
     }
 
     public List<List<Integer>> getGameState() {
@@ -52,6 +51,22 @@ public class GameData {
     }
 
     public void setGameState(List<List<Integer>> gameState) {
-        GameState = gameState;
+        this.GameState = gameState;
+    }
+
+    @Override
+    public String toString() {
+        String s = "";
+        if(getStatus() != null){
+            s += getStatus() + ",";
+        }else{
+            s+= "No status ";
+        }
+        if(getPlayer0Key() != null){
+            s += " player0Key is sat";
+        } else {
+            s += " and no player";
+        }
+        return s;
     }
 }

@@ -37,13 +37,11 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
     }
 
     // TODO Where do emoji chosen by player are saved?
-    public void addNewGame(Player creatorPlayer, List<List<Integer>> gameState){
-        gd = new GameData(creatorPlayer, gameState);
+    public void addNewGame(String creatorPlayer){
+        GameData gd = new GameData(creatorPlayer);
 
         String gameID = Games.push().getKey();
-        Games.child(gameID).child("Player0").setValue(creatorPlayer);
-        Games.child(gameID).child("GameState").setValue(gameState);
-
+        Games.child(gameID).setValue(gd);
         gamesData.put(gameID, gd);
 
         addGameDataChangeListener(gameID); // Listen to changes of that game
@@ -53,27 +51,32 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
         LastTurnData ltd = new LastTurnData(player, timeEnd, dices, actions);
 
         String ltdID = Games.child(gameID).push().getKey();
-        Games.child(gameID).child(ltdID).child("Player").setValue(player);
-        Games.child(gameID).child(ltdID).child("TimeEnd").setValue(timeEnd);
-        Games.child(gameID).child(ltdID).child("Dices").setValue(dices);
-        Games.child(gameID).child(ltdID).child("Actions").setValue(actions);
 
         lastTurnData.put(gameID, ltd);
     }
 
 
-    @Override
+    /*@Override
     public List<List<Integer>> getGameStateByGameID(String id) {
         return gamesData.get(id).getGameState();
-    }
+    }*/
 
-    public void addGameDataChangeListener(String gameID){
+    public void addGameDataChangeListener(final String gameID){
         Games.child(gameID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //Update that gameData class
-                Log.d("sondre", dataSnapshot.getValue().toString());
+                GameData sm = dataSnapshot.getValue(GameData.class);
+                gamesData.put(gameID, sm); //Update that gameData class
+                // TODO Notify subscribers that the data has been changed?
 
+                /* Debugging
+                if(sm == null){
+                    Log.d("sondre", "GD is null");
+                } else {
+                    Log.d("sondre", sm.toString());
+                    Log.d("sondre", "Player0" + sm.getPlayer0Key());
+                    Log.d("sondre", "GameState" + sm.getGameState());
+                }*/
 
             }
 
