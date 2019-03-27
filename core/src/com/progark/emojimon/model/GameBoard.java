@@ -47,6 +47,10 @@ public class GameBoard {
         MoveSetStrategyFactory moveSetFactory = new MoveSetStrategyFactory();
         moveSet= moveSetFactory.GetMoveSet("BasicMoveSet", blot);
 
+        //TODO: add chosen move validation strategy (factory)
+        //TODO: add chosen can clear strategy (factory)
+
+
         //create pieces
         //player0
         //place white pieces according to standard piece placements
