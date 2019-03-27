@@ -1,5 +1,6 @@
 package com.progark.emojimon.model;
 
+import com.progark.emojimon.model.factories.MoveSetStrategyFactory;
 import com.progark.emojimon.model.interfaces.DiceRule;
 import com.progark.emojimon.model.interfaces.Die;
 import com.progark.emojimon.model.strategyPattern.MoveSetStrategy;
@@ -18,7 +19,7 @@ public class GameBoard {
     private Player inBar;
     private int boardSize;
     private int blot = 1; // blot: piece/s that can be thrown out to bar, standard 1
-    private BasicMoveSetStrategy strategy;
+    private MoveSetStrategy moveSet; //
     private int goalSize;
 
     //constructor
@@ -42,8 +43,9 @@ public class GameBoard {
         dice.add(d1);
         dice.add(d2);
 
-        // create moveset strategy
-        strategy = new BasicMoveSetStrategy(blot);
+        // Choose moveset strategy
+        MoveSetStrategyFactory moveSetFactory = new MoveSetStrategyFactory();
+        moveSet= moveSetFactory.GetMoveSet("BasicMoveSet", blot);
 
         //create pieces
         //player0
@@ -74,7 +76,7 @@ public class GameBoard {
     }
 
     public void movePiece(Move move){
-        strategy.calculateMove(move, boardPositions, bar, inBar);
+        moveSet.calculateMove(move, boardPositions, bar, inBar);
     }
 
     public void rollDice(){
