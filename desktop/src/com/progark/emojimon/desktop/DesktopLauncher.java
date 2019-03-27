@@ -7,6 +7,9 @@ import com.progark.emojimon.Emojimon;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		config.title = "Emojimon";
+		config.useGL30 = false;
+
 		new LwjglApplication(new Emojimon(), config);
 	}
 }

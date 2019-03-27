@@ -1,37 +1,34 @@
 package com.progark.emojimon.gameScreens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.progark.emojimon.Emojimon;
 
-public class MainMenuScreen implements Screen {
+public class CreateRulesetScreen implements Screen {
 
     private Stage stage;
     final Emojimon game;
     private OrthographicCamera camera;
 
-    public MainMenuScreen(final Emojimon game) {
+    public CreateRulesetScreen(final Emojimon game) {
         this.game = game;
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, game.WIDTH, game.HEIGHT);
-    }
+        camera.setToOrtho(false, 800, 480);
 
+    }
 
     @Override
     public void show() {
-        /**/
+
     }
 
     @Override
@@ -41,23 +38,22 @@ public class MainMenuScreen implements Screen {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
         Skin mySkin = new Skin(Gdx.files.internal("skin/uiskin.json"));
-        final TextButton txtbtn = new TextButton("Create game",mySkin);
+        final TextButton backbtn = new TextButton("Back",mySkin);
         //button2.setSize(col_width*4,row_height);
-        txtbtn.setPosition(Gdx.graphics.getWidth()/2 - txtbtn.getWidth()/2,
-        Gdx.graphics.getHeight()/2 - txtbtn.getHeight()/2);
-        txtbtn.addListener(new InputListener(){
-//            @Override
+        backbtn.setPosition(0, Gdx.graphics.getHeight()-backbtn.getHeight());
+        backbtn.addListener(new InputListener(){
+            //            @Override
 //            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
 //                System.out.println("Touch up");
 //            }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("Create game");
-                game.setScreen(new CreateRulesetScreen(game));
+                System.out.println("Back");
+                game.setScreen(new MainMenuScreen(game));
                 return true;
             }
         });
-        stage.addActor(txtbtn);
+        stage.addActor(backbtn);
         //stage.act();
         stage.draw();
     }
@@ -77,12 +73,13 @@ public class MainMenuScreen implements Screen {
 
     }
 
-   @Override
-   public void hide() {
-        /**/
-   }
+    @Override
+    public void hide() {
+
+    }
 
     @Override
     public void dispose() {
+
     }
 }

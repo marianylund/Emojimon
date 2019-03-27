@@ -3,13 +3,14 @@ package com.progark.emojimon.gameScreens;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.progark.emojimon.Emojimon;
 
-public class CreateOrJoinMenuScreen {
+public class CountDownScreen {
+
 
     final Emojimon game;
 
     OrthographicCamera camera;
 
-    public CreateOrJoinMenuScreen(final Emojimon game) {
+    public CountDownScreen(final Emojimon game) {
         this.game = game;
 
         camera = new OrthographicCamera();
