@@ -45,7 +45,7 @@ public class GameBoard {
 
         // Choose moveset strategy
         MoveSetStrategyFactory moveSetFactory = new MoveSetStrategyFactory();
-        moveSet= moveSetFactory.GetMoveSet("BasicMoveSet", blot);
+        moveSet= moveSetFactory.GetMoveSet("BASIC", blot);
 
         //TODO: add chosen move validation strategy (factory)
         //TODO: add chosen can clear strategy (factory)

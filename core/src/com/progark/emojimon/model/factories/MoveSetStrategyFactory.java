@@ -10,7 +10,7 @@ public class MoveSetStrategyFactory {
         if (moveSet == null){
             return null;
         }
-        if (moveSet.equalsIgnoreCase("BasicMoveSet")){
+        if (moveSet.equalsIgnoreCase("BASIC")){
             return new BasicMoveSetStrategy(blot);
         }
         return null;
