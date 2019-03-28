@@ -17,10 +17,13 @@ public class Player {
     private MoveValidationStrategy moveValidationStrategy; //TODO: add factory pattern for strategy
     private CanClearStrategy canClearStrategy; //TODO: add factory pattern for strategy
 
-    public Player(int homeAreaStartIndex, int homeAreaEndIndex, boolean moveClockwise){
+    public Player(int homeAreaStartIndex, int homeAreaEndIndex, boolean moveClockwise, MoveValidationStrategy moveValidationStrategy, CanClearStrategy canClearStrategy){
         this.homeAreaStartIndex = homeAreaStartIndex;
         this.homeAreaEndIndex = homeAreaEndIndex;
         this.moveClockwise = moveClockwise;
+        // set strategies for piece movement
+        this.moveValidationStrategy = moveValidationStrategy;
+        this.canClearStrategy = canClearStrategy;
     }
 
     public Move getAvailableBarMove(List<Die> dice, List<Position> positions, Position bar){
