@@ -17,7 +17,13 @@ public class GameBoardController {
     }
 
     public void createGameBoard(int boardSize, int goalSize, String moveSetStrategy){
-        gameBoard = new GameBoard(boardSize, goalSize, moveSetStrategy);
+        //check if boardsize is valid
+        if(boardSize % 2 != 0){
+            throw new IllegalArgumentException(String.format("Board size %d is invalid. Size must be divisible by 2. ", boardSize));
+        }
+        else{
+            gameBoard = new GameBoard(boardSize, goalSize, moveSetStrategy);
+        }
     }
 
     public List<Position> getBoardPositions(){

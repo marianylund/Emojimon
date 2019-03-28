@@ -21,8 +21,8 @@ public class Emojimon extends Game {
 	Texture img;
 	GameBoardController gameBoardController;
 
-    public Emojimon(FirebaseControllerInterface firebase){
-        FBC.I().setFirebase(firebase);
+    public Emojimon(){
+
     }
 	
 	@Override
@@ -33,14 +33,17 @@ public class Emojimon extends Game {
 		//Test creation of gameboard
 		gameBoardController = new GameBoardController();
 		gameBoardController.createGameBoard(24, 6, "BASIC");
+		System.out.println(gameBoardController.getBoardPositions().toString());
 		//test write to Firebase
 
+		/*
 		FBC.I().get().addNewGame("Player0Olala");
 		//tempLastTurn();
 		//FBC.I().get().joinGame();
         String tempGameID = FBC.I().get().getGameIDs()[0].toString();
         FBC.I().get().setGameBoardByGameID(tempGameID, createTempDoubleArrayList());
         FBC.I().get().setGameStatusByGameID(tempGameID, "Playing");
+        */
 	}
 
 	//debugging

@@ -30,10 +30,6 @@ public class GameBoard {
     }
     //create gameboard given boardsize, goalsize
     public GameBoard(int boardSize, int goalSize, String moveSetStrategy){
-        //check if board size is valid
-        if((boardSize % 2) != 0){
-            throw new java.lang.Error(String.format("Board size %d is invalid. Size must be divisible by 2. ", boardSize));
-        }
 
         this.boardSize = boardSize;
 
