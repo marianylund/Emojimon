@@ -1,4 +1,4 @@
-package com.progark.emojimon.controller;
+package com.progark.emojimon.model.interfaces;
 
 import com.progark.emojimon.model.Player;
 
@@ -10,7 +10,7 @@ public interface FirebaseControllerInterface {
     // Add new
     void addNewGame(String creatorPlayer);
     void addGameDataChangeListener(String gameID); // TODO Do we need it here?
-    void addLastTurnByGameID(String gameID, boolean player, String timeEnd, List<Integer> dices, List<List<Integer>> actions);
+    void addLastTurnByGameID(String gameID, boolean player, List<Integer> dices, List<List<Integer>> actions);
 
     // Setters
     void setGameBoardByGameID(String gameID, List<List<Integer>> gameBoard);
@@ -18,6 +18,7 @@ public interface FirebaseControllerInterface {
 
     void joinGame();
     Object[] getGameIDs();
+    void addSubscriber(SubscriberToFirebase subscriber);
 
 
 }

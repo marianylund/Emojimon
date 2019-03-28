@@ -1,6 +1,6 @@
 package com.progark.emojimon.desktop;
 
-import com.progark.emojimon.controller.FirebaseControllerInterface;
+import com.progark.emojimon.model.interfaces.FirebaseControllerInterface;
 import com.progark.emojimon.model.Player;
 
 import java.util.ArrayList;

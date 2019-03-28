@@ -15,15 +15,17 @@ public class GameBoard {
     private DiceRule diceRule;
     //includes all board positions indexed from bottom right to top right
     private List<Position> boardPositions;
+    private int boardSize;
+    private MoveSetStrategy moveSet;
+    private List<Move> currentTurnMoves; //TODO emty it out when the turn changes
+
     private Position bar;
     private Player inBar;
-    private int boardSize;
     private int blot = 1; // blot: piece/s that can be thrown out to bar, standard 1
-    private MoveSetStrategy moveSet; //
+
     private int goalSize;
 
     //constructors
-
     //creates standard gameboard
     public GameBoard(){
         this(24, 6, "BASIC");
@@ -36,8 +38,8 @@ public class GameBoard {
         //create players
         //homearea of player0 will be last goalSize indices of board
         //homeare of player1 will be first goalSize indices of board
-        player0 = new Player(boardSize - goalSize, boardSize-1, true);
-        player1 = new Player(0, goalSize-1, false);
+        player0 = new Player(boardSize - goalSize, boardSize-1, true, true);
+        player1 = new Player(0, goalSize-1, false, false);
 
         //create all positions
         boardPositions = new ArrayList<Position>();
@@ -93,6 +95,7 @@ public class GameBoard {
 
     public void movePiece(Move move){
         moveSet.calculateMove(move, boardPositions, bar, inBar);
+        currentTurnMoves.add(move);
     }
 
     public void rollDice(){
@@ -100,6 +103,8 @@ public class GameBoard {
             dice.get(i).roll();
         }
     }
+
+    //region GETTERS AND SETTERS
 
     public List<Position> getBoardPositions(){
         return boardPositions;
@@ -120,4 +125,13 @@ public class GameBoard {
     public List<Move> getPlayer1Moves(){
         return player1.getAvailableMoves(dice, boardPositions, bar);
     }
+
+    public Player getPlayer0() {
+        return player0;
+    }
+
+    public Player getPlayer1() {
+        return player1;
+    }
+    //endregion
 }

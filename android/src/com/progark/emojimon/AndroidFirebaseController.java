@@ -8,13 +8,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.progark.emojimon.controller.FirebaseControllerInterface;
-import com.progark.emojimon.model.GameData;
-import com.progark.emojimon.model.LastTurnData;
+import com.progark.emojimon.model.interfaces.FirebaseControllerInterface;
+import com.progark.emojimon.model.fireBaseData.GameData;
+import com.progark.emojimon.model.fireBaseData.LastTurnData;
+import com.progark.emojimon.model.interfaces.SubscriberToFirebase;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+
 
 public class AndroidFirebaseController implements FirebaseControllerInterface {
     // Needs to be initiated only once when sent to the core module by Android Launcher
@@ -33,6 +35,7 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
 
     private HashMap<String, GameData> gamesData = new HashMap<>();
     private HashMap<String, LastTurnData> lastTurnData = new HashMap<>(); // the same key as the games id
+    private List<SubscriberToFirebase> subscribers = new ArrayList<>();
 
     String gameId = null;
 
@@ -58,8 +61,8 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 GameData sm = dataSnapshot.getValue(GameData.class);
                 gamesData.put(gameID, sm); //Update that gameData class
-                Log.d("sondre", "Game has been updated: " + sm.toString());
-                // TODO Notify subscribers that the data has been changed?
+                //Log.d("sondre", "Game has been updated: " + sm.toString());
+                notifyGameDataSubs(gameID, sm);
 
                 /* Debugging
                 if(sm == null){
@@ -82,13 +85,14 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
     //endregion
 
     //region NEW LAST TURN
-    public void addLastTurnByGameID(String gameID, boolean player, String timeEnd, List<Integer> dices, List<List<Integer>> actions){
+    public void addLastTurnByGameID(String gameID, boolean player, List<Integer> dices, List<List<Integer>> moves){
         //TODO Better error handling on gameID
+
         if(!gamesData.containsKey("gameID")){
             Log.d("sondre", "There is no game with this GameID, jsyk");
         }
 
-        LastTurnData ltd = new LastTurnData(player, timeEnd, dices, actions);
+        LastTurnData ltd = new LastTurnData(player, dices, moves);
         LastTurns.child(gameID).setValue(ltd);
         lastTurnData.put(gameID, ltd);
 
@@ -101,7 +105,8 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 LastTurnData sm = dataSnapshot.getValue(LastTurnData.class);
                 lastTurnData.put(gameID, sm); //Update that LastTurnData class
-                // TODO Notify subscribers that the data has been changed?
+
+                notifyLastTurnSubs(gameID,sm);
 
                 //Debugging
                 /*if(sm == null){
@@ -167,6 +172,27 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
 
     void addPlayerToGame(String gameId) {
         Games.child(gameId + "/player1").setValue(true);
+    }
+
+
+
+    @Override
+    public void addSubscriber(SubscriberToFirebase subscriber) {
+        if(!subscribers.contains(subscriber)){
+            subscribers.add(subscriber);
+        }
+    }
+
+    private void notifyLastTurnSubs(String gameID, LastTurnData ld){
+        for (SubscriberToFirebase sub:subscribers) {
+            sub.notifyOfNewLastTurn(gameID, ld);
+        }
+    }
+
+    private void notifyGameDataSubs(String gameID, GameData gd){
+        for (SubscriberToFirebase sub:subscribers) {
+            sub.notifyOfGameData(gameID, gd);
+        }
     }
 
     public Object[] getGameIDs(){

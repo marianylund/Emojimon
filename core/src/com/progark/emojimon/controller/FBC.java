@@ -1,5 +1,7 @@
 package com.progark.emojimon.controller;
 
+import com.progark.emojimon.model.interfaces.FirebaseControllerInterface;
+
 public class FBC {
 
     private FirebaseControllerInterface firebase;

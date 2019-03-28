@@ -1,4 +1,4 @@
-package com.progark.emojimon.model;
+package com.progark.emojimon.model.fireBaseData;
 
 import java.util.List;
 
