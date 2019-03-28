@@ -20,7 +20,7 @@ public class BasicMoveSetStrategy implements MoveSetStrategy {
         //check if endPosition is owned by other player
         if(endPosition.getOwner() != startPosition.getOwner()){
 
-            //move pieces on endposition to bar, if there's one piece
+            //move pieces on endposition to bar, if there's blot piece/s
             if (endPosition.getPieceCount() == blot){
                 bar.addPieces(blot);
                 inBar = endPosition.getOwner();
