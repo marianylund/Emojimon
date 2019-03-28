@@ -16,7 +16,6 @@ public class GameBoard {
     //includes all board positions indexed from bottom right to top right
     private List<Position> boardPositions;
     private Position bar;
-    private Player inBar;
     private int boardSize;
     private int blot = 1; // blot: piece/s that can be thrown out to bar, standard 1
     private MoveSetStrategy moveSet; //
@@ -42,6 +41,8 @@ public class GameBoard {
         Die d2 = new SixSidedDie();
         dice.add(d1);
         dice.add(d2);
+
+        bar = new Position(); // initiate empty position for bar
 
         // Choose moveset strategy
         MoveSetStrategyFactory moveSetFactory = new MoveSetStrategyFactory();
@@ -80,7 +81,7 @@ public class GameBoard {
     }
 
     public void movePiece(Move move){
-        moveSet.calculateMove(move, boardPositions, bar, inBar);
+        moveSet.calculateMove(move, boardPositions, bar);
     }
 
     public void rollDice(){
@@ -101,11 +102,19 @@ public class GameBoard {
         return bar;
     }
 
+    public Move getPlayer0BarMove(){
+        return player0.getAvailableBarMove(dice, boardPositions, bar);
+    }
+
     public List<Move> getPlayer0Moves(){
-        return player0.getAvailableMoves(dice, boardPositions, bar);
+        return player0.getAvailableMoves(dice, boardPositions);
+    }
+
+    public Move getPlayer1BarMoves(){
+        return player1.getAvailableBarMove(dice, boardPositions, bar);
     }
 
     public List<Move> getPlayer1Moves(){
-        return player1.getAvailableMoves(dice, boardPositions, bar);
+        return player1.getAvailableMoves(dice, boardPositions);
     }
 }

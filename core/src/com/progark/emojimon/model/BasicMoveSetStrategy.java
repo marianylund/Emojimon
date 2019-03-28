@@ -13,7 +13,7 @@ public class BasicMoveSetStrategy implements MoveSetStrategy {
     }
 
     @Override
-    public void calculateMove(Move move, List<Position> boardPositions, Position bar, Player inBar) {
+    public void calculateMove(Move move, List<Position> boardPositions, Position bar) {
         Position startPosition = boardPositions.get(move.startPosition);
         Position endPosition = boardPositions.get(move.endPosition);
 
@@ -21,9 +21,11 @@ public class BasicMoveSetStrategy implements MoveSetStrategy {
         if(endPosition.getOwner() != startPosition.getOwner()){
 
             //move pieces on endposition to bar, if there's blot piece/s
-            if (endPosition.getPieceCount() == blot){
+            if (endPosition.getPieceCount() == blot && (bar.getOwner().equals(null) || bar.getOwner().equals(endPosition.getOwner()))){
+                if (bar.getOwner().equals(null)){
+                    bar.setOwner(endPosition.getOwner());
+                }
                 bar.addPieces(blot);
-                inBar = endPosition.getOwner();
                 endPosition.removePieces(blot);
             }
 
@@ -31,6 +33,10 @@ public class BasicMoveSetStrategy implements MoveSetStrategy {
         startPosition.addPieces(1);
         startPosition.removePieces(1);
         endPosition.addPieces(1);
+        // if the player has cleared their bar, set owner to null
+        if (bar.getPieceCount() == 0 && bar.getOwner().equals(endPosition.getOwner())){
+            bar.setOwner(null);
+        }
     }
 
 }

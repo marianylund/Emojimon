@@ -23,36 +23,29 @@ public class Player {
         this.moveClockwise = moveClockwise;
     }
 
-    //Get all available moves
-    //(currently only checking individual die, not combinations)
-    public List<Move> getAvailableMoves(List<Die> dice, List<Position> positions, Position bar) {
-        List<Move> moves = new ArrayList<Move>();
-
-        // check if player has pieces on the bar.
-        if (bar.getPieceCount() != 0 && this.equals(bar.getOwner())){
+    public Move getAvailableBarMove(List<Die> dice, List<Position> positions, Position bar){
             // check for possible moves from bar
-            int barIndex = positions.size() + 1;
-            for (int diceIndex = 0; diceIndex < dice.size(); diceIndex++){
-                int diceValue = dice.get(diceIndex).GetValue();
-                int endPositionIndex = moveClockwise ? (barIndex + diceValue) : (barIndex - diceValue);
-                Position endPosition = positions.get(endPositionIndex);
+        int barIndex = positions.size() - 1; // barIndex is the last index of positions
+        //int barIndex = 0; //barIndex is the first position
+        for (int diceIndex = 0; diceIndex < dice.size(); diceIndex++){
+            int diceValue = dice.get(diceIndex).GetValue();
+            int endPositionIndex = moveClockwise ? (barIndex + diceValue) : (barIndex - diceValue);
+            Position endPosition = positions.get(endPositionIndex);
 
-                //apply move validation strategy to check if move is valid
-                if(moveValidationStrategy.isAvailableMove(bar, endPosition)){
-                    moves.add(new Move(barIndex, endPositionIndex));
-                }
-            }
-            if (moves.size() == 0){
-                // if pieces are in bar and no moves are available, return moves (which will be empty)
-                return moves;
+            //apply move validation strategy to check if move is valid
+            if(moveValidationStrategy.isAvailableMove(bar, endPosition)){
+//                moves.add(new Move(barIndex, endPositionIndex));
+                return new Move(barIndex, endPositionIndex);
             }
         }
+        return null; // no moves in bar left
+    }
 
-        //TODO: check if there are pieces at bar (strategy pattern). If they are, check if they're players pieces (bool)
-        //TODO: find all possible moves for bar ... apply moveValidationStrategy
-
-        //TODO: check if there are pieces at bar (strategy pattern). If they are, check if they're players pieces (bool)
-        //TODO: find all possible moves for bar ... apply moveValidationStrategy
+    //Get all available moves
+    //(currently only checking individual die, not combinations)
+    public List<Move> getAvailableMoves(List<Die> dice, List<Position> positions) {
+        //TODO: check if there are any dice moves left (i.e. after moving pieces of bar)
+        List<Move> moves = new ArrayList<Move>();
 
         //find all possible moves for player given die values in dice
         for(int positionIndex = 0; positionIndex < positions.size(); positionIndex++){
