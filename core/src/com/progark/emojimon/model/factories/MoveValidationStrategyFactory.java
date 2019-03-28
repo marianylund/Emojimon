@@ -6,7 +6,7 @@ import com.progark.emojimon.model.strategyPattern.MoveValidationStrategy;
 public class MoveValidationStrategyFactory {
 
     // Create a concrete strategy for validating a move
-    public MoveValidationStrategy CreateMoveValidationStrategy(String moveValidation){
+    public MoveValidationStrategy getMoveValidationStrategy(String moveValidation){
         if (moveValidation == null){
             return null;
         }
