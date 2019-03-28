@@ -17,10 +17,13 @@ public class Player {
     private MoveValidationStrategy moveValidationStrategy;
     private CanClearStrategy canClearStrategy;
 
-    public Player(int homeAreaStartIndex, int homeAreaEndIndex, boolean moveClockwise){
+    public Player(int homeAreaStartIndex, int homeAreaEndIndex, boolean moveClockwise, MoveValidationStrategy moveValidationStrategy, CanClearStrategy canClearStrategy){
         this.homeAreaStartIndex = homeAreaStartIndex;
         this.homeAreaEndIndex = homeAreaEndIndex;
         this.moveClockwise = moveClockwise;
+        // set strategies for piece movement
+        this.moveValidationStrategy = moveValidationStrategy;
+        this.canClearStrategy = canClearStrategy;
     }
 
     //Get all available moves

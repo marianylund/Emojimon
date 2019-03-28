@@ -1,9 +1,13 @@
 package com.progark.emojimon.model;
 
+import com.progark.emojimon.model.factories.CanClearStrategyFactory;
 import com.progark.emojimon.model.factories.MoveSetStrategyFactory;
+import com.progark.emojimon.model.factories.MoveValidationStrategyFactory;
 import com.progark.emojimon.model.interfaces.DiceRule;
 import com.progark.emojimon.model.interfaces.Die;
+import com.progark.emojimon.model.strategyPattern.CanClearStrategy;
 import com.progark.emojimon.model.strategyPattern.MoveSetStrategy;
+import com.progark.emojimon.model.strategyPattern.MoveValidationStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,15 +23,32 @@ public class GameBoard {
     private Player inBar;
     private int boardSize;
     private int blot = 1; // blot: piece/s that can be thrown out to bar, standard 1
+    // strategies
     private MoveSetStrategy moveSet; //
+    private MoveValidationStrategy moveValidation;
+    private CanClearStrategy canClear;
     private int goalSize;
 
     //constructor
     //(currently creating standard gameboard)
     public GameBoard(int boardSize, int goalSize){
+
+        // Choose moveset strategy
+        MoveSetStrategyFactory moveSetFactory = new MoveSetStrategyFactory();
+        moveSet = moveSetFactory.GetMoveSet("BASIC", blot);
+
+        // Choose move validation strategy
+        // TODO: add blot to move validation
+        MoveValidationStrategyFactory moveValidationFactory = new MoveValidationStrategyFactory();
+        moveValidation = moveValidationFactory.getMoveValidationStrategy("BASIC");
+
+        // Choose can clear strategy
+        CanClearStrategyFactory canClearFactory = new CanClearStrategyFactory();
+        canClear = canClearFactory.getCanClearStrategy("BASIC");
+
         //create players
-        player0 = new Player(18, 23, true);
-        player1 = new Player(0, 5, false);
+        player0 = new Player(18, 23, true, moveValidation, canClear);
+        player1 = new Player(0, 5, false, moveValidation, canClear);
         boardPositions = new ArrayList<Position>();
         this.boardSize = boardSize;
         //create all positions
@@ -42,14 +63,6 @@ public class GameBoard {
         Die d2 = new SixSidedDie();
         dice.add(d1);
         dice.add(d2);
-
-        // Choose moveset strategy
-        MoveSetStrategyFactory moveSetFactory = new MoveSetStrategyFactory();
-        moveSet= moveSetFactory.GetMoveSet("BASIC", blot);
-
-        //TODO: add chosen move validation strategy (factory)
-        //TODO: add chosen can clear strategy (factory)
-
 
         //create pieces
         //player0
