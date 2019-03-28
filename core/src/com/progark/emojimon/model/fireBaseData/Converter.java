@@ -6,8 +6,6 @@ import com.progark.emojimon.model.Player;
 import com.progark.emojimon.model.Position;
 import com.progark.emojimon.model.interfaces.Die;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +16,7 @@ public class Converter {
     public static List<Integer> fromDiceToList(List<Die> die){
         List<Integer> diceList = new ArrayList<Integer>();
         for (Die d :die) {
-            diceList.add(d.GetValue());
+            diceList.add(d.getValue());
         }
         return diceList;
     }

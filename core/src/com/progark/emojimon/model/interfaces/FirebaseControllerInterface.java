@@ -1,4 +1,4 @@
-package com.progark.emojimon.controller;
+package com.progark.emojimon.model.interfaces;
 
 import com.progark.emojimon.model.Player;
 
@@ -18,6 +18,7 @@ public interface FirebaseControllerInterface {
 
     void joinGame();
     Object[] getGameIDs();
+    void addSubscriber(SubscriberToFirebase subscriber);
 
 
 }

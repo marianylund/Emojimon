@@ -6,15 +6,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.progark.emojimon.controller.FBC;
-import com.progark.emojimon.controller.FirebaseControllerInterface;
+import com.progark.emojimon.model.interfaces.FirebaseControllerInterface;
 import com.progark.emojimon.controller.GameBoardController;
-import com.progark.emojimon.model.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import jdk.nashorn.internal.runtime.regexp.joni.exception.SyntaxException;
-import sun.rmi.runtime.Log;
 
 public class Emojimon extends Game {
 	SpriteBatch batch;
