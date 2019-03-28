@@ -34,7 +34,7 @@ public class Player {
             if(startPosition.getOwner() == this){
                 //check for possible moves
                 for(int diceIndex = 0; diceIndex < dice.size(); diceIndex++){
-                    int diceValue = dice.get(diceIndex).GetValue();
+                    int diceValue = dice.get(diceIndex).getValue();
                     int endPositionIndex = moveClockwise ? (positionIndex + diceValue) : (positionIndex - diceValue);
                     Position endPosition = positions.get(endPositionIndex);
 

@@ -7,10 +7,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.progark.emojimon.controller.FBC;
 import com.progark.emojimon.controller.FirebaseControllerInterface;
+import com.progark.emojimon.controller.GameBoardController;
 
 public class Emojimon extends Game {
 	SpriteBatch batch;
 	Texture img;
+	GameBoardController gameBoardController;
 
     public Emojimon(FirebaseControllerInterface firebase){
         FBC.I().setFirebase(firebase);
@@ -20,6 +22,8 @@ public class Emojimon extends Game {
 	public void create () {
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
+		gameBoardController = new GameBoardController();
+		gameBoardController.createGameBoard(24, 6, "BASIC");
 	}
 
 	@Override
