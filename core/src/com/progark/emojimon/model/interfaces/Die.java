@@ -2,7 +2,9 @@ package com.progark.emojimon.model.interfaces;
 
 public interface Die {
 
-    void Roll();
+    void roll();
 
-    int GetValue();
+    int getValue();
+
+    void setValue(int value);
 }

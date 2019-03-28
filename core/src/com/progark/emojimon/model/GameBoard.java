@@ -5,7 +5,6 @@ import com.progark.emojimon.model.interfaces.DiceRule;
 import com.progark.emojimon.model.interfaces.Die;
 import com.progark.emojimon.model.strategyPattern.MoveSetStrategy;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,20 +25,33 @@ public class GameBoard {
 
     private int goalSize;
 
-    //constructor
-    //(currently creating standard gameboard)
-    public GameBoard(int boardSize, int goalSize){
-        //create players
-        // Player0 start index starts at 0 and is the creator
-        player0 = new Player(0, 5, false, true);
-        player1 = new Player(18, 23, true, false);
-        boardPositions = new ArrayList<Position>();
+    //constructors
+    //creates standard gameboard
+    public GameBoard(){
+        this(24, 6, "BASIC");
+    }
+    //create gameboard given boardsize, goalsize
+    public GameBoard(int boardSize, int goalSize, String moveSetStrategy){
+        //check if board size is valid
+        if((boardSize % 2) != 0){
+            throw new java.lang.Error(String.format("Board size %d is invalid. Size must be divisible by 2. ", boardSize));
+        }
+
         this.boardSize = boardSize;
+
+        //create players
+        //homearea of player0 will be last goalSize indices of board
+        //homeare of player1 will be first goalSize indices of board
+        player0 = new Player(boardSize - goalSize, boardSize-1, true, true);
+        player1 = new Player(0, goalSize-1, false, false);
+
         //create all positions
+        boardPositions = new ArrayList<Position>();
         for(int i = 0; i < boardSize; i++){
             Position p = new Position(i);
             boardPositions.add(p);
         }
+        bar = new Position(boardSize);
 
         //create dice
         dice = new ArrayList<Die>();
@@ -50,13 +62,14 @@ public class GameBoard {
 
         // Choose moveset strategy
         MoveSetStrategyFactory moveSetFactory = new MoveSetStrategyFactory();
-        moveSet= moveSetFactory.GetMoveSet("BASIC", blot);
+        moveSet= moveSetFactory.GetMoveSet(moveSetStrategy, blot);
 
         //TODO: add chosen move validation strategy (factory)
         //TODO: add chosen can clear strategy (factory)
 
 
         //create pieces
+        //TODO: Should number of pieces and piece placement strategy be choosable for the player?
         //player0
         //place white pieces according to standard piece placements
         for(int i = 0; i < 15; i++){
@@ -91,7 +104,7 @@ public class GameBoard {
 
     public void rollDice(){
         for(int i = 0; i < dice.size(); i++){
-            dice.get(i).Roll();
+            dice.get(i).roll();
         }
     }
 

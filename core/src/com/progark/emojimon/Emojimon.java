@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.progark.emojimon.controller.FBC;
 import com.progark.emojimon.controller.FirebaseControllerInterface;
+import com.progark.emojimon.controller.GameBoardController;
 import com.progark.emojimon.model.Player;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import sun.rmi.runtime.Log;
 public class Emojimon extends Game {
 	SpriteBatch batch;
 	Texture img;
+	GameBoardController gameBoardController;
 
     public Emojimon(FirebaseControllerInterface firebase){
         FBC.I().setFirebase(firebase);
@@ -27,6 +29,10 @@ public class Emojimon extends Game {
 	public void create () {
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
+
+		//Test creation of gameboard
+		gameBoardController = new GameBoardController();
+		gameBoardController.createGameBoard(24, 6, "BASIC");
 		//test write to Firebase
 
 		FBC.I().get().addNewGame("Player0Olala");

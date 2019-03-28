@@ -2,6 +2,8 @@ package com.progark.emojimon.controller;
 
 import com.progark.emojimon.Emojimon;
 import com.progark.emojimon.model.GameBoard;
+import com.progark.emojimon.model.Move;
+import com.progark.emojimon.model.Player;
 import com.progark.emojimon.model.Position;
 import com.progark.emojimon.model.interfaces.Die;
 
@@ -12,7 +14,10 @@ public class GameBoardController {
     private GameBoard gameBoard;
 
     public GameBoardController(){
-        gameBoard = new GameBoard(24, 6);
+    }
+
+    public void createGameBoard(int boardSize, int goalSize, String moveSetStrategy){
+        gameBoard = new GameBoard(boardSize, goalSize, moveSetStrategy);
     }
 
     public List<Position> getBoardPositions(){
@@ -27,5 +32,8 @@ public class GameBoardController {
         gameBoard.rollDice();
     }
 
+    public void MovePiece(Move move){
+        gameBoard.movePiece(move);
+    }
 
 }

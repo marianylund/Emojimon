@@ -17,14 +17,17 @@ public class SixSidedDie implements Die {
     }
 
     @Override
-    public void Roll() {
+    public void roll() {
         Random r = new Random();
         //set currentValue to random number in range[minValue, maxValue]
         currentValue = r.nextInt((maxValue-minValue) + 1) + minValue;
     }
 
     @Override
-    public int GetValue() {
+    public int getValue() {
         return currentValue;
     }
+
+    @Override
+    public void setValue(int value){ currentValue = value;}
 }
