@@ -11,16 +11,18 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class Player {
 
+    private boolean creator = false;
     private int homeAreaStartIndex;
     private int homeAreaEndIndex;
     private boolean moveClockwise;
     private MoveValidationStrategy moveValidationStrategy;
     private CanClearStrategy canClearStrategy;
 
-    public Player(int homeAreaStartIndex, int homeAreaEndIndex, boolean moveClockwise){
+    public Player(int homeAreaStartIndex, int homeAreaEndIndex, boolean moveClockwise, boolean isCreator){
         this.homeAreaStartIndex = homeAreaStartIndex;
         this.homeAreaEndIndex = homeAreaEndIndex;
         this.moveClockwise = moveClockwise;
+        this.creator = isCreator;
     }
 
     //Get all available moves
@@ -71,6 +73,10 @@ public class Player {
     //returns whether player is in a position to start clearing pieces
     public boolean canClear(List<Position> boardPositions, Position bar) {
         return canClearStrategy.canClear(this, boardPositions, bar);
+    }
+
+    public boolean isCreator(){
+        return creator;
     }
 
 

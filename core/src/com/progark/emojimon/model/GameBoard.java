@@ -5,6 +5,7 @@ import com.progark.emojimon.model.interfaces.DiceRule;
 import com.progark.emojimon.model.interfaces.Die;
 import com.progark.emojimon.model.strategyPattern.MoveSetStrategy;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,19 +16,23 @@ public class GameBoard {
     private DiceRule diceRule;
     //includes all board positions indexed from bottom right to top right
     private List<Position> boardPositions;
+    private int boardSize;
+    private MoveSetStrategy moveSet;
+    private List<Move> currentTurnMoves; //TODO emty it out when the turn changes
+
     private Position bar;
     private Player inBar;
-    private int boardSize;
     private int blot = 1; // blot: piece/s that can be thrown out to bar, standard 1
-    private MoveSetStrategy moveSet; //
+
     private int goalSize;
 
     //constructor
     //(currently creating standard gameboard)
     public GameBoard(int boardSize, int goalSize){
         //create players
-        player0 = new Player(18, 23, true);
-        player1 = new Player(0, 5, false);
+        // Player0 start index starts at 0 and is the creator
+        player0 = new Player(0, 5, false, true);
+        player1 = new Player(18, 23, true, false);
         boardPositions = new ArrayList<Position>();
         this.boardSize = boardSize;
         //create all positions
@@ -81,6 +86,7 @@ public class GameBoard {
 
     public void movePiece(Move move){
         moveSet.calculateMove(move, boardPositions, bar, inBar);
+        currentTurnMoves.add(move);
     }
 
     public void rollDice(){
@@ -88,6 +94,8 @@ public class GameBoard {
             dice.get(i).Roll();
         }
     }
+
+    //region GETTERS AND SETTERS
 
     public List<Position> getBoardPositions(){
         return boardPositions;
@@ -108,4 +116,13 @@ public class GameBoard {
     public List<Move> getPlayer1Moves(){
         return player1.getAvailableMoves(dice, boardPositions, bar);
     }
+
+    public Player getPlayer0() {
+        return player0;
+    }
+
+    public Player getPlayer1() {
+        return player1;
+    }
+    //endregion
 }

@@ -10,7 +10,7 @@ public interface FirebaseControllerInterface {
     // Add new
     void addNewGame(String creatorPlayer);
     void addGameDataChangeListener(String gameID); // TODO Do we need it here?
-    void addLastTurnByGameID(String gameID, boolean player, String timeEnd, List<Integer> dices, List<List<Integer>> actions);
+    void addLastTurnByGameID(String gameID, boolean player, List<Integer> dices, List<List<Integer>> actions);
 
     // Setters
     void setGameBoardByGameID(String gameID, List<List<Integer>> gameBoard);

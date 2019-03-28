@@ -9,12 +9,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.progark.emojimon.controller.FirebaseControllerInterface;
-import com.progark.emojimon.model.GameData;
-import com.progark.emojimon.model.LastTurnData;
+import com.progark.emojimon.model.fireBaseData.GameData;
+import com.progark.emojimon.model.fireBaseData.LastTurnData;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class AndroidFirebaseController implements FirebaseControllerInterface {
     // Needs to be initiated only once when sent to the core module by Android Launcher
@@ -82,13 +81,14 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
     //endregion
 
     //region NEW LAST TURN
-    public void addLastTurnByGameID(String gameID, boolean player, String timeEnd, List<Integer> dices, List<List<Integer>> actions){
+    public void addLastTurnByGameID(String gameID, boolean player, List<Integer> dices, List<List<Integer>> moves){
         //TODO Better error handling on gameID
+
         if(!gamesData.containsKey("gameID")){
             Log.d("sondre", "There is no game with this GameID, jsyk");
         }
 
-        LastTurnData ltd = new LastTurnData(player, timeEnd, dices, actions);
+        LastTurnData ltd = new LastTurnData(player, dices, moves);
         LastTurns.child(gameID).setValue(ltd);
         lastTurnData.put(gameID, ltd);
 
