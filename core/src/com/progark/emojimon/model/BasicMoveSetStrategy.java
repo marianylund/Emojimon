@@ -13,9 +13,10 @@ public class BasicMoveSetStrategy implements MoveSetStrategy {
     }
 
     @Override
-    public void calculateMove(Move move, List<Position> boardPositions, Position bar) {
+    public void calculateMove(Move move, List<Position> boardPositions) {
         Position startPosition = boardPositions.get(move.startPosition);
         Position endPosition = boardPositions.get(move.endPosition);
+        Position bar = boardPositions.get(0);
 
         //check if endPosition is owned by other player
         if(endPosition.getOwner() != startPosition.getOwner()){

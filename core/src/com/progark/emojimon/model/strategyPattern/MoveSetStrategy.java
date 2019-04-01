@@ -7,5 +7,5 @@ import com.progark.emojimon.model.Position;
 import java.util.List;
 
 public interface MoveSetStrategy {
-    void calculateMove(Move move, List<Position> boardPositions, Position bar);
+    void calculateMove(Move move, List<Position> boardPositions);
 }

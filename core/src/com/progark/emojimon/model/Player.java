@@ -26,17 +26,16 @@ public class Player {
         this.canClearStrategy = canClearStrategy;
     }
 
-    public Move getAvailableBarMove(List<Die> dice, List<Position> positions, Position bar){
+    public Move getAvailableBarMove(List<Die> dice, List<Position> positions){
             // check for possible moves from bar
-        int barIndex = positions.size() - 1; // barIndex is the last index of positions
-        //int barIndex = 0; //barIndex is the first position
+        int barIndex = 0; //barIndex is the first position
         for (int diceIndex = 0; diceIndex < dice.size(); diceIndex++){
             int diceValue = dice.get(diceIndex).GetValue();
             int endPositionIndex = moveClockwise ? (barIndex + diceValue) : (barIndex - diceValue);
             Position endPosition = positions.get(endPositionIndex);
 
             //apply move validation strategy to check if move is valid
-            if(moveValidationStrategy.isAvailableMove(bar, endPosition)){
+            if(moveValidationStrategy.isAvailableMove(positions.get(0), endPosition)){
 //                moves.add(new Move(barIndex, endPositionIndex));
                 return new Move(barIndex, endPositionIndex);
             }
@@ -51,7 +50,7 @@ public class Player {
         List<Move> moves = new ArrayList<Move>();
 
         //find all possible moves for player given die values in dice
-        for(int positionIndex = 0; positionIndex < positions.size(); positionIndex++){
+        for(int positionIndex = 1; positionIndex < positions.size(); positionIndex++){
             Position startPosition = positions.get(positionIndex);
             if(startPosition.getOwner() == this){
                 //check for possible moves
