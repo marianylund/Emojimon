@@ -88,6 +88,7 @@ public class GameBoard {
     public int getBoardSize(){
         return boardSize;
     }
+
     public List<Position> getBoardPositions(){
         return boardPositions;
     }

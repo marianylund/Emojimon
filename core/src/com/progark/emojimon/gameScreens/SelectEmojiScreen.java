@@ -27,21 +27,25 @@ public class SelectEmojiScreen extends ApplicationAdapter implements Screen {
     private Viewport viewport;
     private TextureAtlas atlas;
     private Skin skin;
-    private SpriteBatch batch;
+    private SpriteBatch batch; // ubrukt, må finne ut av textureatlas
     private Texture spritesheet;
 
     public SelectEmojiScreen(final Emojimon game) {
         this.game = game;
+
         atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"), atlas);
+
+
         camera = new OrthographicCamera();
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         viewport.apply();
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
         stage = new Stage(viewport);
-        //camera.setToOrtho(false, 800, 480);
-        spritesheet = new Texture("spritesheet.png"); //bruk textureatlas https://stackoverflow.com/questions/36111196/store-sprites-from-spritesheet-in-array-libgdx
+
+        //unfinished, might be better to use textureatlas instead https://stackoverflow.com/questions/36111196/store-sprites-from-spritesheet-in-array-libgdx
+        spritesheet = new Texture("spritesheet.png");
 
     }
 
@@ -54,6 +58,7 @@ public class SelectEmojiScreen extends ApplicationAdapter implements Screen {
     public void show() {
         Gdx.input.setInputProcessor(stage);
 
+        //create table to contain menu
         Table mainTable = new Table();
         mainTable.setFillParent(true);
 

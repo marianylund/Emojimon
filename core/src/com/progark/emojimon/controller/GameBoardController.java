@@ -22,13 +22,18 @@ public class GameBoardController {
     }
 
    /*public Position getWhitePlayerBar(){
+
+    public Position getWhitePlayerBar(){
+>>>>>>> 304ddff872c48313253f07f886ebf9ee9dcf69fe
         return gameBoard.getPlayer1Bar();
     }
 
     public Position getBlackPlayerBar(){
         return gameBoard.getPlayer0Bar();
     }
+<<<<<<< HEAD
     */
+
     public List<Die> getDice(){
         return gameBoard.getDice();
     }

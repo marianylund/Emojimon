@@ -32,8 +32,11 @@ public class MainMenuScreen implements Screen {
 
     public MainMenuScreen(final Emojimon game) {
         this.game = game;
+
+        //import skin to be used for GUI elements
         atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"), atlas);
+
         camera = new OrthographicCamera();
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         viewport.apply();
@@ -46,15 +49,18 @@ public class MainMenuScreen implements Screen {
     public void show() {
         Gdx.input.setInputProcessor(stage);
 
+        // Create table to contain menu items
         Table mainTable = new Table();
         mainTable.setFillParent(true);
 
+        //Create label and buttons to be displayed
         Label emojimonLabel = new Label("Emojimon", skin);
         TextButton createGameButton = new TextButton("Create game", skin);
         TextButton joinGameButton = new TextButton("Join game", skin);
         TextButton exitButton = new TextButton("Exit", skin);
         TextButton selectEmojiButton = new TextButton("Select emoji", skin);
 
+        //Add listeners to buttons to add functionality to them when clicked
         createGameButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -80,6 +86,7 @@ public class MainMenuScreen implements Screen {
             }
         });
 
+        //Add labels and buttons to menu
         mainTable.add(emojimonLabel).pad(10);
         mainTable.row();
         mainTable.add(createGameButton).pad(10).width(Gdx.graphics.getWidth()/2).height(Gdx.graphics.getWidth()/6);
@@ -90,6 +97,7 @@ public class MainMenuScreen implements Screen {
         mainTable.row();
         mainTable.add(exitButton).pad(10);
 
+        //Add menu to stage as an actor
         stage.addActor(mainTable);
     }
 
@@ -122,10 +130,10 @@ public class MainMenuScreen implements Screen {
 
     }
 
-   @Override
-   public void hide() {
+    @Override
+    public void hide() {
         /**/
-   }
+    }
 
     @Override
     public void dispose() {
