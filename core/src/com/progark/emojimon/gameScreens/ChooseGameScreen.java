@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -32,24 +33,39 @@ public class ChooseGameScreen implements Screen {
         //camera.setToOrtho(false, game.WIDTH, game.HEIGHT);
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         viewport.apply();
-
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
-
         stage = new Stage(viewport);
     }
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+
+        Table mainTable = new Table();
+        mainTable.setFillParent(true);
+
         TextButton backButton = new TextButton("Back", skin);
+        TextButton joinButton = new TextButton("Join!", skin);
+
         backButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(game));
             }
         });
-        stage.addActor(backButton);
+        joinButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                ((Game)Gdx.app.getApplicationListener()).setScreen(new CountDownScreen(game));
+            }
+        });
+        mainTable.add(backButton);
+        mainTable.row();
+        mainTable.add(joinButton);
+        mainTable.row();
+
+        stage.addActor(mainTable);
     }
 
     @Override

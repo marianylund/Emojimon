@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -20,47 +21,26 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.progark.emojimon.Emojimon;
 
-public class MainMenuScreen extends Game implements Screen {
+public class MainMenuScreen implements Screen {
 
-    protected Stage stage;
+    private Stage stage;
     final Emojimon game;
     private OrthographicCamera camera;
     private Viewport viewport;
     private TextureAtlas atlas;
-    protected Skin skin;
+    private Skin skin;
 
     public MainMenuScreen(final Emojimon game) {
         this.game = game;
         atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"), atlas);
         camera = new OrthographicCamera();
-        //camera.setToOrtho(false, game.WIDTH, game.HEIGHT);
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         viewport.apply();
-
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
-
         stage = new Stage(viewport);
-        //Gdx.input.setInputProcessor(stage);
-
-/*        createGameBtn = new TextButton("Create game", mySkin);
-        //button2.setSize(col_width*4,row_height);
-        createGameBtn.setPosition(Gdx.graphics.getWidth()/2 - createGameBtn.getWidth()/2, Gdx.graphics.getHeight()/2 - createGameBtn.getHeight()/2);
-        createGameBtn.addListener(new InputListener(){
-            //            @Override
-//            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-//                System.out.println("Touch up");
-//            }
-            @Override
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("Create game");
-                game.setScreen(new CreateRulesetScreen(game));
-                return true;
-            }
-        });*/
     }
-
 
     @Override
     public void show() {
@@ -68,11 +48,12 @@ public class MainMenuScreen extends Game implements Screen {
 
         Table mainTable = new Table();
         mainTable.setFillParent(true);
-        mainTable.top();
 
+        Label emojimonLabel = new Label("Emojimon", skin);
         TextButton createGameButton = new TextButton("Create game", skin);
         TextButton joinGameButton = new TextButton("Join game", skin);
         TextButton exitButton = new TextButton("Exit", skin);
+        TextButton selectEmojiButton = new TextButton("Select emoji", skin);
 
         createGameButton.addListener(new ClickListener(){
             @Override
@@ -86,6 +67,12 @@ public class MainMenuScreen extends Game implements Screen {
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new ChooseGameScreen(game));
             }
         });
+        selectEmojiButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new SelectEmojiScreen(game));
+            }
+        });
         exitButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -93,11 +80,15 @@ public class MainMenuScreen extends Game implements Screen {
             }
         });
 
-        mainTable.add(createGameButton);
+        mainTable.add(emojimonLabel).pad(10);
         mainTable.row();
-        mainTable.add(joinGameButton);
+        mainTable.add(createGameButton).pad(10).width(Gdx.graphics.getWidth()/2).height(Gdx.graphics.getWidth()/6);
         mainTable.row();
-        mainTable.add(exitButton);
+        mainTable.add(joinGameButton).pad(10).width(Gdx.graphics.getWidth()/2).height(Gdx.graphics.getWidth()/6);
+        mainTable.row();
+        mainTable.add(selectEmojiButton).pad(10).width(Gdx.graphics.getWidth()/2);
+        mainTable.row();
+        mainTable.add(exitButton).pad(10);
 
         stage.addActor(mainTable);
     }
@@ -110,7 +101,6 @@ public class MainMenuScreen extends Game implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        // stage.addActor(createGameBtn);
         stage.act();
         stage.draw();
     }
