@@ -51,6 +51,10 @@ public class GameScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
 
+    }
+
+    @Override
+    public void show() {
         //creating the visual gameboard
         TiledMap tiledMap = new TiledMap();
         MapLayers layers = tiledMap.getLayers();
@@ -71,12 +75,10 @@ public class GameScreen implements Screen {
         Stage stage = new TiledMapStage(tiledMap);
         Gdx.input.setInputProcessor(stage);
 
+        //listeneres for actions
+
+
         renderer = new OrthogonalTiledMapRenderer(map);
-    }
-
-    @Override
-    public void show() {
-
     }
 
     @Override
