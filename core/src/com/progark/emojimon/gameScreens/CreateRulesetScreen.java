@@ -32,8 +32,9 @@ public class CreateRulesetScreen implements Screen {
     private Viewport viewport;
     private TextureAtlas atlas;
     private Skin skin;
-    private int diceAmount;
+    private String diceAmount;
     private String startPosition;
+    private String diceSize;
 
     public CreateRulesetScreen(final Emojimon game) {
         this.game = game;
@@ -62,14 +63,24 @@ public class CreateRulesetScreen implements Screen {
         Label diceAmountLabel = new Label("Amount of dice", skin);
         Label diceSizeLabel = new Label("Dice size", skin);
         Label startPositionLabel = new Label("Start position", skin);
+        Label allowNegativeRoll = new Label("Number of rolls", skin);
 
         TextField diceAmountField = new TextField("", skin);
         diceAmountField.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
         TextField diceSizeField = new TextField("", skin);
         diceSizeField.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
 
+        final SelectBox<String> diceAmountBox = new SelectBox<String>(skin);
+        diceAmountBox.setItems("1","2","3","4","5");
+
+        final SelectBox<String> diceSizeBox = new SelectBox<String>(skin);
+        diceSizeBox.setItems("4","6","12","20");
+
         final SelectBox<String> startPositionBox = new SelectBox<String>(skin);
         startPositionBox.setItems("Top right","Top left","Bottom right","Bottom left");
+
+        final SelectBox<String> numberOfRollsBox = new SelectBox<String>(skin);
+        numberOfRollsBox.setItems("","Top left","Bottom right","Bottom left");
 
         backButton.addListener(new ClickListener(){
             @Override
@@ -78,13 +89,13 @@ public class CreateRulesetScreen implements Screen {
             }
         });
 
-        diceAmountField.setTextFieldListener(new TextField.TextFieldListener() {
-            @Override
-            public void keyTyped(TextField textField, char c) { //bug her et sted, appen kræsjer hvis all text slettes
-                int value = Integer.parseInt(textField.getText());
-                diceAmount = value;
-            }
-        });
+//        diceAmountField.setTextFieldListener(new TextField.TextFieldListener() {
+//            @Override
+//            public void keyTyped(TextField textField, char c) { //bug her et sted, appen kræsjer hvis all text slettes
+//                int value = Integer.parseInt(textField.getText());
+//                diceAmount = value;
+//            }
+//        });
 
         createLobbyButton.addListener(new ClickListener(){
             @Override
@@ -101,18 +112,34 @@ public class CreateRulesetScreen implements Screen {
             }
         });
 
+        diceAmountBox.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                diceAmount = diceAmountBox.getSelected();
+                System.out.println(diceAmount);
+            }
+        });
+
+        diceSizeBox.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                diceSize = diceSizeBox.getSelected();
+                System.out.println(diceSize);
+            }
+        });
+
         mainTable.add(backButton).pad(20);
         mainTable.add(screenLabel).pad(20);
         // mainTable.add(screenLabel).pad(10).width(Value.percentWidth(.75F, mainTable));
         mainTable.row();
         mainTable.add(diceAmountLabel).pad(Gdx.graphics.getWidth()/24);
-        mainTable.add(diceAmountField).pad(Gdx.graphics.getWidth()/24);
+        mainTable.add(diceAmountBox).pad(Gdx.graphics.getWidth()/24).width(Value.percentWidth(.25F, mainTable));
         mainTable.row();
         mainTable.add(diceSizeLabel).pad(Gdx.graphics.getWidth()/24);
-        mainTable.add(diceSizeField).pad(Gdx.graphics.getWidth()/24);
+        mainTable.add(diceSizeBox).pad(Gdx.graphics.getWidth()/24).width(Value.percentWidth(.25F, mainTable));
         mainTable.row();
         mainTable.add(startPositionLabel).pad(Gdx.graphics.getWidth()/24);
-        mainTable.add(startPositionBox).pad(Gdx.graphics.getWidth()/24);
+        mainTable.add(startPositionBox).pad(Gdx.graphics.getWidth()/24).width(Value.percentWidth(.25F, mainTable));
         mainTable.row();
         mainTable.add(createLobbyButton).pad(20).colspan(2);
         mainTable.row();
