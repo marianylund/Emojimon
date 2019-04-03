@@ -16,6 +16,7 @@ public class Player {
     private boolean moveClockwise;
     private MoveValidationStrategy moveValidationStrategy;
     private CanClearStrategy canClearStrategy;
+    private List<Die> dice;
 
     public Player(int homeAreaStartIndex, int homeAreaEndIndex, boolean moveClockwise, MoveValidationStrategy moveValidationStrategy, CanClearStrategy canClearStrategy){
         this.homeAreaStartIndex = homeAreaStartIndex;
@@ -61,7 +62,6 @@ public class Player {
         return homeAreaEndIndex;
     }
 
-
     public boolean getMoveClockwise(){
         return moveClockwise;
     }
@@ -74,6 +74,22 @@ public class Player {
     //returns whether player is in a position to start clearing pieces
     public boolean canClear(List<Position> boardPositions, Position bar) {
         return canClearStrategy.canClear(this, boardPositions, bar);
+    }
+
+    public void setDice(List<Die> dice){
+        this.dice = dice;
+    }
+
+    // if a move is made, reduce players dice list
+    public void updateDice(){
+        dice.remove(dice.size() - 1);
+    }
+
+    // returns whether the players turn has ended
+    public boolean finishedTurn(){
+        if (dice.size() == 0){
+            return true;
+        } return false;
     }
 
 

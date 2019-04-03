@@ -92,14 +92,15 @@ public class GameBoard {
 
     }
 
-    public void movePiece(Move move){
-        moveSet.calculateMove(move, boardPositions, bar, inBar);
+    public boolean movePiece(Move move){
+        return moveSet.doMove(move, boardPositions, bar, inBar);
     }
 
-    public void rollDice(){
+    public void rollDice(Player player){
         for(int i = 0; i < dice.size(); i++){
             dice.get(i).Roll();
         }
+        player.setDice(dice);
     }
 
     public List<Position> getBoardPositions(){
