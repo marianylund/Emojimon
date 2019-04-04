@@ -13,9 +13,9 @@ import java.util.List;
 
 public class GameBoardController {
     private GameBoard gameBoard;
-
+    // boardSize = 25, incl. bar position 0
     public GameBoardController(){
-        gameBoard = new GameBoard(24, 6, 15);
+        gameBoard = new GameBoard(25, 6, 15);
     }
 
     public List<Position> getBoardPositions(){

@@ -13,17 +13,18 @@ public class BasicMoveSetStrategy implements MoveSetStrategy {
     }
 
     @Override
-    public boolean doMove(Move move, List<Position> boardPositions, Position bar, Player inBar) {
+    public boolean doMove(Move move, List<Position> boardPositions) {
         Position startPosition = boardPositions.get(move.startPosition);
         Position endPosition = boardPositions.get(move.endPosition);
+        Position bar = boardPositions.get(0);
 
         // move piece as long as position is not owned by another player
         if(endPosition.getOwner() != startPosition.getOwner()){
 
             // // throw opposite players' pieces to bar, if there's blot piece/s
-            if (endPosition.getPieceCount() == blot){
+            if (endPosition.getPieceCount() == blot && (bar.getOwner().equals(null) || bar.getOwner().equals(endPosition.getOwner()))){
+                if (bar.getOwner().equals(null)){
                 bar.addPieces(blot);
-                inBar = endPosition.getOwner();
                 endPosition.removePieces(blot);
                 return true;
             }
@@ -32,6 +33,11 @@ public class BasicMoveSetStrategy implements MoveSetStrategy {
         startPosition.addPieces(1);
         startPosition.removePieces(1);
         endPosition.addPieces(1);
+
+        // if the player has cleared their bar, set owner to null
+        if (bar.getPieceCount() == 0 && bar.getOwner().equals(endPosition.getOwner())){
+            bar.setOwner(null);
+        }
         return true;
     }
 

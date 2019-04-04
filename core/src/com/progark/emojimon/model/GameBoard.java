@@ -19,14 +19,13 @@ public class GameBoard {
     private DiceRule diceRule;
     //includes all board positions indexed from bottom right to top right
     private List<Position> boardPositions; // position 0: our bar
-    private Position bar;
-    private Player inBar;
     private int boardSize;
     private int blot = 1; // blot: piece/s that can be thrown out to bar, standard 1
     // strategies
     private MoveSetStrategy moveSet; //
     private MoveValidationStrategy moveValidation;
     private CanClearStrategy canClear;
+    //all pieces must be in goalSize before being able to be cleared off
     private int goalSize;
     private int pieces;
 
@@ -70,32 +69,32 @@ public class GameBoard {
         //player0
         //place white pieces according to standard piece placements
         for(int i = 0; i < pieces; i++){
-            boardPositions.get(0).addPieces(2);
-            boardPositions.get(0).setOwner(player0);
-            boardPositions.get(11).addPieces(5);
-            boardPositions.get(11).setOwner(player0);
-            boardPositions.get(16).addPieces(3);
-            boardPositions.get(16).setOwner(player0);
-            boardPositions.get(18).addPieces(5);
-            boardPositions.get(18).setOwner(player0);
+            boardPositions.get(1).addPieces(2);
+            boardPositions.get(1).setOwner(player0);
+            boardPositions.get(12).addPieces(5);
+            boardPositions.get(12).setOwner(player0);
+            boardPositions.get(17).addPieces(3);
+            boardPositions.get(17).setOwner(player0);
+            boardPositions.get(19).addPieces(5);
+            boardPositions.get(19).setOwner(player0);
         }
 
         //place player1 pieces according to standard piece placements
         for(int i = 0; i < pieces; i++){
-            boardPositions.get(23).addPieces(2);
-            boardPositions.get(23).setOwner(player1);
-            boardPositions.get(12).addPieces(5);
-            boardPositions.get(12).setOwner(player1);
-            boardPositions.get(7).addPieces(3);
-            boardPositions.get(7).setOwner(player1);
-            boardPositions.get(5).addPieces(5);
-            boardPositions.get(5).setOwner(player1);
+            boardPositions.get(24).addPieces(2);
+            boardPositions.get(24).setOwner(player1);
+            boardPositions.get(13).addPieces(5);
+            boardPositions.get(13).setOwner(player1);
+            boardPositions.get(8).addPieces(3);
+            boardPositions.get(8).setOwner(player1);
+            boardPositions.get(6).addPieces(5);
+            boardPositions.get(6).setOwner(player1);
         }
 
     }
 
     public boolean movePiece(Move move){
-        return moveSet.doMove(move, boardPositions, bar, inBar);
+        return moveSet.doMove(move, boardPositions);
     }
 
     public void rollDice(Player player){
@@ -113,15 +112,20 @@ public class GameBoard {
         return dice;
     }
 
-    public Position getBar(){
-        return bar;
+    //TODO: logic for dice move
+    public Move getPlayer0BarMove(){
+        return player0.getAvailableBarMove(dice, boardPositions);
     }
 
     public List<Move> getPlayer0Moves(){
-        return player0.getAvailableMoves(dice, boardPositions, bar);
+        return player0.getAvailableMoves(dice, boardPositions);
+    }
+
+    public Move getPlayer1BarMoves(){
+        return player1.getAvailableBarMove(dice, boardPositions);
     }
 
     public List<Move> getPlayer1Moves(){
-        return player1.getAvailableMoves(dice, boardPositions, bar);
+        return player1.getAvailableMoves(dice, boardPositions);
     }
 }
