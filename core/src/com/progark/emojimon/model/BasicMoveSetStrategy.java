@@ -13,24 +13,26 @@ public class BasicMoveSetStrategy implements MoveSetStrategy {
     }
 
     @Override
-    public void calculateMove(Move move, List<Position> boardPositions, Position bar, Player inBar) {
+    public boolean doMove(Move move, List<Position> boardPositions, Position bar, Player inBar) {
         Position startPosition = boardPositions.get(move.startPosition);
         Position endPosition = boardPositions.get(move.endPosition);
 
-        //check if endPosition is owned by other player
+        // move piece as long as position is not owned by another player
         if(endPosition.getOwner() != startPosition.getOwner()){
 
-            //move pieces on endposition to bar, if there's blot piece/s
+            // // throw opposite players' pieces to bar, if there's blot piece/s
             if (endPosition.getPieceCount() == blot){
                 bar.addPieces(blot);
                 inBar = endPosition.getOwner();
                 endPosition.removePieces(blot);
+                return true;
             }
-
+        return false;
         }
         startPosition.addPieces(1);
         startPosition.removePieces(1);
         endPosition.addPieces(1);
+        return true;
     }
 
 }

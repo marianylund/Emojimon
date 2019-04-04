@@ -17,12 +17,17 @@ public class Player {
     private boolean moveClockwise;
     private MoveValidationStrategy moveValidationStrategy;
     private CanClearStrategy canClearStrategy;
+    private List<Die> dice;
 
-    public Player(int homeAreaStartIndex, int homeAreaEndIndex, boolean moveClockwise, boolean isCreator){
+
+    public Player(int homeAreaStartIndex, int homeAreaEndIndex, boolean moveClockwise, MoveValidationStrategy moveValidationStrategy, CanClearStrategy canClearStrategy, boolean isCreator){
         this.homeAreaStartIndex = homeAreaStartIndex;
         this.homeAreaEndIndex = homeAreaEndIndex;
         this.moveClockwise = moveClockwise;
         this.creator = isCreator;
+        // set strategies for piece movement
+        this.moveValidationStrategy = moveValidationStrategy;
+        this.canClearStrategy = canClearStrategy;
     }
 
     //Get all available moves
@@ -60,7 +65,6 @@ public class Player {
         return homeAreaEndIndex;
     }
 
-
     public boolean getMoveClockwise(){
         return moveClockwise;
     }
@@ -75,8 +79,24 @@ public class Player {
         return canClearStrategy.canClear(this, boardPositions, bar);
     }
 
-    public boolean isCreator(){
+    public boolean isCreator() {
         return creator;
+    }
+
+    public void setDice(List<Die> dice){
+        this.dice = dice;
+    }
+
+    // if a move is made, reduce players dice list
+    public void updateDice(){
+        dice.remove(dice.size() - 1);
+    }
+
+    // returns whether the players turn has ended
+    public boolean finishedTurn(){
+        if (dice.size() == 0){
+            return true;
+        } return false;
     }
 
 
