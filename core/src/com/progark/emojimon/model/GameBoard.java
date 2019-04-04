@@ -18,7 +18,7 @@ public class GameBoard {
     private List<Die> dice;
     private DiceRule diceRule;
     //includes all board positions indexed from bottom right to top right
-    private List<Position> boardPositions;
+    private List<Position> boardPositions; // position 0: our bar
     private Position bar;
     private Player inBar;
     private int boardSize;
@@ -28,10 +28,12 @@ public class GameBoard {
     private MoveValidationStrategy moveValidation;
     private CanClearStrategy canClear;
     private int goalSize;
+    private int pieces;
 
     //constructor
     //(currently creating standard gameboard)
-    public GameBoard(int boardSize, int goalSize){
+    public GameBoard(int boardSize, int goalSize, int pieces){
+        this.pieces = pieces;
 
         // Choose moveset strategy
         MoveSetStrategyFactory moveSetFactory = new MoveSetStrategyFactory();
@@ -47,8 +49,8 @@ public class GameBoard {
         canClear = canClearFactory.getCanClearStrategy("BASIC");
 
         //create players
-        player0 = new Player(18, 23, true, moveValidation, canClear);
-        player1 = new Player(0, 5, false, moveValidation, canClear);
+        player0 = new Player(pieces,18, 23, true, moveValidation, canClear);
+        player1 = new Player(pieces,0, 5, false, moveValidation, canClear);
         boardPositions = new ArrayList<Position>();
         this.boardSize = boardSize;
         //create all positions
@@ -67,7 +69,7 @@ public class GameBoard {
         //create pieces
         //player0
         //place white pieces according to standard piece placements
-        for(int i = 0; i < 15; i++){
+        for(int i = 0; i < pieces; i++){
             boardPositions.get(0).addPieces(2);
             boardPositions.get(0).setOwner(player0);
             boardPositions.get(11).addPieces(5);
@@ -79,7 +81,7 @@ public class GameBoard {
         }
 
         //place player1 pieces according to standard piece placements
-        for(int i = 0; i < 15; i++){
+        for(int i = 0; i < pieces; i++){
             boardPositions.get(23).addPieces(2);
             boardPositions.get(23).setOwner(player1);
             boardPositions.get(12).addPieces(5);

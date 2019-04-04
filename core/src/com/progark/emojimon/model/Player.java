@@ -17,8 +17,10 @@ public class Player {
     private MoveValidationStrategy moveValidationStrategy;
     private CanClearStrategy canClearStrategy;
     private List<Die> dice;
+    private int piecesInGame; // hold count of pieces that haven't been cleared off
 
-    public Player(int homeAreaStartIndex, int homeAreaEndIndex, boolean moveClockwise, MoveValidationStrategy moveValidationStrategy, CanClearStrategy canClearStrategy){
+    public Player(int piecesInGame, int homeAreaStartIndex, int homeAreaEndIndex, boolean moveClockwise, MoveValidationStrategy moveValidationStrategy, CanClearStrategy canClearStrategy){
+        this.piecesInGame = piecesInGame;
         this.homeAreaStartIndex = homeAreaStartIndex;
         this.homeAreaEndIndex = homeAreaEndIndex;
         this.moveClockwise = moveClockwise;
@@ -68,12 +70,18 @@ public class Player {
 
     //returns whether player has cleared all of their pieces
     public boolean isDone() {
-        throw new NotImplementedException();
+        if (piecesInGame == 0){
+            return true;
+        } return false;
+    }
+
+    public void updatePieceClearance(){
+        --piecesInGame;
     }
 
     //returns whether player is in a position to start clearing pieces
-    public boolean canClear(List<Position> boardPositions, Position bar) {
-        return canClearStrategy.canClear(this, boardPositions, bar);
+    public boolean canClear(List<Position> boardPositions) {
+        return canClearStrategy.canClear(this, boardPositions);
     }
 
     public void setDice(List<Die> dice){
@@ -91,6 +99,5 @@ public class Player {
             return true;
         } return false;
     }
-
 
 }
