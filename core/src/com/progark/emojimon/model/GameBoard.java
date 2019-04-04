@@ -48,8 +48,8 @@ public class GameBoard {
         canClear = canClearFactory.getCanClearStrategy("BASIC");
 
         //create players
-        player0 = new Player(pieces,18, 23, true, moveValidation, canClear);
-        player1 = new Player(pieces,0, 5, false, moveValidation, canClear);
+        player0 = new Player(pieces,18, 23, true, moveValidation, canClear, blot);
+        player1 = new Player(pieces,0, 5, false, moveValidation, canClear, blot);
         boardPositions = new ArrayList<Position>();
         this.boardSize = boardSize;
         //create all positions

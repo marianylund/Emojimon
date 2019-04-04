@@ -10,7 +10,7 @@ public class BasicAvailableMoveStrategy implements MoveValidationStrategy {
     @Override
     //Validates move based on standard backgammon movement rules
     //Valid if endposition is free, endposition is owned by moving player, or endposition contains 1 enemy piece
-    public boolean isAvailableMove(Position startPosition, Position endPosition){
+    public boolean isAvailableMove(Position startPosition, Position endPosition, int blot){
         boolean valid = false;
         if(endPosition.getPieceCount() == 0){
             valid = true;
@@ -18,7 +18,7 @@ public class BasicAvailableMoveStrategy implements MoveValidationStrategy {
         else if(endPosition.getOwner() == startPosition.getOwner()){
             valid = true;
         }
-        else if(endPosition.getPieceCount() == 1){
+        else if(endPosition.getPieceCount() == blot){
             valid = true;
         }
         return valid;

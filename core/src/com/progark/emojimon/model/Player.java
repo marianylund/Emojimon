@@ -18,8 +18,9 @@ public class Player {
     private CanClearStrategy canClearStrategy;
     private List<Die> dice;
     private int piecesInGame; // hold count of pieces that haven't been cleared off
+    private int blot;
 
-    public Player(int piecesInGame, int homeAreaStartIndex, int homeAreaEndIndex, boolean moveClockwise, MoveValidationStrategy moveValidationStrategy, CanClearStrategy canClearStrategy){
+    public Player(int piecesInGame, int homeAreaStartIndex, int homeAreaEndIndex, boolean moveClockwise, MoveValidationStrategy moveValidationStrategy, CanClearStrategy canClearStrategy, int blot){
         this.piecesInGame = piecesInGame;
         this.homeAreaStartIndex = homeAreaStartIndex;
         this.homeAreaEndIndex = homeAreaEndIndex;
@@ -27,6 +28,7 @@ public class Player {
         // set strategies for piece movement
         this.moveValidationStrategy = moveValidationStrategy;
         this.canClearStrategy = canClearStrategy;
+        this.blot = blot;
     }
 
     public Move getAvailableBarMove(List<Die> dice, List<Position> positions){
@@ -38,7 +40,7 @@ public class Player {
             Position endPosition = positions.get(endPositionIndex);
 
             //apply move validation strategy to check if move is valid
-            if(moveValidationStrategy.isAvailableMove(positions.get(0), endPosition)){
+            if(moveValidationStrategy.isAvailableMove(positions.get(0), endPosition, blot)){
 //                moves.add(new Move(barIndex, endPositionIndex));
                 return new Move(barIndex, endPositionIndex);
             }
@@ -63,7 +65,7 @@ public class Player {
                     Position endPosition = positions.get(endPositionIndex);
 
                     //apply move validation strategy to check if move is valid
-                    if(moveValidationStrategy.isAvailableMove(startPosition, endPosition)){
+                    if(moveValidationStrategy.isAvailableMove(startPosition, endPosition, blot)){
                         moves.add(new Move(positionIndex, endPositionIndex));
                     }
                 }
@@ -88,9 +90,7 @@ public class Player {
 
     //returns whether player has cleared all of their pieces
     public boolean isDone() {
-        if (piecesInGame == 0){
-            return true;
-        } return false;
+        return (piecesInGame == 0);
     }
 
     public void updatePieceClearance(){
@@ -100,6 +100,11 @@ public class Player {
     //returns whether player is in a position to start clearing pieces
     public boolean canClear(List<Position> boardPositions) {
         return canClearStrategy.canClear(this, boardPositions);
+    }
+
+    // returns whether move is available
+    public boolean isAvailableMove(Position start, Position end){
+        return moveValidationStrategy.isAvailableMove(start, end, blot);
     }
 
     public void setDice(List<Die> dice){
@@ -113,9 +118,7 @@ public class Player {
 
     // returns whether the players turn has ended
     public boolean finishedTurn(){
-        if (dice.size() == 0){
-            return true;
-        } return false;
+        return (dice.size() == 0);
     }
 
 }
