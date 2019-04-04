@@ -17,7 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.progark.emojimon.Emojimon;
-import com.progark.emojimon.view.GameScreen;
+import com.progark.emojimon.gameScreens.GameScreen;
 
 public class CountDownScreen implements Screen {
 

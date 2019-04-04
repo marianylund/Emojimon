@@ -1,4 +1,4 @@
-package com.progark.emojimon.view;
+package com.progark.emojimon.gameScreens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -63,11 +63,14 @@ public class GameScreen implements Screen {
         MapLayers layers = tiledMap.getLayers();
         int boardSize = gameBoardController.getBoardSize();
 
-        TiledMapTileLayer triangleLayer = new TiledMapTileLayer(2, boardSize / 2, Gdx.graphics.getWidth() / 2, ((Gdx.graphics.getHeight() / 4) * 3) / (boardSize / 2));
+        TiledMapTileLayer triangleLayer = new TiledMapTileLayer(2, boardSize / 2, Gdx.graphics.getWidth(), ((Gdx.graphics.getHeight() / 4) * 3));
         tiles = new Texture(Gdx.files.internal("blacktri.png"));
-        TextureRegion[][] splitTiles = TextureRegion.split(tiles, Gdx.graphics.getWidth()/2, (Gdx.graphics.getHeight()/4) * 3/(boardSize / 2));
+        TextureRegion[][] splitTiles = TextureRegion.split(tiles, Gdx.graphics.getWidth()/2, (3));
+        System.out.println(splitTiles[0].length);
+        //System.out.println(((16/4) * 3)/(boardSize / 2));
         for (int x = 0; x < 2; x++) {
-            for (int y = 0; y < boardSize / 2; y++) {
+            for (int y = 0; y < (3); y++) {
+                System.out.print(x + ", "+ y +"\n");
                 TiledMapTileLayer.Cell triangleCell = new TiledMapTileLayer.Cell();
                 triangleCell.setTile(new StaticTiledMapTile(splitTiles[x][y]));
                 triangleLayer.setCell(x, y, triangleCell);
@@ -78,7 +81,7 @@ public class GameScreen implements Screen {
         Stage stage = new TiledMapStage(tiledMap);
         Gdx.input.setInputProcessor(stage);
 
-        renderer = new OrthogonalTiledMapRenderer(map);
+        //renderer = new OrthogonalTiledMapRenderer(map);
 
     }
 
@@ -86,8 +89,8 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // This cryptic line clears the screen.
         camera.update();
-        renderer.setView(camera);
-        renderer.render();
+        //renderer.setView(camera);
+        //renderer.render();
         stage.act();
         stage.draw();
         batch.begin();
