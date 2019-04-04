@@ -12,6 +12,7 @@ public class BasicMoveSetStrategy implements MoveSetStrategy {
         this.blot = blot;
     }
 
+    // perform piece movement from start position to end position
     @Override
     public boolean doMove(Move move, List<Position> boardPositions) {
         Position startPosition = boardPositions.get(move.startPosition);

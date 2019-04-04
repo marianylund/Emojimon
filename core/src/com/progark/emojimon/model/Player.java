@@ -18,7 +18,7 @@ public class Player {
     private CanClearStrategy canClearStrategy;
     private List<Die> dice;
     private int piecesInGame; // hold count of pieces that haven't been cleared off
-    private int blot;
+    private int blot; // blot: piece/s that can be thrown out to bar
 
     public Player(int piecesInGame, int homeAreaStartIndex, int homeAreaEndIndex, boolean moveClockwise, MoveValidationStrategy moveValidationStrategy, CanClearStrategy canClearStrategy, int blot){
         this.piecesInGame = piecesInGame;
@@ -88,11 +88,12 @@ public class Player {
         return moveClockwise;
     }
 
-    //returns whether player has cleared all of their pieces
+    // returns whether player has cleared all of their pieces, i.e. won
     public boolean isDone() {
         return (piecesInGame == 0);
     }
 
+    // everytime a piece is cleared up, decrement pieces in play
     public void updatePieceClearance(){
         --piecesInGame;
     }
@@ -107,6 +108,7 @@ public class Player {
         return moveValidationStrategy.isAvailableMove(start, end, blot);
     }
 
+    // set players dice from gameboard
     public void setDice(List<Die> dice){
         this.dice = dice;
     }

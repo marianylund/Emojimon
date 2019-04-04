@@ -65,7 +65,7 @@ public class GameBoard {
         dice.add(d1);
         dice.add(d2);
 
-        //create pieces
+        //create pieces, index 0 is reserved to bar
         //player0
         //place white pieces according to standard piece placements
         for(int i = 0; i < pieces; i++){
