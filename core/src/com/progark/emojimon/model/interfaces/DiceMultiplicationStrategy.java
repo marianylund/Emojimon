@@ -1,4 +1,4 @@
 package com.progark.emojimon.model.interfaces;
 
-public interface DiceRule {
+public interface DiceMultiplicationStrategy {
 }

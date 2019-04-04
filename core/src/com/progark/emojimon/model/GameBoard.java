@@ -1,7 +1,7 @@
 package com.progark.emojimon.model;
 
 import com.progark.emojimon.model.factories.MoveSetStrategyFactory;
-import com.progark.emojimon.model.interfaces.DiceRule;
+import com.progark.emojimon.model.interfaces.DiceMultiplicationStrategy;
 import com.progark.emojimon.model.interfaces.Die;
 import com.progark.emojimon.model.strategyPattern.MoveSetStrategy;
 
@@ -12,7 +12,7 @@ public class GameBoard {
     private Player player0;
     private Player player1;
     private List<Die> dice;
-    private DiceRule diceRule;
+    private DiceMultiplicationStrategy diceMultiplicationStrategy;
     //includes all board positions indexed from bottom right to top right
     private List<Position> boardPositions;
     private int boardSize;
