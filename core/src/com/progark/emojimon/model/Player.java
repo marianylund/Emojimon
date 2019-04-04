@@ -1,6 +1,8 @@
 package com.progark.emojimon.model;
 
 import com.progark.emojimon.model.interfaces.Die;
+import com.progark.emojimon.model.strategyPattern.CanClearStrategy;
+import com.progark.emojimon.model.strategyPattern.MoveValidationStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,14 +11,23 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class Player {
 
+    private boolean creator = false;
     private int homeAreaStartIndex;
     private int homeAreaEndIndex;
     private boolean moveClockwise;
+    private MoveValidationStrategy moveValidationStrategy;
+    private CanClearStrategy canClearStrategy;
+    private List<Die> dice;
 
-    public Player(int homeAreaStartIndex, int homeAreaEndIndex, boolean moveClockwise){
+
+    public Player(int homeAreaStartIndex, int homeAreaEndIndex, boolean moveClockwise, MoveValidationStrategy moveValidationStrategy, CanClearStrategy canClearStrategy, boolean isCreator){
         this.homeAreaStartIndex = homeAreaStartIndex;
         this.homeAreaEndIndex = homeAreaEndIndex;
         this.moveClockwise = moveClockwise;
+        this.creator = isCreator;
+        // set strategies for piece movement
+        this.moveValidationStrategy = moveValidationStrategy;
+        this.canClearStrategy = canClearStrategy;
     }
 
     //Get all available moves
@@ -26,25 +37,36 @@ public class Player {
 
         //find all possible moves for player given die values in dice
         for(int positionIndex = 0; positionIndex < positions.size(); positionIndex++){
-            if(positions.get(positionIndex).getOwner() == this){
+            Position startPosition = positions.get(positionIndex);
+            if(startPosition.getOwner() == this){
                 //check for possible moves
                 for(int diceIndex = 0; diceIndex < dice.size(); diceIndex++){
-                    int diceValue = dice.get(diceIndex).GetValue();
-                    int endPosition = moveClockwise ? (positionIndex + diceValue) : (positionIndex - diceValue);
-                    if(positions.get(endPosition).getOwner() == this){
-                        moves.add(new Move(positionIndex, endPosition));
-                    }
-                    else{
-                        //only add if number of enemy pieces on position does not exceed limit
-                        if(positions.get(endPosition).getPieceCount() < 1){
-                            moves.add(new Move(positionIndex, endPosition));
-                        }
+                    int diceValue = dice.get(diceIndex).getValue();
+                    int endPositionIndex = moveClockwise ? (positionIndex + diceValue) : (positionIndex - diceValue);
+                    Position endPosition = positions.get(endPositionIndex);
+
+                    //apply move validation strategy to check if move is valid
+                    if(moveValidationStrategy.isAvailableMove(startPosition, endPosition)){
+                        moves.add(new Move(positionIndex, endPositionIndex));
                     }
                 }
             }
         }
 
         return moves;
+    }
+
+    //GETTERS
+    public int getHomeAreaStartIndex() {
+        return homeAreaStartIndex;
+    }
+
+    public int getHomeAreaEndIndex() {
+        return homeAreaEndIndex;
+    }
+
+    public boolean getMoveClockwise(){
+        return moveClockwise;
     }
 
     //returns whether player has cleared all of their pieces
@@ -54,7 +76,28 @@ public class Player {
 
     //returns whether player is in a position to start clearing pieces
     public boolean canClear(List<Position> boardPositions, Position bar) {
-        throw new NotImplementedException();
+        return canClearStrategy.canClear(this, boardPositions, bar);
     }
+
+    public boolean isCreator() {
+        return creator;
+    }
+
+    public void setDice(List<Die> dice){
+        this.dice = dice;
+    }
+
+    // if a move is made, reduce players dice list
+    public void updateDice(){
+        dice.remove(dice.size() - 1);
+    }
+
+    // returns whether the players turn has ended
+    public boolean finishedTurn(){
+        if (dice.size() == 0){
+            return true;
+        } return false;
+    }
+
 
 }

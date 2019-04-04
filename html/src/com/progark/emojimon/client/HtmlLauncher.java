@@ -46,6 +46,6 @@ public class HtmlLauncher extends GwtApplication {
 
         @Override
         public ApplicationListener createApplicationListener () {
-                return new Emojimon();
+                return new Emojimon(new HtmlFirebaseController());
         }
 }
