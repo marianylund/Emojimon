@@ -40,7 +40,7 @@ public class GameBoard {
 
     //create gameboard given boardsize, goalsize
     public GameBoard(int boardSize, int goalSize, String moveSetStrategy){
-
+        this (boardSize, goalSize);
     }
     //constructor
     //(currently creating standard gameboard)

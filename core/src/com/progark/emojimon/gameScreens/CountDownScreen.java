@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.progark.emojimon.Emojimon;
+import com.progark.emojimon.view.GameScreen;
 
 public class CountDownScreen implements Screen {
 
@@ -78,7 +79,7 @@ public class CountDownScreen implements Screen {
         stage.act();
         stage.draw();
         if (elapsed > 3){
-            game.setScreen(new MainMenuScreen(game)); //endre denne til GameScreen
+            game.setScreen(new GameScreen(game)); //endre denne til GameScreen
         }
     }
 

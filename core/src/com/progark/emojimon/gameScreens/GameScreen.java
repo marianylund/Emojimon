@@ -45,9 +45,11 @@ public class GameScreen implements Screen {
     private SpriteBatch batch;
     private BitmapFont font;
 
-    public GameScreen(final Emojimon game, GameBoardController gameBoardController) {
+
+    public GameScreen(final Emojimon game) {
         this.game = game;
-        this.gameBoardController = gameBoardController;
+        this.gameBoardController = new GameBoardController();
+        this.gameBoardController.createGameBoard(24,6,"BASIC");
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
 
