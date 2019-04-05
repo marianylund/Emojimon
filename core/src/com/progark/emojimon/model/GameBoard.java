@@ -86,28 +86,25 @@ public class GameBoard {
         //TODO: Should number of pieces and piece placement strategy be choosable for the player?
         //player0
         //place white pieces according to standard piece placements
-        for(int i = 0; i < 15; i++){
-            boardPositions.get(0).addPieces(2);
-            boardPositions.get(0).setOwner(player0);
-            boardPositions.get(11).addPieces(5);
-            boardPositions.get(11).setOwner(player0);
-            boardPositions.get(16).addPieces(3);
-            boardPositions.get(16).setOwner(player0);
-            boardPositions.get(18).addPieces(5);
-            boardPositions.get(18).setOwner(player0);
-        }
+        boardPositions.get(0).addPieces(2);
+        boardPositions.get(0).setOwner(player0);
+        boardPositions.get(11).addPieces(5);
+        boardPositions.get(11).setOwner(player0);
+        boardPositions.get(16).addPieces(3);
+        boardPositions.get(16).setOwner(player0);
+        boardPositions.get(18).addPieces(5);
+        boardPositions.get(18).setOwner(player0);
+
 
         //place player1 pieces according to standard piece placements
-        for(int i = 0; i < 15; i++){
-            boardPositions.get(23).addPieces(2);
-            boardPositions.get(23).setOwner(player1);
-            boardPositions.get(12).addPieces(5);
-            boardPositions.get(12).setOwner(player1);
-            boardPositions.get(7).addPieces(3);
-            boardPositions.get(7).setOwner(player1);
-            boardPositions.get(5).addPieces(5);
-            boardPositions.get(5).setOwner(player1);
-        }
+        boardPositions.get(23).addPieces(2);
+        boardPositions.get(23).setOwner(player1);
+        boardPositions.get(12).addPieces(5);
+        boardPositions.get(12).setOwner(player1);
+        boardPositions.get(7).addPieces(3);
+        boardPositions.get(7).setOwner(player1);
+        boardPositions.get(5).addPieces(5);
+        boardPositions.get(5).setOwner(player1);
 
     }
 

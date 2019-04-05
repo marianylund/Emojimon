@@ -159,7 +159,7 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
                 @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snap : dataSnapshot.getChildren()){
-                    if(snap.child("Status").getValue().equals("waiting")) {
+                    if(snap.child("status").getValue().equals("waiting")) {
                         addPlayerToGame(snap.getKey());
                         addGameDataChangeListener(snap.getKey());
                         break;

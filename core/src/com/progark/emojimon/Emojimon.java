@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.progark.emojimon.controller.FBC;
 import com.progark.emojimon.gameScreens.MainMenuScreen;
 import com.progark.emojimon.controller.GameBoardController;
+import com.progark.emojimon.model.fireBaseData.Converter;
 import com.progark.emojimon.model.interfaces.FirebaseControllerInterface;
 
 import java.util.ArrayList;
@@ -37,7 +38,8 @@ public class Emojimon extends Game {
 		//Test creation of gameboard
 		gameBoardController = new GameBoardController();
 		gameBoardController.createGameBoard(24, 6, "BASIC");
-		//System.out.println(gameBoardController.getBoardPositions().toString());
+
+
 		//test write to Firebase
 
 		/*
@@ -48,6 +50,12 @@ public class Emojimon extends Game {
         FBC.I().get().setGameBoardByGameID(tempGameID, createTempDoubleArrayList());
         FBC.I().get().setGameStatusByGameID(tempGameID, "Playing");
         */
+        FBC.I().get().addNewGame("Player0Olala");
+		FBC.I().get().joinGame();
+        String tempGameID = FBC.I().get().getGameIDs()[0].toString();
+        FBC.I().get().setGameBoardByGameID(tempGameID, Converter.fromBoardPositionsToList(gameBoardController.getBoardPositions()));
+        FBC.I().get().setGameStatusByGameID(tempGameID, "playing");
+
 	}
 
 	//debugging

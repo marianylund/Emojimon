@@ -27,7 +27,13 @@ public class Converter {
         {
             List<Integer> pos = new ArrayList<Integer>();
             pos.add(p.getPieceCount());
-            pos.add(fromPlayerToPlayerNumber(p.getOwner()));
+            if(p.getOwner() != null){
+                pos.add(fromPlayerToPlayerNumber(p.getOwner()));
+            }
+            else{
+                //use -1 to denote lack of owner?
+                pos.add(-1);
+            }
             gameBoard.add(p.getPositionIndex(), pos);
         }
         return gameBoard;
