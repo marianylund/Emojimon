@@ -11,10 +11,11 @@ public class AndroidLauncher extends AndroidApplication {
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		initialize(new Emojimon(new DesktopFirebaseController()), config);
+		//initialize(new Emojimon(new AndroidFirebaseController()), config);
 
-		//AndroidFirebaseController fb = new AndroidFirebaseController();
-		//fb.Write();
+		AndroidFirebaseController fb = new AndroidFirebaseController();
+		fb.Write();
+		initialize(new Emojimon(fb), config);
 
 		Log.d("Test", "Hello");
 		//fb.SetEmojiByPlayerID(0, "New l");

@@ -3,6 +3,7 @@ package com.progark.emojimon;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -181,6 +182,11 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
         if(!subscribers.contains(subscriber)){
             subscribers.add(subscriber);
         }
+    }
+
+    @Override
+    public ArrayList getGameStateByGameID(String id) {
+        return null;
     }
 
     private void notifyLastTurnSubs(String gameID, LastTurnData ld){
