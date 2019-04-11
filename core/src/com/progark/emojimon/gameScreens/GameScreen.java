@@ -12,39 +12,35 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.progark.emojimon.Emojimon;
 import com.progark.emojimon.controller.GameBoardController;
 import com.progark.emojimon.mapTiles.TiledMapStage;
-import com.progark.emojimon.model.GameBoard;
-import com.progark.emojimon.model.Position;
-import com.progark.emojimon.model.interfaces.Die;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
 
 public class GameScreen implements Screen {
 
-    final Emojimon game;
-
-    OrthographicCamera camera;
-
-    //gamesettings
-    private GameBoardController gameBoardController;
-    private TiledMap tiledMap;
-    private Stage stage;
-    private Texture tiles;
     private TiledMap map;
     private TiledMapRenderer renderer;
-    private SpriteBatch batch;
-    private BitmapFont font;
+    private OrthographicCamera camera;
 
+    private AssetManager assetManager;
+    private Texture tiles;
+    private Texture texture;
+    private BitmapFont font;
+    private SpriteBatch batch;
+
+    private GameBoardController gameBoardController;
+    final Emojimon game;
+
+    Skin skin;
+    Stage stage;
 
     public GameScreen(final Emojimon game) {
         this.game = game;
@@ -52,56 +48,52 @@ public class GameScreen implements Screen {
         this.gameBoardController.createGameBoard(24,6,"BASIC");
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
+        this.assetManager = assetManager;
 
     }
+
 
     @Override
     public void show() {
+        //skin = new Skin(Gdx.files.internal("blacktri.png"));
+        stage = new Stage(new ScreenViewport());
 
-        //creating the visual gameboard
-        TiledMap tiledMap = new TiledMap();
-        MapLayers layers = tiledMap.getLayers();
-        int boardSize = gameBoardController.getBoardSize();
+        float w = Gdx.graphics.getWidth();
+        float h = Gdx.graphics.getHeight();
 
-        TiledMapTileLayer triangleLayer = new TiledMapTileLayer(2, boardSize / 2, Gdx.graphics.getWidth(), ((Gdx.graphics.getHeight() / 4) * 3));
-        tiles = new Texture(Gdx.files.internal("blacktri.png"));
-        TextureRegion[][] splitTiles = TextureRegion.split(tiles, Gdx.graphics.getWidth()/2, (3));
-        System.out.println(splitTiles[0].length);
-        //System.out.println(((16/4) * 3)/(boardSize / 2));
-        for (int x = 0; x < 2; x++) {
-            for (int y = 0; y < (3); y++) {
-                System.out.print(x + ", "+ y +"\n");
-                TiledMapTileLayer.Cell triangleCell = new TiledMapTileLayer.Cell();
-                triangleCell.setTile(new StaticTiledMapTile(splitTiles[x][y]));
-                triangleLayer.setCell(x, y, triangleCell);
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, (w / (h - 40)) * 10, 10);
+        camera.update();
 
+        font = new BitmapFont();
+        batch = new SpriteBatch();
+
+        {
+            tiles = new Texture(Gdx.files.internal("blacktri2.png"));
+            TextureRegion[][] splitTiles = TextureRegion.split(tiles, 64, 64);
+            map = new TiledMap();
+            MapLayers layers = map.getLayers();
+            for (int i = 0; i < 1; i++) {
+                TiledMapTileLayer layer = new TiledMapTileLayer(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/8);
+                for (int x = 0; x < 2; x++) {
+                    for (int y = 0; y < 8; y++) {
+                        int ty = (int)(y);
+                        int tx = (int)(x);
+                        Cell cell = new Cell();
+                        cell.setTile(new StaticTiledMapTile(splitTiles[0][0]));
+                        layer.setCell(x, y, cell);
+
+                    }
+                }
+                layers.add(layer);
             }
         }
-        layers.add(triangleLayer);
-        Stage stage = new TiledMapStage(tiledMap);
+
+        renderer = new OrthogonalTiledMapRenderer(map, 1/32f);
+        Stage stage = new TiledMapStage(map);
         Gdx.input.setInputProcessor(stage);
-
-        //renderer = new OrthogonalTiledMapRenderer(map);
-
     }
 
-    @Override
-    public void render(float delta) {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // This cryptic line clears the screen.
-        camera.update();
-        //renderer.setView(camera);
-        //renderer.render();
-        stage.act();
-        stage.draw();
-        batch.begin();
-        font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 10, 20);
-        batch.end();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-
-    }
 
     @Override
     public void pause() {
@@ -121,5 +113,29 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
 
+    }
+
+
+    @Override
+    public void render (float dt) {
+        Gdx.gl.glClearColor(100f / 255f, 100f / 255f, 250f / 255f, 1f);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        // Prepare for stage drawing by updating the viewport
+        stage.getViewport();
+        stage.act();
+        stage.draw();
+
+        // Prepare for embedded map drawing by applying the desired viewport for the map
+        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(),  Gdx.graphics.getHeight());
+        camera.update();
+        renderer.setView(camera);
+        renderer.render();
+
+    }
+
+    @Override
+    public void resize (int width, int height) {
+        stage.getViewport().update(width, height, true);
     }
 }

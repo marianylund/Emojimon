@@ -20,15 +20,17 @@ public class TiledMapStage extends Stage {
     }
 
     private void createActorsForLayer(TiledMapTileLayer tiledLayer) {
+        int id = 0;
         for (int x = 0; x < tiledLayer.getWidth(); x++) {
             for (int y = 0; y < tiledLayer.getHeight(); y++) {
                 TiledMapTileLayer.Cell cell = tiledLayer.getCell(x, y);
-                TiledMapActor actor = new TiledMapActor(tiledMap, tiledLayer, cell);
+                TiledMapActor actor = new TiledMapActor(tiledMap, tiledLayer, cell, id);
                 actor.setBounds(x * tiledLayer.getTileWidth(), y * tiledLayer.getTileHeight(), tiledLayer.getTileWidth(),
                         tiledLayer.getTileHeight());
                 addActor(actor);
                 EventListener eventListener = new TiledMapClickListener(actor);
                 actor.addListener(eventListener);
+                id++;
             }
         }
     }
