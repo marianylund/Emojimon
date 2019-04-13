@@ -8,9 +8,9 @@ public class BasicCanClearStrategy implements CanClearStrategy {
 
     @Override
     //Standard rule: check if all player's pieces are within the goal area
-    public boolean canClear(Player player, List<Position> boardPositions, Position bar) {
-        if(bar.getOwner() == player){
-            return false;
+    public boolean canClear(Player player, List<Position> boardPositions) {
+        if (boardPositions.get(0).getOwner() == player){
+            return false; // player has piece in bar
         }
 
         for(int i = 0; i < boardPositions.size(); i++){

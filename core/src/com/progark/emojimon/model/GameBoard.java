@@ -18,13 +18,15 @@ public class GameBoard {
     private List<Die> dice;
     private DiceMultiplicationStrategy diceMultiplicationStrategy;
     //includes all board positions indexed from bottom right to top right
-    private List<Position> boardPositions;
+    private List<Position> boardPositions;// position 0: our bar
     private int boardSize;
-    private List<Move> currentTurnMoves; //TODO emty it out when the turn changes
+    private List<Move> currentTurnMoves; //TODO empty it out when the turn changes
 
     private Position bar;
     private Player inBar;
+
     private int blot = 1; // blot: piece/s that can be thrown out to bar, standard 1
+
     //constructors
     //creates standard gameboard
     public GameBoard(){
@@ -35,16 +37,20 @@ public class GameBoard {
     private MoveSetStrategy moveSet; //
     private MoveValidationStrategy moveValidation;
     private CanClearStrategy canClear;
+    //all pieces must be in goalSize before being able to be cleared off
     private int goalSize;
+    private int pieces;
 
 
     //create gameboard given boardsize, goalsize
     public GameBoard(int boardSize, int goalSize, String moveSetStrategy){
-        this (boardSize, goalSize);
+        this (boardSize, goalSize, 15);
     }
+
     //constructor
     //(currently creating standard gameboard)
-    public GameBoard(int boardSize, int goalSize){
+    public GameBoard(int boardSize, int goalSize, int pieces){
+        this.pieces = pieces;
 
         // Choose moveset strategy
         MoveSetStrategyFactory moveSetFactory = new MoveSetStrategyFactory();
@@ -59,13 +65,14 @@ public class GameBoard {
         CanClearStrategyFactory canClearFactory = new CanClearStrategyFactory();
         canClear = canClearFactory.getCanClearStrategy("BASIC");
 
+
         this.boardSize = boardSize;
 
         //create players
         //homearea of player0 will be last goalSize indices of board
-        //homeare of player1 will be first goalSize indices of board
-        player0 = new Player(boardSize - goalSize, boardSize-1, true, moveValidation, canClear, true);
-        player1 = new Player(0, goalSize-1, false, moveValidation, canClear, false);
+        //homearea of player1 will be first goalSize indices of board
+        player0 = new Player(pieces,boardSize - goalSize, boardSize-1, true, moveValidation, canClear, blot, true);
+        player1 = new Player(pieces, 0, goalSize-1, false, moveValidation, canClear, blot, false);
 
         //create all positions
         boardPositions = new ArrayList<Position>();
@@ -106,12 +113,12 @@ public class GameBoard {
         boardPositions.get(5).addPieces(5);
         boardPositions.get(5).setOwner(player1);
 
+
     }
 
 
     public boolean movePiece(Move move){
-        currentTurnMoves.add(move);
-        return moveSet.doMove(move, boardPositions, bar, inBar);
+        return moveSet.doMove(move, boardPositions);
     }
 
     public void rollDice(Player player){
@@ -134,16 +141,21 @@ public class GameBoard {
         return dice;
     }
 
-    public Position getBar(){
-        return bar;
+    //TODO: logic for dice move
+    public Move getPlayer0BarMove(){
+        return player0.getAvailableBarMove(dice, boardPositions);
     }
 
     public List<Move> getPlayer0Moves(){
-        return player0.getAvailableMoves(dice, boardPositions, bar);
+        return player0.getAvailableMoves(dice, boardPositions);
+    }
+
+    public Move getPlayer1BarMoves(){
+        return player1.getAvailableBarMove(dice, boardPositions);
     }
 
     public List<Move> getPlayer1Moves(){
-        return player1.getAvailableMoves(dice, boardPositions, bar);
+        return player1.getAvailableMoves(dice, boardPositions);
     }
 
     public Player getPlayer0() {

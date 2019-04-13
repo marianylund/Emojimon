@@ -13,7 +13,7 @@ import java.util.List;
 
 public class GameBoardController {
     private GameBoard gameBoard;
-
+    // boardSize = 25, incl. bar position 0
     public GameBoardController(){
     }
 
@@ -28,7 +28,7 @@ public class GameBoardController {
         else{
             gameBoard = new GameBoard(boardSize, goalSize, moveSetStrategy);
         }
-
+        
     }
 
     public List<Position> getBoardPositions(){

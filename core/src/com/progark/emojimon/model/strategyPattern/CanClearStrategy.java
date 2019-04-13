@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface CanClearStrategy {
 
-    boolean canClear(Player player, List<Position> boardPositions, Position bar);
+    boolean canClear(Player player, List<Position> boardPositions);
 }

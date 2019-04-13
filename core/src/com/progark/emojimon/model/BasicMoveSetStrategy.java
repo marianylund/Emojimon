@@ -12,27 +12,39 @@ public class BasicMoveSetStrategy implements MoveSetStrategy {
         this.blot = blot;
     }
 
+    // perform piece movement from start position to end position
     @Override
-    public boolean doMove(Move move, List<Position> boardPositions, Position bar, Player inBar) {
+    public boolean doMove(Move move, List<Position> boardPositions) {
         Position startPosition = boardPositions.get(move.startPosition);
         Position endPosition = boardPositions.get(move.endPosition);
+        Position bar = boardPositions.get(0);
 
-        // move piece as long as position is not owned by another player
-        if(endPosition.getOwner() != startPosition.getOwner()){
+        // check if players piece can be moved
+        if (startPosition.getOwner().isAvailableMove(startPosition, endPosition)){
 
-            // // throw opposite players' pieces to bar, if there's blot piece/s
-            if (endPosition.getPieceCount() == blot){
+            // throw opposite players piece
+            if (!endPosition.getOwner().equals(startPosition.getOwner())){
                 bar.addPieces(blot);
-                inBar = endPosition.getOwner();
                 endPosition.removePieces(blot);
-                return true;
-            }
-        return false;
-        }
-        startPosition.addPieces(1);
-        startPosition.removePieces(1);
-        endPosition.addPieces(1);
-        return true;
-    }
 
+                // set bar owner
+                if (!bar.getOwner().equals(endPosition.getOwner())){
+                    bar.setOwner(endPosition.getOwner());
+                }
+            }
+
+            startPosition.addPieces(1);
+            startPosition.removePieces(1);
+            endPosition.addPieces(1);
+
+            // if the player has cleared their bar, set owner to null
+            if (bar.getPieceCount() == 0 && bar.getOwner().equals(endPosition.getOwner())) {
+                bar.setOwner(null);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
 }
