@@ -3,10 +3,11 @@ package com.progark.emojimon.model.factories;
 import com.progark.emojimon.model.BasicAvailableMoveStrategy;
 import com.progark.emojimon.model.strategyPattern.MoveValidationStrategy;
 
+//implements parameterized factory method for MoveValidationStrategy
 public class MoveValidationStrategyFactory {
 
     // Create a concrete strategy for validating a move
-    public MoveValidationStrategy getMoveValidationStrategy(String moveValidation){
+    public static MoveValidationStrategy getMoveValidationStrategy(String moveValidation){
         if (moveValidation == null){
             return null;
         }

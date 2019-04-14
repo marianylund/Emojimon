@@ -53,17 +53,14 @@ public class GameBoard {
         this.pieces = pieces;
 
         // Choose moveset strategy
-        MoveSetStrategyFactory moveSetFactory = new MoveSetStrategyFactory();
-        moveSet = moveSetFactory.GetMoveSet("BASIC", blot);
+        moveSet = MoveSetStrategyFactory.GetMoveSet("BASIC", blot);
 
         // Choose move validation strategy
         // TODO: add blot to move validation
-        MoveValidationStrategyFactory moveValidationFactory = new MoveValidationStrategyFactory();
-        moveValidation = moveValidationFactory.getMoveValidationStrategy("BASIC");
+        moveValidation = MoveValidationStrategyFactory.getMoveValidationStrategy("BASIC");
 
         // Choose can clear strategy
-        CanClearStrategyFactory canClearFactory = new CanClearStrategyFactory();
-        canClear = canClearFactory.getCanClearStrategy("BASIC");
+        canClear = CanClearStrategyFactory.getCanClearStrategy("BASIC");
 
 
         this.boardSize = boardSize;
@@ -128,11 +125,11 @@ public class GameBoard {
         player.setDice(dice);
     }
 
+    //region GETTERS AND SETTERS
+
     public int getBoardSize(){
         return boardSize;
     }
-    //region GETTERS AND SETTERS
-
     public List<Position> getBoardPositions(){
         return boardPositions;
     }

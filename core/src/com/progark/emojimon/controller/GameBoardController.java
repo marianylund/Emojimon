@@ -28,7 +28,7 @@ public class GameBoardController {
         else{
             gameBoard = new GameBoard(boardSize, goalSize, moveSetStrategy);
         }
-        
+
     }
 
     public List<Position> getBoardPositions(){

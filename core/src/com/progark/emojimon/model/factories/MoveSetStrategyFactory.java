@@ -3,10 +3,11 @@ package com.progark.emojimon.model.factories;
 import com.progark.emojimon.model.BasicMoveSetStrategy;
 import com.progark.emojimon.model.strategyPattern.MoveSetStrategy;
 
+//implements parameterized factory method for MoveSetStrategy
 public class MoveSetStrategyFactory {
 
     //Create a concrete strategy for calculating piece movement
-    public MoveSetStrategy GetMoveSet(String moveSet, int blot){
+    public static MoveSetStrategy GetMoveSet(String moveSet, int blot){
         if (moveSet == null){
             return null;
         }

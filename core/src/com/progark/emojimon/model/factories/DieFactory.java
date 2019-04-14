@@ -2,10 +2,11 @@ package com.progark.emojimon.model.factories;
 
 import com.progark.emojimon.model.interfaces.Die;
 
+//implements parameterized factory method for Die
 public class DieFactory {
 
     //Create a concrete Die based on parameters given
-    public Die CreateDie(){
+    public static Die CreateDie(){
         return null;
     }
 }
