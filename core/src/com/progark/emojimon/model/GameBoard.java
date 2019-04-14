@@ -34,9 +34,9 @@ public class GameBoard {
     }
 
     // strategies
-    private MoveSetStrategy moveSet; //
-    private MoveValidationStrategy moveValidation;
-    private CanClearStrategy canClear;
+    private MoveSetStrategy moveSetStrategy; //
+    private MoveValidationStrategy moveValidationStrategy;
+    private CanClearStrategy canClearStrategy;
     //all pieces must be in goalSize before being able to be cleared off
     private int goalSize;
     private int pieces;
@@ -53,14 +53,14 @@ public class GameBoard {
         this.pieces = pieces;
 
         // Choose moveset strategy
-        moveSet = MoveSetStrategyFactory.GetMoveSet("BASIC", blot);
+        moveSetStrategy = MoveSetStrategyFactory.GetMoveSet("BASIC", blot);
 
         // Choose move validation strategy
         // TODO: add blot to move validation
-        moveValidation = MoveValidationStrategyFactory.getMoveValidationStrategy("BASIC");
+        moveValidationStrategy = MoveValidationStrategyFactory.getMoveValidationStrategy("BASIC");
 
         // Choose can clear strategy
-        canClear = CanClearStrategyFactory.getCanClearStrategy("BASIC");
+        canClearStrategy = CanClearStrategyFactory.getCanClearStrategy("BASIC");
 
 
         this.boardSize = boardSize;
@@ -68,16 +68,17 @@ public class GameBoard {
         //create players
         //homearea of player0 will be last goalSize indices of board
         //homearea of player1 will be first goalSize indices of board
-        player0 = new Player(pieces,boardSize - goalSize, boardSize-1, true, moveValidation, canClear, blot, true);
-        player1 = new Player(pieces, 0, goalSize-1, false, moveValidation, canClear, blot, false);
+        player0 = new Player(pieces,boardSize - goalSize, boardSize-1, true, moveValidationStrategy, canClearStrategy, blot, true);
+        player1 = new Player(pieces, 0, goalSize-1, false, moveValidationStrategy, canClearStrategy, blot, false);
 
-        //create all positions
+        //create all positions (including bar at position 0)
         boardPositions = new ArrayList<Position>();
-        for(int i = 0; i < boardSize; i++){
+        for(int i = 0; i < boardSize+1; i++){
             Position p = new Position(i);
             boardPositions.add(p);
         }
-        bar = new Position(boardSize);
+
+        bar = boardPositions.get(0);
 
         //create dice
         dice = new ArrayList<Die>();
@@ -90,32 +91,32 @@ public class GameBoard {
         //TODO: Should number of pieces and piece placement strategy be choosable for the player?
         //player0
         //place white pieces according to standard piece placements
-        boardPositions.get(0).addPieces(2);
-        boardPositions.get(0).setOwner(player0);
-        boardPositions.get(11).addPieces(5);
-        boardPositions.get(11).setOwner(player0);
-        boardPositions.get(16).addPieces(3);
-        boardPositions.get(16).setOwner(player0);
-        boardPositions.get(18).addPieces(5);
-        boardPositions.get(18).setOwner(player0);
+        boardPositions.get(1).addPieces(2);
+        boardPositions.get(1).setOwner(player0);
+        boardPositions.get(12).addPieces(5);
+        boardPositions.get(12).setOwner(player0);
+        boardPositions.get(17).addPieces(3);
+        boardPositions.get(17).setOwner(player0);
+        boardPositions.get(19).addPieces(5);
+        boardPositions.get(19).setOwner(player0);
 
 
         //place player1 pieces according to standard piece placements
-        boardPositions.get(23).addPieces(2);
-        boardPositions.get(23).setOwner(player1);
-        boardPositions.get(12).addPieces(5);
-        boardPositions.get(12).setOwner(player1);
-        boardPositions.get(7).addPieces(3);
-        boardPositions.get(7).setOwner(player1);
-        boardPositions.get(5).addPieces(5);
-        boardPositions.get(5).setOwner(player1);
+        boardPositions.get(24).addPieces(2);
+        boardPositions.get(24).setOwner(player1);
+        boardPositions.get(13).addPieces(5);
+        boardPositions.get(13).setOwner(player1);
+        boardPositions.get(8).addPieces(3);
+        boardPositions.get(8).setOwner(player1);
+        boardPositions.get(6).addPieces(5);
+        boardPositions.get(6).setOwner(player1);
 
 
     }
 
 
     public boolean movePiece(Move move){
-        return moveSet.doMove(move, boardPositions);
+        return moveSetStrategy.doMove(move, boardPositions);
     }
 
     public void rollDice(Player player){

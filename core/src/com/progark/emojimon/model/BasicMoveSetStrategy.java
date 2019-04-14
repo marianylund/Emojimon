@@ -37,6 +37,11 @@ public class BasicMoveSetStrategy implements MoveSetStrategy {
             startPosition.removePieces(1);
             endPosition.addPieces(1);
 
+            //update owner of endposition if necessary
+            if(endPosition.getOwner() != startPosition.getOwner()){
+                endPosition.setOwner(startPosition.getOwner());
+            }
+
             // if the player has cleared their bar, set owner to null
             if (bar.getPieceCount() == 0 && bar.getOwner().equals(endPosition.getOwner())) {
                 bar.setOwner(null);
