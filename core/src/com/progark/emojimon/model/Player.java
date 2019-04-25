@@ -17,7 +17,6 @@ public class Player {
     private boolean moveClockwise;
     private MoveValidationStrategy moveValidationStrategy;
     private CanClearStrategy canClearStrategy;
-    private List<Die> dice;
     private int piecesInGame; // hold count of pieces that haven't been cleared off
     private int blot; // blot: piece/s that can be thrown out to bar
 
@@ -34,27 +33,60 @@ public class Player {
         this.creator = isCreator;
     }
 
-    public Move getAvailableBarMove(List<Die> dice, List<Position> positions){
-            // check for possible moves from bar
+    //Get all available moves from bar (pieces to be entered)
+    //Entering involves moving a piece from the bar to a position in the other player's home area
+    //See "Hitting and Entering": http://www.bkgm.com/rules.html
+    public List<Move> getAvailableBarMoves(List<Die> dice, List<Position> positions, int otherPlayerHomeAreaStartIndex, int otherPlayerHomeAreaEndIndex){
+        List<Move> moves = new ArrayList<Move>();
+
         int barIndex = 0; //barIndex is the first position
+
+        //return empty list if player does not own bar or bar is empty
+        if(positions.get(barIndex).getOwner() != this || positions.get(barIndex).getPieceCount() == 0){
+            return moves;
+        }
+
+        // check for possible moves from bar
         for (int diceIndex = 0; diceIndex < dice.size(); diceIndex++){
-            int diceValue = dice.get(diceIndex).getValue();
-            int endPositionIndex = moveClockwise ? (barIndex + diceValue) : (barIndex - diceValue);
+            Die die = dice.get(diceIndex);
+            //ignore used dice
+            if(die.getUsed()) continue;
+
+            int diceValue = die.getValue();
+
+            int endPositionIndex;
+
+            if(moveClockwise){
+                endPositionIndex = (otherPlayerHomeAreaStartIndex - 1) + diceValue;
+            }
+            else{
+                endPositionIndex = (otherPlayerHomeAreaEndIndex + 1) - diceValue;
+            }
+
+            //ignore move if endposition is outside of other player's home area
+            if(endPositionIndex < otherPlayerHomeAreaStartIndex || endPositionIndex > otherPlayerHomeAreaEndIndex){
+                continue;
+            }
+
+            //ignore move if endposition index is bar or out of bounds
+            if(endPositionIndex < 1 || endPositionIndex >= positions.size()){
+                continue;
+            }
+
             Position endPosition = positions.get(endPositionIndex);
 
             //apply move validation strategy to check if move is valid
             if(moveValidationStrategy.isAvailableMove(positions.get(0), endPosition, blot)){
-//                moves.add(new Move(barIndex, endPositionIndex));
-                return new Move(barIndex, endPositionIndex);
+                moves.add(new Move(barIndex, endPositionIndex, die));
             }
         }
-        return null; // no moves in bar left
+
+        return moves;
     }
 
-    //Get all available moves
-    //(currently only checking individual die, not combinations)
-    public List<Move> getAvailableMoves(List<Die> dice, List<Position> positions) {
-        //TODO: check if there are any dice moves left (i.e. after moving pieces of bar)
+    //Get available moves using pieces on the board (i.e. not on bar)
+    //TODO: logic for clearing
+    public List<Move> getAvailableBoardMoves(List<Die> dice, List<Position> positions) {
         List<Move> moves = new ArrayList<Move>();
 
         //find all possible moves for player given die values in dice
@@ -63,13 +95,23 @@ public class Player {
             if(startPosition.getOwner() == this){
                 //check for possible moves
                 for(int diceIndex = 0; diceIndex < dice.size(); diceIndex++){
-                    int diceValue = dice.get(diceIndex).getValue();
+                    Die die = dice.get(diceIndex);
+
+                    //ignore used dice
+                    if(die.getUsed()) continue;
+
+                    int diceValue = die.getValue();
                     int endPositionIndex = moveClockwise ? (positionIndex + diceValue) : (positionIndex - diceValue);
+
+                    //ignore if endposition index is bar or out of bounds
+                    if(endPositionIndex < 1 || endPositionIndex >= positions.size()){
+                        continue;
+                    }
                     Position endPosition = positions.get(endPositionIndex);
 
                     //apply move validation strategy to check if move is valid
                     if(moveValidationStrategy.isAvailableMove(startPosition, endPosition, blot)){
-                        moves.add(new Move(positionIndex, endPositionIndex));
+                        moves.add(new Move(positionIndex, endPositionIndex, die));
                     }
                 }
             }
@@ -115,19 +157,5 @@ public class Player {
         return creator;
     }
 
-    // set players dice from gameboard
-    public void setDice(List<Die> dice){
-        this.dice = dice;
-    }
-
-    // if a move is made, reduce players dice list
-    public void updateDice(){
-        dice.remove(dice.size() - 1);
-    }
-
-    // returns whether the players turn has ended
-    public boolean finishedTurn(){
-        return (dice.size() == 0);
-    }
 
 }

@@ -19,7 +19,8 @@ public class Position {
 
 
     public Player getOwner(){
-        return owner;
+        if(pieceCount == 0) return null;
+        else return owner;
     }
 
     public void setOwner(Player owner){

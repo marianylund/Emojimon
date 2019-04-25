@@ -20,13 +20,19 @@ public class GameBoardController {
     public int getBoardSize(){return gameBoard.getBoardSize();}
 
 
-    public void createGameBoard(int boardSize, int goalSize, String moveSetStrategy){
+    //create gameboard with standard settings
+    public void createStandardGameBoard(){
+        gameBoard = new GameBoard();
+    }
+
+    //create gameboard with given size
+    public void createGameBoard(int boardSize){
         //check if boardsize is valid
         if(boardSize % 2 != 0){
             throw new IllegalArgumentException(String.format("Board size %d is invalid. Size must be divisible by 2. ", boardSize));
         }
         else{
-            gameBoard = new GameBoard(boardSize, goalSize, moveSetStrategy);
+            gameBoard = new GameBoard(boardSize);
         }
 
     }
@@ -45,8 +51,8 @@ public class GameBoardController {
     }
 
     // TODO: move to PlayerController?
-    public void rollDice(Player player){
-        gameBoard.rollDice(player);
+    public void rollDice(){
+        gameBoard.rollDice();
     }
 
 }

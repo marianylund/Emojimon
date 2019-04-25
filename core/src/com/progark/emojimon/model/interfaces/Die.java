@@ -7,4 +7,8 @@ public interface Die {
     int getValue();
 
     void setValue(int value);
+
+    void setUsed(boolean used);
+
+    boolean getUsed();
 }
