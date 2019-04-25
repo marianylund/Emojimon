@@ -1,10 +1,13 @@
 package com.progark.emojimon.controller;
 
 import com.progark.emojimon.Emojimon;
+import com.progark.emojimon.GameManager;
 import com.progark.emojimon.model.GameBoard;
 import com.progark.emojimon.model.Move;
 import com.progark.emojimon.model.Player;
 import com.progark.emojimon.model.Position;
+import com.progark.emojimon.model.fireBaseData.Converter;
+import com.progark.emojimon.model.fireBaseData.LastTurnData;
 import com.progark.emojimon.model.interfaces.Die;
 
 
@@ -55,4 +58,15 @@ public class GameBoardController {
         gameBoard.rollDice();
     }
 
+    public void endTurn(Player player){
+        if(player.isDone()){
+            // TODO End Game
+        }else{
+            // Push Last turn data
+            FBC.I().get().addLastTurnByGameID(GameManager.GetInstance().getGameID(), !player.isCreator(),
+                    Converter.fromDiceToList(gameBoard.getDice().getDieList()),
+                    Converter.fromMovesToList(gameBoard.getCurrentTurnMoves()));
+            gameBoard.emptyCurrentTurnMoves();
+        }
+    }
 }

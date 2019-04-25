@@ -20,7 +20,7 @@ public class GameBoard {
     //includes all board positions indexed from bottom right to top right
     private List<Position> boardPositions;// position 0: our bar
     private int boardSize;
-    private List<Move> currentTurnMoves; //TODO empty it out when the turn changes
+    private List<Move> currentTurnMoves; // moves done during this turn, it is emptied when the turn is ended
 
     //dice
     private Dice dice;
@@ -114,6 +114,7 @@ public class GameBoard {
 
     public boolean movePiece(Move move){
         move.die.setUsed(true);
+        currentTurnMoves.add(move);
         return moveSetStrategy.doMove(move, boardPositions);
     }
 
@@ -163,5 +164,14 @@ public class GameBoard {
     public Player getPlayer1() {
         return player1;
     }
+
+    public List<Move> getCurrentTurnMoves() {
+        return currentTurnMoves;
+    }
+
+    public void emptyCurrentTurnMoves(){
+        currentTurnMoves.clear();
+    }
+
     //endregion
 }
