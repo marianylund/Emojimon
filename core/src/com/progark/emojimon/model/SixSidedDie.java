@@ -9,11 +9,13 @@ public class SixSidedDie implements Die {
     private int currentValue;
     private int minValue;
     private int maxValue;
+    private boolean used;
 
     public SixSidedDie(){
         minValue = 1;
         maxValue = 6;
         currentValue = maxValue;
+        used = false;
     }
 
     @Override
@@ -33,11 +35,11 @@ public class SixSidedDie implements Die {
 
     @Override
     public void setUsed(boolean used) {
-
+        this.used = used;
     }
 
     @Override
     public boolean getUsed() {
-        return false;
+        return used;
     }
 }
