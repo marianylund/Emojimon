@@ -62,7 +62,7 @@ public class GameScreen implements Screen {
         float h = Gdx.graphics.getHeight();
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, (w / (h - 40)) * 10, 10);
+        camera.setToOrtho(false, (w / (h))*12, 12); // må settes dynamisk
         camera.update();
 
         font = new BitmapFont();
@@ -74,9 +74,9 @@ public class GameScreen implements Screen {
             map = new TiledMap();
             MapLayers layers = map.getLayers();
             for (int i = 0; i < 1; i++) {
-                TiledMapTileLayer layer = new TiledMapTileLayer(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/8);
+                TiledMapTileLayer layer = new TiledMapTileLayer(2, gameBoardController.getBoardSize()/2, Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/(gameBoardController.getBoardSize()/2));
                 for (int x = 0; x < 2; x++) {
-                    for (int y = 0; y < 8; y++) {
+                    for (int y = 0; y < (gameBoardController.getBoardSize()/2); y++) {
                         int ty = (int)(y);
                         int tx = (int)(x);
                         Cell cell = new Cell();
@@ -86,10 +86,11 @@ public class GameScreen implements Screen {
                     }
                 }
                 layers.add(layer);
+                System.out.println(layer.getWidth() +", "+ layer.getHeight());
             }
         }
 
-        renderer = new OrthogonalTiledMapRenderer(map, 1/32f);
+        renderer = new OrthogonalTiledMapRenderer(map, 1/24f);
         Stage stage = new TiledMapStage(map);
         Gdx.input.setInputProcessor(stage);
     }
@@ -121,6 +122,11 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(100f / 255f, 100f / 255f, 250f / 255f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        //prepare for the drawing of buttons on the far side
+        //Gdx.gl.glViewport( 0,Gdx.graphics.getHeight()*(7/8),Gdx.graphics.getWidth(),Gdx.graphics.getHeight() / 8 );
+
+//Draw your stage and just leave the upper right window/table cell transparent
+
         // Prepare for stage drawing by updating the viewport
         stage.getViewport();
         stage.act();
@@ -132,6 +138,8 @@ public class GameScreen implements Screen {
         renderer.setView(camera);
         renderer.render();
 
+        //prepare for the drawing of the scoring area
+       // Gdx.gl.glViewport( 0,0, Gdx.graphics.getWidth(),Gdx.graphics.getHeight()/8);
     }
 
     @Override

@@ -50,12 +50,14 @@ public class Emojimon extends Game {
         FBC.I().get().setGameBoardByGameID(tempGameID, createTempDoubleArrayList());
         FBC.I().get().setGameStatusByGameID(tempGameID, "Playing");
         */
+		//uncomment this when testing on android
+        /*
         FBC.I().get().addNewGame("Player0Olala");
 		FBC.I().get().joinGame();
         String tempGameID = FBC.I().get().getGameIDs()[0].toString();
         FBC.I().get().setGameBoardByGameID(tempGameID, Converter.fromBoardPositionsToList(gameBoardController.getBoardPositions()));
         FBC.I().get().setGameStatusByGameID(tempGameID, "playing");
-
+        */
 	}
 
 	//debugging
