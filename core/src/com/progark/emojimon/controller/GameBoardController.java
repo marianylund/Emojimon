@@ -42,8 +42,8 @@ public class GameBoardController {
     }
 
 
-    public List<Die> getDice(){
-        return gameBoard.getDice();
+    public List<Die> getDieList(){
+        return gameBoard.getDice().getDieList();
     }
 
     public void doMove(Move move){
