@@ -160,6 +160,7 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
     // Finds the first game with status == waiting.
     // Sets player 1 to true and subscribes to the gamedata
     public void joinGame() {
+        System.out.println("JOINED GAME");
         Games.addListenerForSingleValueEvent(new ValueEventListener() {
 
                 @Override
@@ -168,6 +169,7 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
                     if(snap.child("status").getValue().equals("waiting")) {
                         addPlayerToGame(snap.getKey());
                         addGameDataChangeListener(snap.getKey());
+                        addLastTurnDataChangeListener(snap.getKey());
                         break;
                     }
                 }

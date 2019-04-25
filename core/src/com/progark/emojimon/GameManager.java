@@ -15,6 +15,7 @@ public class GameManager implements SubscriberToFirebase {
     private String gameID;
     private LastTurnData lastTurnData;
     private GameData gameData;
+    private GameBoardController gameBoardController;
 
     private boolean currentPlayer = false; // The creator is the first one to go
 
@@ -32,13 +33,25 @@ public class GameManager implements SubscriberToFirebase {
         return INSTANCE;
     }
 
+    public void setGameBoardController(GameBoardController gameBoardController) {
+        this.gameBoardController = gameBoardController;
+    }
+
+    public GameBoardController getGameBoardController() {
+        return gameBoardController;
+    }
+
     @Override
     public void notifyOfNewLastTurn(String gameID, LastTurnData lastTurn) {
         lastTurnData = lastTurn;
         currentPlayer = !lastTurnData.getPlayer();
         if(isItLocalPlayerTurn()){
-            // TODO show what opponent did
-            // TODO start your turn
+            if(gameBoardController != null) {
+                // TODO show what opponent did
+                gameBoardController.showLastTurn(lastTurn);
+                // TODO start your turn
+
+            }
         }
     }
 
