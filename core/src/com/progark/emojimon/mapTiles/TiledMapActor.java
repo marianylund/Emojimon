@@ -12,11 +12,21 @@ public class TiledMapActor extends Actor {
 
     private TiledMapTileLayer.Cell cell;
 
-    public TiledMapActor(TiledMap tiledMap, TiledMapTileLayer tiledLayer, TiledMapTileLayer.Cell cell) {
+    private int tileId;
+
+    public TiledMapActor(TiledMap tiledMap, TiledMapTileLayer tiledLayer, TiledMapTileLayer.Cell cell, int id) {
         this.tiledMap = tiledMap;
         this.tiledLayer = tiledLayer;
         this.cell = cell;
+        this.tileId = id;
     }
 
+    public TiledMapTileLayer.Cell getCell(){
+        return cell;
+    }
+
+    public int getTileId(){
+        return tileId;
+    }
 }
 
