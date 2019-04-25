@@ -17,7 +17,7 @@ public class PlayerController {
 
     // roll dice on touch
     public void onTouchRollDice(){
-        gameBoard.rollDice(player);
+        gameBoard.rollDice();
     }
 
     // selected piece to move
@@ -29,8 +29,8 @@ public class PlayerController {
     }
 
     // select where to move piece to
-    public void onTouchSelectEndPos(Position endPosition){
-        Move move = new Move(startPosition.getPositionIndex(), endPosition.getPositionIndex());
+   /* public void onTouchSelectEndPos(Position endPosition){
+       // Move move = new Move(startPosition.getPositionIndex(), endPosition.getPositionIndex());
         if (gameBoard.movePiece(move)){
             player.updateDice();
             // TODO: save move for player (opt: save move player has made to animate for the opponent?)
@@ -39,6 +39,6 @@ public class PlayerController {
                 player.updatePieceClearance();
             }
         }
-    }
+    }*/
 
 }

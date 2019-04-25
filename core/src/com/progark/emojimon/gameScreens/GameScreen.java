@@ -45,7 +45,7 @@ public class GameScreen implements Screen {
     public GameScreen(final Emojimon game) {
         this.game = game;
         this.gameBoardController = new GameBoardController();
-        this.gameBoardController.createGameBoard(24,6,"BASIC");
+        this.gameBoardController.createStandardGameBoard();
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
         this.assetManager = assetManager;

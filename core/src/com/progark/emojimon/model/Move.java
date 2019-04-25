@@ -13,4 +13,9 @@ public class Move {
         this.endPosition = endPosition;
         this.die = die;
     }
+
+    public Move(int startPosition, int endPosition){
+        this.startPosition = startPosition;
+        this.endPosition = endPosition;
+    }
 }

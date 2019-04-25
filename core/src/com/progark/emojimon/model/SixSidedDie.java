@@ -30,4 +30,14 @@ public class SixSidedDie implements Die {
 
     @Override
     public void setValue(int value){ currentValue = value;}
+
+    @Override
+    public void setUsed(boolean used) {
+
+    }
+
+    @Override
+    public boolean getUsed() {
+        return false;
+    }
 }

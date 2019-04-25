@@ -37,7 +37,7 @@ public class Emojimon extends Game {
 
 		//Test creation of gameboard
 		gameBoardController = new GameBoardController();
-		gameBoardController.createGameBoard(24, 6, "BASIC");
+		gameBoardController.createStandardGameBoard();
 
 
 		//test write to Firebase
