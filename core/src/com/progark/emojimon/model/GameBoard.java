@@ -1,6 +1,7 @@
 package com.progark.emojimon.model;
 
 import com.progark.emojimon.model.factories.CanClearStrategyFactory;
+import com.progark.emojimon.model.factories.DieFactory;
 import com.progark.emojimon.model.factories.MoveSetStrategyFactory;
 import com.progark.emojimon.model.interfaces.DiceMultiplicationStrategy;
 import com.progark.emojimon.model.factories.MoveValidationStrategyFactory;
@@ -8,6 +9,7 @@ import com.progark.emojimon.model.interfaces.Die;
 import com.progark.emojimon.model.strategyPattern.CanClearStrategy;
 import com.progark.emojimon.model.strategyPattern.MoveSetStrategy;
 import com.progark.emojimon.model.strategyPattern.MoveValidationStrategy;
+import com.sun.org.apache.xpath.internal.operations.Mult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +17,13 @@ import java.util.List;
 public class GameBoard {
     private Player player0;
     private Player player1;
-    private List<Die> dice;
     //includes all board positions indexed from bottom right to top right
     private List<Position> boardPositions;// position 0: our bar
     private int boardSize;
     private List<Move> currentTurnMoves; //TODO empty it out when the turn changes
+
+    //dice
+    private Dice dice;
 
     //all pieces must be in goalSize before being able to be cleared off
     private int pieces;
@@ -35,19 +39,18 @@ public class GameBoard {
     private MoveValidationStrategy moveValidationStrategy;
     private CanClearStrategy canClearStrategy;
 
-
     //constructors
     //creates standard gameboard
     public GameBoard(){
-        this(24, 15,"BASIC", "BASIC", "BASIC");
+        this(24, 15,2, 6, 2, "BASIC", "BASIC", "BASIC");
     }
 
     public GameBoard(int boardSize){
-        this(boardSize, 15,"BASIC", "BASIC", "BASIC");
+        this(boardSize, 15, 2, 6, 2, "BASIC", "BASIC", "BASIC");
     }
 
     //create dynamic board
-    public GameBoard(int boardSize, int pieces, String moveSetStrategyID, String moveValidationStrategyID, String canClearStrategyID){
+    public GameBoard(int boardSize, int pieces, int baseNumberOfDice, int dieSides, int diceMultiplier, String moveSetStrategyID, String moveValidationStrategyID, String canClearStrategyID){
         this.pieces = pieces;
 
         // Choose moveset strategy
@@ -79,11 +82,7 @@ public class GameBoard {
         bar = boardPositions.get(0);
 
         //create dice
-        dice = new ArrayList<Die>();
-        Die d1 = new SixSidedDie();
-        Die d2 = new SixSidedDie();
-        dice.add(d1);
-        dice.add(d2);
+        dice = new Dice(baseNumberOfDice, diceMultiplier, dieSides);
 
         //create pieces
         //TODO: Should number of pieces and piece placement strategy be choosable for the player?
@@ -119,10 +118,7 @@ public class GameBoard {
     }
 
     public void rollDice(){
-        for(int i = 0; i < dice.size(); i++){
-            dice.get(i).roll();
-            dice.get(i).setUsed(false);
-        }
+        dice.rollDice();
     }
 
     //region GETTERS AND SETTERS
@@ -134,7 +130,7 @@ public class GameBoard {
         return boardPositions;
     }
 
-    public List<Die> getDice(){
+    public Dice getDice(){
         return dice;
     }
 
@@ -142,10 +138,10 @@ public class GameBoard {
     //otherwise checks for available moves on board
     public List<Move> getPlayer0Moves(){
         if(bar.getOwner() == player0 && bar.getPieceCount() > 0){
-            return player0.getAvailableBarMoves(dice, boardPositions, player1.getHomeAreaStartIndex(), player1.getHomeAreaEndIndex());
+            return player0.getAvailableBarMoves(dice.getDieList(), boardPositions, player1.getHomeAreaStartIndex(), player1.getHomeAreaEndIndex());
         }
         else{
-            return player0.getAvailableBoardMoves(dice, boardPositions);
+            return player0.getAvailableBoardMoves(dice.getDieList(), boardPositions);
         }
     }
 
@@ -153,10 +149,10 @@ public class GameBoard {
     //otherwise checks for available moves on board
     public List<Move> getPlayer1Moves(){
         if(bar.getOwner() == player1 && bar.getPieceCount() > 0){
-            return player1.getAvailableBarMoves(dice, boardPositions, player0.getHomeAreaStartIndex(), player0.getHomeAreaEndIndex());
+            return player1.getAvailableBarMoves(dice.getDieList(), boardPositions, player0.getHomeAreaStartIndex(), player0.getHomeAreaEndIndex());
         }
         else{
-            return player1.getAvailableBoardMoves(dice, boardPositions);
+            return player1.getAvailableBoardMoves(dice.getDieList(), boardPositions);
         }
     }
 
