@@ -47,9 +47,8 @@ public class GameManager implements SubscriberToFirebase {
         currentPlayer = !lastTurnData.getPlayer();
         if(isItLocalPlayerTurn()){
             if(gameBoardController != null) {
-                // TODO show what opponent did
                 gameBoardController.showLastTurn(lastTurn);
-                // TODO start your turn
+                // TODO: GUI: Start turn by enabling roll dice button for player
 
             }
         }
