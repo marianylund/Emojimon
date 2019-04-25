@@ -16,7 +16,6 @@ public class GameBoard {
     private Player player0;
     private Player player1;
     private List<Die> dice;
-    private DiceMultiplicationStrategy diceMultiplicationStrategy;
     //includes all board positions indexed from bottom right to top right
     private List<Position> boardPositions;// position 0: our bar
     private int boardSize;
@@ -31,6 +30,7 @@ public class GameBoard {
     private int blot = 1; // blot: piece/s that can be thrown out to bar, standard 1
 
     // strategies
+    private DiceMultiplicationStrategy diceMultiplicationStrategy;
     private MoveSetStrategy moveSetStrategy; //
     private MoveValidationStrategy moveValidationStrategy;
     private CanClearStrategy canClearStrategy;
