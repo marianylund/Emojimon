@@ -58,7 +58,7 @@ public class GameBoardController {
         gameBoard.rollDice();
     }
 
-    public void showLastTurn(LastTurnData lastTurn) throws InterruptedException {
+    public void showLastTurn(LastTurnData lastTurn) {
         //Set dices
         for (int i = 0; i < 2; i++) {
             Die die = getDieList().get(i);
