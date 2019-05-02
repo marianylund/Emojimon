@@ -13,7 +13,7 @@ public class BasicCanClearStrategy implements CanClearStrategy {
             return false; // player has piece in bar
         }
 
-        for(int i = 0; i < boardPositions.size(); i++){
+        for(int i = 1; i < boardPositions.size(); i++){
             if(boardPositions.get(i).getOwner() == player){
                 int positionIndex = boardPositions.get(i).getPositionIndex();
                 if(positionIndex < player.getHomeAreaStartIndex() || positionIndex > player.getHomeAreaEndIndex()){

@@ -18,7 +18,10 @@ public class GameBoard {
     private Player player0;
     private Player player1;
     //includes all board positions indexed from bottom right to top right
+
     private List<Position> boardPositions;// position 0: our bar
+    private Position bar;
+
     private int boardSize;
     private List<Move> currentTurnMoves; //TODO empty it out when the turn changes
 
@@ -28,8 +31,6 @@ public class GameBoard {
     //all pieces must be in goalSize before being able to be cleared off
     private int pieces;
 
-    private Position bar;
-    private Player inBar;
 
     private int blot = 1; // blot: piece/s that can be thrown out to bar, standard 1
 
@@ -65,20 +66,28 @@ public class GameBoard {
 
         this.boardSize = boardSize;
 
-        //create players
-        //homearea of player0 will be first quadrant of the board
-        //homearea of player1 will be last quadrant of the board
-        player0 = new Player(pieces,1, boardSize/4,false, moveValidationStrategy, canClearStrategy, blot, true);
-        player1 = new Player(pieces, boardSize + 1 - (boardSize/4), boardSize, true, moveValidationStrategy, canClearStrategy, blot, false);
-
-        //create all positions (including bar at position 0)
+        //create all positions
         boardPositions = new ArrayList<Position>();
-        for(int i = 0; i < boardSize+1; i++){
+
+        //create bar at index 0
+        bar = new Position(0);
+        boardPositions.add(bar);
+
+        //create all board positions
+        for(int i = 1; i < boardSize+1; i++){
             Position p = new Position(i);
             boardPositions.add(p);
         }
 
-        bar = boardPositions.get(0);
+        //create goal position
+        Position player0Goal = new Position(boardSize+1);
+        Position player1Goal = new Position(boardSize+2);
+
+        //create players
+        //homearea of player0 will be first quadrant of the board
+        //homearea of player1 will be last quadrant of the board
+        player0 = new Player(pieces,1, boardSize/4, player0Goal, false, moveValidationStrategy, canClearStrategy, blot, true);
+        player1 = new Player(pieces, boardSize + 1 - (boardSize/4), boardSize, player1Goal, true, moveValidationStrategy, canClearStrategy, blot, false);
 
         //create dice
         dice = new Dice(baseNumberOfDice, diceMultiplier, dieSides);
@@ -112,7 +121,9 @@ public class GameBoard {
 
 
     public boolean movePiece(Move move){
-        move.die.setUsed(true);
+        if(move.die != null){
+            move.die.setUsed(true);
+        }
         return moveSetStrategy.doMove(move, boardPositions);
     }
 
@@ -161,6 +172,14 @@ public class GameBoard {
 
     public Player getPlayer1() {
         return player1;
+    }
+
+    public Position getPlayerGoal(int playerIndex){
+        if(playerIndex == 0) return player0.getGoal();
+        else if(playerIndex == 1) return player1.getGoal();
+        else{
+            throw new IndexOutOfBoundsException("Invalid player index " + playerIndex);
+        }
     }
     //endregion
 }
