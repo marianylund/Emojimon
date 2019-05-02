@@ -42,8 +42,8 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
     String gameId = null;
 
 
-    public void Write() {
-        myRef.setValue("testingtesting");
+    public void testWrite(String testMessage) {
+        myRef.setValue(testMessage);
     }
 
     //region NEW GAME

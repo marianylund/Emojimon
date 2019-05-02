@@ -24,7 +24,12 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.progark.emojimon.Emojimon;
 import com.progark.emojimon.GameManager;
+import com.progark.emojimon.controller.FBC;
 import com.progark.emojimon.controller.GameBoardController;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class CreateRulesetScreen implements Screen {
 
@@ -102,7 +107,16 @@ public class CreateRulesetScreen implements Screen {
         createLobbyButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                System.out.println("SONDRE");
+                // Initiate GameBoardController
                 GameManager.GetInstance().setGameBoardController(new GameBoardController());
+                ArrayList<String> strategyList = new ArrayList<String>();
+                strategyList.add("BASIC");
+                strategyList.add("BASIC");
+                strategyList.add("BASIC");
+                FBC.I().get().addNewGame("Sondre", strategyList);
+                FBC.I().get().testWrite("heipådeg");
+                System.out.println(Arrays.toString(FBC.I().get().getGameIDs()));
                 game.setScreen(new LobbyScreen(game));
             }
         });

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface FirebaseControllerInterface {
+    void testWrite(String testMessage);
     // Add new
     void addNewGame(String creatorPlayer, List<String> strategies);
     void addGameDataChangeListener(String gameID); // TODO Do we need it here?
