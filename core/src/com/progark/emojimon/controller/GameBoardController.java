@@ -37,6 +37,25 @@ public class GameBoardController {
 
     }
 
+    // TODO: choose dice
+    // create gameboard with given size and pieces
+    public void createDynamicBoard(int boardSize, int piecesPerPlayer){
+
+        if(boardSize % 2 != 0){ //check if boardsize is valid
+            throw new IllegalArgumentException(String.format("Board size %d is invalid. Size must be divisible by 2. ", boardSize));
+        }
+        // check if amount of pieces is valid
+        else if (piecesPerPlayer < 15){
+            throw new IllegalArgumentException(String.format("Pieces per player %d is invalid. Can't be less than 15", piecesPerPlayer));
+        }
+        else if ((piecesPerPlayer - 15) % 4 != 0){
+            throw new IllegalArgumentException(String.format("Pieces per player %d is invalid. The rest must be 0, i.e divisible by 4.", piecesPerPlayer));
+        }
+        else{
+            gameBoard = new GameBoard(boardSize, piecesPerPlayer, 2, 6, 2, "BASIC", "BASIC", "BASIC");
+        }
+    }
+
     public List<Position> getBoardPositions(){
         return gameBoard.getBoardPositions();
     }

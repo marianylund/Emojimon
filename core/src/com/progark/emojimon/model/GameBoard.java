@@ -50,7 +50,7 @@ public class GameBoard {
 
     //create dynamic board
     public GameBoard(int boardSize, int pieces, int baseNumberOfDice, int dieSides, int diceMultiplier, String moveSetStrategyID, String moveValidationStrategyID, String canClearStrategyID){
-        this.pieces = pieces;
+        this.pieces = pieces; // per player
 
         // Choose moveset strategy
         moveSetStrategy = MoveSetStrategyFactory.GetMoveSet(moveSetStrategyID, blot);
@@ -95,7 +95,16 @@ public class GameBoard {
         boardPositions.get(8).setOwner(player0);
         boardPositions.get(6).addPieces(5);
         boardPositions.get(6).setOwner(player0);
-
+        // if more than 15 pieces per player, add more pieces to placement accordingly
+        if (pieces > 15){
+            int piecesLeft = this.pieces-15;
+            for (int i = 0; i < piecesLeft/4; i++){
+                boardPositions.get(24).addPieces(1);
+                boardPositions.get(13).addPieces(1);
+                boardPositions.get(8).addPieces(1);
+                boardPositions.get(6).addPieces(1);
+            }
+        }
 
         //place player1 pieces according to standard piece placements
         boardPositions.get(1).addPieces(2);
@@ -106,6 +115,16 @@ public class GameBoard {
         boardPositions.get(17).setOwner(player1);
         boardPositions.get(19).addPieces(5);
         boardPositions.get(19).setOwner(player1);
+        // if more than 15 pieces per player, add more pieces to placement accordingly
+        if (pieces > 15){
+            int piecesLeft = this.pieces-15;
+            for (int i = 0; i < piecesLeft/4; i++){
+                boardPositions.get(1).addPieces(1);
+                boardPositions.get(12).addPieces(1);
+                boardPositions.get(17).addPieces(1);
+                boardPositions.get(19).addPieces(1);
+            }
+        }
 
 
     }
