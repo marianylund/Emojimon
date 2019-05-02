@@ -39,7 +39,6 @@ public class SelectEmojiScreen extends ApplicationAdapter implements Screen {
     private Skin skin;
     private SpriteBatch batch; // ubrukt, må finne ut av textureatlas
     private Texture spritesheet;
-    private Sprite brain;
     private Image chosenEmoji;
 
     float sw = Gdx.graphics.getWidth();

@@ -103,7 +103,11 @@ public class GameScreen implements Screen {
         font = new BitmapFont();
 
         tiles = new Texture(Gdx.files.internal("blacktri3.png"));
-        TextureRegion[][] splitTiles = TextureRegion.split(tiles, Gdx.graphics.getWidth()/2, ((Gdx.graphics.getHeight()/8)*6)/(gameBoardController.getBoardSize()/2));
+        TextureRegion blacktri = new TextureRegion(new Texture(Gdx.files.internal("blacktri.png")));
+        TextureRegion blacktri2 = new TextureRegion(new Texture(Gdx.files.internal("blacktri2.png")));
+        TextureRegion blacktri3 = new TextureRegion(tiles);
+
+        //TextureRegion[][] splitTiles = TextureRegion.split(tiles, Gdx.graphics.getWidth()/2, ((Gdx.graphics.getHeight()/8)*6)/(gameBoardController.getBoardSize()/2));
         map = new TiledMap();
         MapLayers layers = map.getLayers();
         for (int i = 0; i < 1; i++) {
@@ -113,7 +117,16 @@ public class GameScreen implements Screen {
                     int ty = (int)(y);
                     int tx = (int)(x);
                     Cell cell = new Cell();
-                    cell.setTile(new StaticTiledMapTile(splitTiles[0][0]));
+                    if(y == 0){
+                        cell.setTile(new StaticTiledMapTile(blacktri));
+
+                    }else if (y== 1){
+                        cell.setTile(new StaticTiledMapTile(blacktri2));
+
+                    } else {
+                        cell.setTile(new StaticTiledMapTile(blacktri3));
+
+                    }
                     layer.setCell(x, y, cell);
 
                 }

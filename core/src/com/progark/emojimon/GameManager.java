@@ -12,7 +12,6 @@ public class GameManager implements SubscriberToFirebase {
     //Implements Singleton pattern with lazy initialization
     private static GameManager INSTANCE;
     private String emoji = "face-with-tears-of-joy_1f602"; // default emoji
-
     private String gameID;
     private LastTurnData lastTurnData;
     private GameData gameData;
