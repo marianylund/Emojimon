@@ -23,6 +23,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.progark.emojimon.Emojimon;
+import com.progark.emojimon.GameManager;
+import com.progark.emojimon.controller.GameBoardController;
 
 public class CreateRulesetScreen implements Screen {
 
@@ -100,6 +102,7 @@ public class CreateRulesetScreen implements Screen {
         createLobbyButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                GameManager.GetInstance().setGameBoardController(new GameBoardController());
                 game.setScreen(new LobbyScreen(game));
             }
         });
