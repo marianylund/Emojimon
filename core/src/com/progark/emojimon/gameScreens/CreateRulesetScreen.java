@@ -107,16 +107,13 @@ public class CreateRulesetScreen implements Screen {
         createLobbyButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("SONDRE");
                 // Initiate GameBoardController
                 GameManager.GetInstance().setGameBoardController(new GameBoardController());
                 ArrayList<String> strategyList = new ArrayList<String>();
                 strategyList.add("BASIC");
                 strategyList.add("BASIC");
                 strategyList.add("BASIC");
-                FBC.I().get().addNewGame("Sondre", strategyList);
-                FBC.I().get().testWrite("heipådeg");
-                System.out.println(Arrays.toString(FBC.I().get().getGameIDs()));
+                FBC.I().get().addNewGame("TEST", strategyList);
                 game.setScreen(new LobbyScreen(game));
             }
         });
