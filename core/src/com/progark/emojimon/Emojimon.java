@@ -48,13 +48,13 @@ public class Emojimon extends Game {
         FBC.I().get().setGameBoardByGameID(tempGameID, createTempDoubleArrayList());
         FBC.I().get().setGameStatusByGameID(tempGameID, "Playing");
         */
-		List<String> strategies = new ArrayList<String>();
+		/*List<String> strategies = new ArrayList<String>();
 		strategies.add("BASIC"); strategies.add("BASIC"); strategies.add("BASIC");
         FBC.I().get().addNewGame("Player0Olala", strategies);
 		FBC.I().get().joinGame();
         String tempGameID = FBC.I().get().getGameIDs()[0].toString();
         FBC.I().get().setGameBoardByGameID(tempGameID, Converter.fromBoardPositionsToList(gameBoardController.getBoardPositions()));
-        FBC.I().get().setGameStatusByGameID(tempGameID, "playing");
+        FBC.I().get().setGameStatusByGameID(tempGameID, "playing");*/
 
 	}
 

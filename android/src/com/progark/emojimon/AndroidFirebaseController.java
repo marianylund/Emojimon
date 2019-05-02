@@ -3,6 +3,7 @@ package com.progark.emojimon;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.badlogic.gdx.Game;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -49,9 +50,14 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
     public void addNewGame(String creatorPlayer, List<String> strategies){
         GameData gd = new GameData(creatorPlayer, strategies);
 
+
         String gameID = Games.push().getKey();
         Games.child(gameID).setValue(gd);
         gamesData.put(gameID, gd);
+
+        GameManager.GetInstance().setLocalPlayer(false); // Player 0 if created the game
+        GameManager.GetInstance().setGameID(gameID);
+        addSubscriber(GameManager.GetInstance());
 
         addGameDataChangeListener(gameID); // Listen to changes of that game
     }
@@ -154,6 +160,7 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
     // Finds the first game with status == waiting.
     // Sets player 1 to true and subscribes to the gamedata
     public void joinGame() {
+        System.out.println("JOINED GAME");
         Games.addListenerForSingleValueEvent(new ValueEventListener() {
 
                 @Override
@@ -162,6 +169,7 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
                     if(snap.child("status").getValue().equals("waiting")) {
                         addPlayerToGame(snap.getKey());
                         addGameDataChangeListener(snap.getKey());
+                        addLastTurnDataChangeListener(snap.getKey());
                         break;
                     }
                 }
@@ -169,10 +177,14 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
+
     }
 
-    void addPlayerToGame(String gameId) {
-        Games.child(gameId + "/player1").setValue(true);
+    void addPlayerToGame(String gameID) {
+        Games.child(gameID + "/player1").setValue(true);
+        GameManager.GetInstance().setGameID(gameID);
+        GameManager.GetInstance().setLocalPlayer(true); // Player 1 if joined game
+        addSubscriber(GameManager.GetInstance());
     }
 
 

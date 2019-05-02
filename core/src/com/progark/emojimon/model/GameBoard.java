@@ -35,6 +35,7 @@ public class GameBoard {
     private int blot = 1; // blot: piece/s that can be thrown out to bar, standard 1
 
     // strategies
+    private DiceMultiplicationStrategy diceMultiplicationStrategy;
     private MoveSetStrategy moveSetStrategy; //
     private MoveValidationStrategy moveValidationStrategy;
     private CanClearStrategy canClearStrategy;
