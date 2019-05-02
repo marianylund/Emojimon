@@ -26,7 +26,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.progark.emojimon.Emojimon;
 import com.progark.emojimon.controller.GameBoardController;
 import com.progark.emojimon.mapTiles.Hud;
@@ -37,7 +41,10 @@ public class GameScreen implements Screen {
     private Hud hud;
     private TiledMap map;
     private TiledMapRenderer renderer;
-    private OrthographicCamera camera;
+    private OrthographicCamera gamecamera;
+    private Viewport gameviewport;
+    private OrthographicCamera guicamera;
+    private Viewport guiviewport;
 
     private AssetManager assetManager;
     private Texture tiles;
@@ -58,7 +65,6 @@ public class GameScreen implements Screen {
         this.game = game;
         this.gameBoardController = new GameBoardController();
         this.gameBoardController.createStandardGameBoard();
-        camera = new OrthographicCamera();
         this.assetManager = assetManager;
 
         //import skin to be used for GUI elements
@@ -67,8 +73,12 @@ public class GameScreen implements Screen {
 
 
         batch = new SpriteBatch();
-        hud = new Hud(batch);
+        hud = new Hud(batch, game);
 
+        guicamera = new OrthographicCamera();
+        guiviewport = new FitViewport(Gdx.graphics.getWidth(), (float)Gdx.graphics.getHeight()/8, guicamera);
+        guiviewport.apply();
+        this.buttonstage = new Stage(guiviewport);
 
     }
 
@@ -83,18 +93,21 @@ public class GameScreen implements Screen {
         float h = Gdx.graphics.getHeight();
 
         //camera = new OrthographicCamera();
-        camera.setToOrtho(false, (w/h)*((float)gameBoardController.getBoardSize()/2), (float)gameBoardController.getBoardSize()/2); // må settes dynamisk
-        camera.update();
+        gamecamera = new OrthographicCamera();
+        gameviewport = new ExtendViewport(Gdx.graphics.getWidth(), (float)(Gdx.graphics.getHeight()/8)*6, gamecamera);
+        //gameviewport.setScreenBounds(0,Gdx.graphics.getHeight()/8,Gdx.graphics.getWidth(),Gdx.graphics.getHeight()/8*6);
+        gamecamera.setToOrtho(false,Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); // må settes dynamisk
+
+        gamecamera.update();
 
         font = new BitmapFont();
-        batch = new SpriteBatch();
 
-        tiles = new Texture(Gdx.files.internal("blacktri2.png"));
-        TextureRegion[][] splitTiles = TextureRegion.split(tiles, 64, 64);
+        tiles = new Texture(Gdx.files.internal("blacktri3.png"));
+        TextureRegion[][] splitTiles = TextureRegion.split(tiles, Gdx.graphics.getWidth()/2, ((Gdx.graphics.getHeight()/8)*6)/(gameBoardController.getBoardSize()/2));
         map = new TiledMap();
         MapLayers layers = map.getLayers();
         for (int i = 0; i < 1; i++) {
-            TiledMapTileLayer layer = new TiledMapTileLayer(2, gameBoardController.getBoardSize()/2, Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/(gameBoardController.getBoardSize()/2));
+            TiledMapTileLayer layer = new TiledMapTileLayer(2, gameBoardController.getBoardSize()/2, Gdx.graphics.getWidth()/2, ((Gdx.graphics.getHeight()/8)*6)/(gameBoardController.getBoardSize()/2));
             for (int x = 0; x < 2; x++) {
                 for (int y = 0; y < (gameBoardController.getBoardSize()/2); y++) {
                     int ty = (int)(y);
@@ -106,58 +119,16 @@ public class GameScreen implements Screen {
                 }
             }
             layers.add(layer);
-            System.out.println(layer.getWidth() +", "+ layer.getHeight());
         }
 
 
 
-        renderer = new OrthogonalTiledMapRenderer(map, 1/64f);
+        renderer = new OrthogonalTiledMapRenderer(map);
         //renderer = new IsometricTiledMapRenderer(map, 1/64f);
         Stage stage = new TiledMapStage(map);
         Gdx.input.setInputProcessor(stage);
-/*
-        //Setting up the buttons
-        Gdx.input.setInputProcessor(buttonstage);
 
-        // Create table to contain menu items
-        Table mainTable = new Table();
-        mainTable.setFillParent(true);
 
-        //Create label and buttons to be displayed
-        TextButton gobackbutton = new TextButton("Back", skin);
-        TextButton doublebutton = new TextButton("Double", skin);
-        TextButton resignbutton = new TextButton("Resign", skin);
-
-        //Add listeners to buttons to add functionality to them when clicked
-        gobackbutton.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                ((Game)Gdx.app.getApplicationListener()).setScreen(new CreateRulesetScreen(game));
-            }
-        });
-        doublebutton.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                ((Game)Gdx.app.getApplicationListener()).setScreen(new ChooseGameScreen(game));
-            }
-        });
-        resignbutton.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.exit();
-            }
-        });
-
-        //Add labels and buttons to menu
-        mainTable.add(gobackbutton).pad(10).width(Gdx.graphics.getWidth()/2).height(Gdx.graphics.getWidth()/6);
-        mainTable.row();
-        mainTable.add(doublebutton).pad(10).width(Gdx.graphics.getWidth()/2).height(Gdx.graphics.getWidth()/6);
-        mainTable.row();
-        mainTable.add(resignbutton).pad(10).width(Gdx.graphics.getWidth()/2);
-
-        //Add menu to stage as an actor
-        buttonstage.addActor(mainTable);
-*/
     }
 
 
@@ -188,23 +159,32 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(100f / 255f, 100f / 255f, 250f / 255f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        //scoring area
+        //Gdx.gl.glViewport(0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight()/8);
+        buttonstage.getViewport();
+        buttonstage.act();
+        buttonstage.draw();
+
+        // Prepare for embedded map drawing by applying the desired viewport for the map
+        Gdx.gl.glViewport(0, Gdx.graphics.getHeight()/8, Gdx.graphics.getWidth(),  (Gdx.graphics.getHeight()/8)*6);
+        stage.getViewport().apply();
+        stage.act();
+        stage.draw();
+
+        renderer.setView(gamecamera);
+        renderer.render();
+
         //prepare for the drawing of buttons on the far side
-        Gdx.gl.glViewport( 0,Gdx.graphics.getHeight()*(7/8),Gdx.graphics.getWidth(),Gdx.graphics.getHeight() / 8 );
+        //Gdx.gl.glViewport( 0,(Gdx.graphics.getHeight()*8)*7,Gdx.graphics.getWidth(),Gdx.graphics.getHeight() / 8 );
+        //batch.setProjectionMatrix(hud.getStage().getCamera().combined); //set the spriteBatch to draw what our stageViewport sees
+        //hud.getStage().act(dt); //act the Hud
+        //hud.getStage().draw(); //draw the Hud
 /*
         // Prepare for stage drawing by updating the viewport
         buttonstage.getViewport();
         buttonstage.act();
         buttonstage.draw();
 */
-        // Prepare for embedded map drawing by applying the desired viewport for the map
-        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(),  Gdx.graphics.getHeight());
-        stage.getViewport();
-        stage.act();
-        stage.draw();
-
-        camera.update();
-        renderer.setView(camera);
-        renderer.render();
 
         //prepare for the drawing of the scoring area
        // Gdx.gl.glViewport( 0,0, Gdx.graphics.getWidth(),Gdx.graphics.getHeight()/8);
@@ -214,7 +194,10 @@ public class GameScreen implements Screen {
     public void resize (int width, int height) {
 
         stage.getViewport().update(width, height, true);
-       // buttonstage.getViewport().update(width, height, true);
+        buttonstage.getViewport().update(width, height, true);
+
+        guicamera.position.set(guicamera.viewportWidth / 2, guicamera.viewportHeight / 2, 0);
+        guicamera.update();
         //scorestage.getViewport().update(width,height,true);
         //hud.getStage().getViewport().update(width, height);
 
