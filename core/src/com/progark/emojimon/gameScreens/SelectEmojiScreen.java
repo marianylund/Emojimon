@@ -145,7 +145,7 @@ public class SelectEmojiScreen extends ApplicationAdapter implements Screen {
         });
         //Add button container
         Container buttonContainer = new Container();
-        
+
         float cw = sw * 0.8f;
         float ch = sh * 0.5f;
         buttonContainer.center();

@@ -9,12 +9,13 @@ public class GameData {
     private String player1Key;
     private String player1emoji;
     private List<List<Integer>> GameBoard;
+    private List<String> strategies;
 
     public GameData(){} // Reguires for Firebase
 
-    public GameData(String player0) {
+    public GameData(String player0, List<String> strategies) {
         this.status = "Waiting";
-
+        this.strategies = strategies;
         // The player who has created the game
         this.player0Key = player0;
 
@@ -53,6 +54,7 @@ public class GameData {
         this.GameBoard = gameBoard;
     }
 
+
     public String getPlayer0emoji() {
         return player0emoji;
     }
@@ -67,6 +69,11 @@ public class GameData {
 
     public void setPlayer1emoji(String player1emoji) {
         this.player1emoji = player1emoji;
+    }
+
+    public List<String> getStrategies() {
+        return strategies;
+
     }
 
     @Override
