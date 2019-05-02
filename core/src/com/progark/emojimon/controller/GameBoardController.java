@@ -28,8 +28,8 @@ public class GameBoardController {
     //create gameboard with given size
     public void createGameBoard(int boardSize){
         //check if boardsize is valid
-        if(boardSize % 2 != 0){
-            throw new IllegalArgumentException(String.format("Board size %d is invalid. Size must be divisible by 2. ", boardSize));
+        if(boardSize % 4 != 0){
+            throw new IllegalArgumentException(String.format("Board size %d is invalid. Size must be divisible by 4. ", boardSize));
         }
         else{
             gameBoard = new GameBoard(boardSize);
@@ -41,18 +41,18 @@ public class GameBoardController {
     // create gameboard with given size and pieces
     public void createDynamicBoard(int boardSize, int piecesPerPlayer){
 
-        if(boardSize % 2 != 0){ //check if boardsize is valid
-            throw new IllegalArgumentException(String.format("Board size %d is invalid. Size must be divisible by 2. ", boardSize));
+        if(boardSize % 4 != 0){ //check if boardsize is valid
+            throw new IllegalArgumentException(String.format("Board size %d is invalid. Size must be divisible by 4. ", boardSize));
         }
         // check if amount of pieces is valid
         else if (piecesPerPlayer < 15){
             throw new IllegalArgumentException(String.format("Pieces per player %d is invalid. Can't be less than 15", piecesPerPlayer));
         }
-        else if ((piecesPerPlayer - 15) % 4 != 0){
-            throw new IllegalArgumentException(String.format("Pieces per player %d is invalid. The rest must be 0, i.e divisible by 4.", piecesPerPlayer));
+        else if (piecesPerPlayer > 30){
+            throw new IllegalArgumentException(String.format("Pieces per player %d is invalid. Cannot have over 30 pieces per player.", piecesPerPlayer));
         }
         else{
-            gameBoard = new GameBoard(boardSize, piecesPerPlayer, 2, 6, 2, "BASIC", "BASIC", "BASIC");
+            gameBoard = new GameBoard(boardSize, piecesPerPlayer, 2, 6, 2, "BASIC", "BASIC", "BASIC", "BASIC");
         }
     }
 
