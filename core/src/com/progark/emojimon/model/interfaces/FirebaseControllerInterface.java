@@ -3,12 +3,13 @@ package com.progark.emojimon.model.interfaces;
 import com.progark.emojimon.model.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
 public interface FirebaseControllerInterface {
     // Add new
-    void addNewGame(String creatorPlayer);
+    void addNewGame(String creatorPlayer, List<String> strategies);
     void addGameDataChangeListener(String gameID); // TODO Do we need it here?
     void addLastTurnByGameID(String gameID, boolean player, List<Integer> dices, List<List<Integer>> actions);
 
