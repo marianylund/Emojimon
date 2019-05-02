@@ -42,14 +42,14 @@ public class Emojimon extends Game {
 
 		//test write to Firebase
 
-		/*
-		FBC.I().get().addNewGame("Player0Olala");
+/*
+		FBC.I().get().addNewGame("PLEASEWORK");
 		//tempLastTurn();
 		//FBC.I().get().joinGame();
         String tempGameID = FBC.I().get().getGameIDs()[0].toString();
         FBC.I().get().setGameBoardByGameID(tempGameID, createTempDoubleArrayList());
         FBC.I().get().setGameStatusByGameID(tempGameID, "Playing");
-        */
+*/
 		//uncomment this when testing on android
         /*
         FBC.I().get().addNewGame("Player0Olala");
