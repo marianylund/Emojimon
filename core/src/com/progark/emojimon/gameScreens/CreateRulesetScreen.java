@@ -74,7 +74,7 @@ public class CreateRulesetScreen implements Screen {
         diceAmountBox.setItems("1","2","3","4","5");
 
         final SelectBox<String> diceSizeBox = new SelectBox<String>(skin);
-        diceSizeBox.setItems("4","6","12","20");
+        diceSizeBox.setItems("4","6","10","20");
 
         final SelectBox<String> startPositionBox = new SelectBox<String>(skin);
         startPositionBox.setItems("Top right","Top left","Bottom right","Bottom left");

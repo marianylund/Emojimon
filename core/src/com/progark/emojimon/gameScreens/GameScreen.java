@@ -16,6 +16,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -28,10 +29,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.progark.emojimon.Emojimon;
 import com.progark.emojimon.controller.GameBoardController;
+import com.progark.emojimon.mapTiles.Hud;
 import com.progark.emojimon.mapTiles.TiledMapStage;
 
 public class GameScreen implements Screen {
 
+    private Hud hud;
     private TiledMap map;
     private TiledMapRenderer renderer;
     private OrthographicCamera camera;
@@ -62,6 +65,11 @@ public class GameScreen implements Screen {
         atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"), atlas);
 
+
+        batch = new SpriteBatch();
+        hud = new Hud(batch);
+
+
     }
 
 
@@ -74,8 +82,8 @@ public class GameScreen implements Screen {
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
 
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, (w / (h))*12, 12); // må settes dynamisk
+        //camera = new OrthographicCamera();
+        camera.setToOrtho(false, (w/h)*((float)gameBoardController.getBoardSize()/2), (float)gameBoardController.getBoardSize()/2); // må settes dynamisk
         camera.update();
 
         font = new BitmapFont();
@@ -101,10 +109,13 @@ public class GameScreen implements Screen {
             System.out.println(layer.getWidth() +", "+ layer.getHeight());
         }
 
-        renderer = new OrthogonalTiledMapRenderer(map, 1/24f);
+
+
+        renderer = new OrthogonalTiledMapRenderer(map, 1/64f);
+        //renderer = new IsometricTiledMapRenderer(map, 1/64f);
         Stage stage = new TiledMapStage(map);
         Gdx.input.setInputProcessor(stage);
-
+/*
         //Setting up the buttons
         Gdx.input.setInputProcessor(buttonstage);
 
@@ -146,7 +157,7 @@ public class GameScreen implements Screen {
 
         //Add menu to stage as an actor
         buttonstage.addActor(mainTable);
-
+*/
     }
 
 
@@ -167,7 +178,8 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        hud.dispose(); //dispose our hud
+        batch.dispose(); //dispose the spriteBatch
     }
 
 
@@ -178,12 +190,12 @@ public class GameScreen implements Screen {
 
         //prepare for the drawing of buttons on the far side
         Gdx.gl.glViewport( 0,Gdx.graphics.getHeight()*(7/8),Gdx.graphics.getWidth(),Gdx.graphics.getHeight() / 8 );
-
+/*
         // Prepare for stage drawing by updating the viewport
         buttonstage.getViewport();
         buttonstage.act();
         buttonstage.draw();
-
+*/
         // Prepare for embedded map drawing by applying the desired viewport for the map
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(),  Gdx.graphics.getHeight());
         stage.getViewport();
@@ -202,7 +214,9 @@ public class GameScreen implements Screen {
     public void resize (int width, int height) {
 
         stage.getViewport().update(width, height, true);
-        buttonstage.getViewport().update(width, height, true);
-        scorestage.getViewport().update(width,height,true);
+       // buttonstage.getViewport().update(width, height, true);
+        //scorestage.getViewport().update(width,height,true);
+        //hud.getStage().getViewport().update(width, height);
+
     }
 }
