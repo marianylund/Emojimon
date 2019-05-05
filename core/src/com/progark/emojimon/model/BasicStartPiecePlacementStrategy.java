@@ -13,7 +13,7 @@ import java.util.List;
 //player0, positions: [24, 13, 8, 6]
 //player1, positions: [1, 12, 17, 19]
 
-public class BasicStartStartPiecePlacementStrategy implements StartPiecePlacementStrategy {
+public class BasicStartPiecePlacementStrategy implements StartPiecePlacementStrategy {
 
     @Override
     public void placeStartPieces(int boardSize, int piecesPerPlayer, List<Position> boardPositions, Player p0, Player p1, int pieces) {
