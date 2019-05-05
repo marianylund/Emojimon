@@ -19,7 +19,6 @@ public class GameBoardController {
 
     public int getBoardSize(){return gameBoard.getBoardSize();}
 
-
     //create gameboard with standard settings
     public void createStandardGameBoard(){
         gameBoard = new GameBoard();

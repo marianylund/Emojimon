@@ -23,8 +23,6 @@ public class Emojimon extends Game {
     Texture img;
     GameBoardController gameBoardController;
 
-
-
     public Emojimon(FirebaseControllerInterface firebaseControllerInterface){
         FBC.I().setFirebase(firebaseControllerInterface);
     }
@@ -50,7 +48,9 @@ public class Emojimon extends Game {
         FBC.I().get().setGameBoardByGameID(tempGameID, createTempDoubleArrayList());
         FBC.I().get().setGameStatusByGameID(tempGameID, "Playing");
         */
-        FBC.I().get().addNewGame("Player0Olala");
+		List<String> strategies = new ArrayList<String>();
+		strategies.add("BASIC"); strategies.add("BASIC"); strategies.add("BASIC");
+        FBC.I().get().addNewGame("Player0Olala", strategies);
 		FBC.I().get().joinGame();
         String tempGameID = FBC.I().get().getGameIDs()[0].toString();
         FBC.I().get().setGameBoardByGameID(tempGameID, Converter.fromBoardPositionsToList(gameBoardController.getBoardPositions()));
