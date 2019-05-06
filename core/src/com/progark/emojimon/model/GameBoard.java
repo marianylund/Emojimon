@@ -95,6 +95,8 @@ public class GameBoard {
         //homearea of player1 will be last quadrant of the board
         player0 = new Player(pieces,1, boardSize/4, player0Goal, false, moveValidationStrategy, canClearStrategy, blot, true);
         player1 = new Player(pieces, boardSize + 1 - (boardSize/4), boardSize, player1Goal, true, moveValidationStrategy, canClearStrategy, blot, false);
+        player0Goal.setOwner(player0);
+        player1Goal.setOwner(player1);
 
         //create dice
         dice = new Dice(baseNumberOfDice, diceMultiplier, dieSides);
@@ -110,7 +112,30 @@ public class GameBoard {
             move.die.setUsed(true);
         }
         currentTurnMoves.add(move);
-        return moveSetStrategy.doMove(move, boardPositions);
+
+        //check if move is to either player's goal (outside of boardpositions)
+        if(move.endPosition >= boardPositions.size()){
+            //move piece to goal
+            if(move.endPosition == getPlayerGoal(0).getPositionIndex()){
+                //move to goal 0
+                boardPositions.get(move.startPosition).removePieces(1);
+                getPlayerGoal(0).addPieces(1);
+                return true;
+            }
+            else if(move.endPosition == getPlayerGoal(1).getPositionIndex()){
+                //move to goal 1
+                boardPositions.get(move.startPosition).removePieces(1);
+                getPlayerGoal(1).addPieces(1);
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            //do board move
+            return moveSetStrategy.doMove(move, boardPositions);
+        }
     }
 
     public void rollDice(){
