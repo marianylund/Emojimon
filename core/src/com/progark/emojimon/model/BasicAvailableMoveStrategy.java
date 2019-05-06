@@ -7,11 +7,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BasicAvailableMoveStrategy implements MoveValidationStrategy {
+
+    private int blot;
+
+    public BasicAvailableMoveStrategy(int blot) {
+        this.blot = blot;
+    }
+
     @Override
     //Validates move based on standard backgammon movement rules
     //Valid if endposition is free, endposition is owned by moving player, or endposition contains 1 enemy piece
     // blot is how many of the opposing pieces in an endposition can be thrown of to bar
-    public boolean isAvailableMove(Position startPosition, Position endPosition, int blot){
+    public boolean isAvailableMove(Position startPosition, Position endPosition){
         boolean valid = false;
         if(endPosition.getPieceCount() == 0){
             valid = true;
@@ -19,7 +26,7 @@ public class BasicAvailableMoveStrategy implements MoveValidationStrategy {
         else if(endPosition.getOwner() == startPosition.getOwner()){
             valid = true;
         }
-        else if(endPosition.getPieceCount() == blot){
+        else if(endPosition.getPieceCount() == this.blot){
             valid = true;
         }
         return valid;

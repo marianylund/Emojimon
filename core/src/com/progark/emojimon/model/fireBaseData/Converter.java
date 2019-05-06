@@ -43,6 +43,7 @@ public class Converter {
         return p.isCreator() ? 0 : 1;
     }
 
+
     public static List<List<Integer>> fromMovesToList(List<Move> moves){
         List<List<Integer>> movesList = new ArrayList<List<Integer>>();
         for (Move m: moves)

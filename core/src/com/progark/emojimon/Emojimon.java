@@ -17,8 +17,8 @@ import java.util.List;
 
 public class Emojimon extends Game {
 
-    public static final int WIDTH = 480;
-    public static final int HEIGHT = 880;
+    public static final int WIDTH = 800;
+    public static final int HEIGHT = 800;
     SpriteBatch batch;
     Texture img;
     GameBoardController gameBoardController;
@@ -40,22 +40,22 @@ public class Emojimon extends Game {
 
 		//test write to Firebase
 
-		/*
-		FBC.I().get().addNewGame("Player0Olala");
-		//tempLastTurn();
-		//FBC.I().get().joinGame();
-        String tempGameID = FBC.I().get().getGameIDs()[0].toString();
-        FBC.I().get().setGameBoardByGameID(tempGameID, createTempDoubleArrayList());
-        FBC.I().get().setGameStatusByGameID(tempGameID, "Playing");
-        */
-		/*List<String> strategies = new ArrayList<String>();
+
+		//uncomment this when testing on android
+        /*
+        FBC.I().get().addNewGame("Player0Olala");
+
+		List<String> strategies = new ArrayList<String>();
+
 		strategies.add("BASIC"); strategies.add("BASIC"); strategies.add("BASIC");
         FBC.I().get().addNewGame("Player0Olala", strategies);
+
 		FBC.I().get().joinGame();
         String tempGameID = FBC.I().get().getGameIDs()[0].toString();
         FBC.I().get().setGameBoardByGameID(tempGameID, Converter.fromBoardPositionsToList(gameBoardController.getBoardPositions()));
-        FBC.I().get().setGameStatusByGameID(tempGameID, "playing");*/
 
+        FBC.I().get().setGameStatusByGameID(tempGameID, "playing");
+        */
 	}
 
 	//debugging
