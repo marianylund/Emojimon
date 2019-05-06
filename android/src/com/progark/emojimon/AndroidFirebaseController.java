@@ -3,12 +3,14 @@ package com.progark.emojimon;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.badlogic.gdx.Game;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.progark.emojimon.model.fireBaseData.Settings;
 import com.progark.emojimon.model.interfaces.FirebaseControllerInterface;
 import com.progark.emojimon.model.fireBaseData.GameData;
 import com.progark.emojimon.model.fireBaseData.LastTurnData;
@@ -41,17 +43,22 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
     String gameId = null;
 
 
-    public void Write() {
-        myRef.setValue("testingtesting");
+    public void testWrite(String testMessage) {
+        myRef.setValue(testMessage);
     }
 
     //region NEW GAME
-    public void addNewGame(String creatorPlayer){
-        GameData gd = new GameData(creatorPlayer);
+    public void addNewGame(String creatorPlayer, Settings strategies){
+        GameData gd = new GameData(creatorPlayer, strategies);
+
 
         String gameID = Games.push().getKey();
         Games.child(gameID).setValue(gd);
         gamesData.put(gameID, gd);
+
+        GameManager.GetInstance().setLocalPlayer(false); // Player 0 if created the game
+        GameManager.GetInstance().setGameID(gameID);
+        addSubscriber(GameManager.GetInstance());
 
         addGameDataChangeListener(gameID); // Listen to changes of that game
     }
@@ -62,18 +69,8 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 GameData sm = dataSnapshot.getValue(GameData.class);
                 gamesData.put(gameID, sm); //Update that gameData class
-                //Log.d("sondre", "Game has been updated: " + sm.toString());
+                System.out.println(gamesData);
                 notifyGameDataSubs(gameID, sm);
-
-                /* Debugging
-                if(sm == null){
-                    Log.d("sondre", "GD is null");
-                } else {
-                    Log.d("sondre", sm.toString());
-                    Log.d("sondre", "Player0" + sm.getPlayer0Key());
-                    Log.d("sondre", "GameState" + sm.getGameBoard());
-                }*/
-
             }
 
             @Override
@@ -108,16 +105,6 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
                 lastTurnData.put(gameID, sm); //Update that LastTurnData class
 
                 notifyLastTurnSubs(gameID,sm);
-
-                //Debugging
-                /*if(sm == null){
-                    Log.d("sondre", "GD is null");
-                } else {
-                    Log.d("sondre", sm.toString());
-                    Log.d("sondre", "Last player turn: " + sm.getPlayer());
-                    Log.d("sondre", "Actions: " + sm.getActions());
-                }*/
-
             }
 
             @Override
@@ -159,9 +146,10 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
                 @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snap : dataSnapshot.getChildren()){
-                    if(snap.child("status").getValue().equals("waiting")) {
+                    if(snap.child("status").getValue().equals("Waiting")) {
                         addPlayerToGame(snap.getKey());
                         addGameDataChangeListener(snap.getKey());
+                        //addLastTurnDataChangeListener(snap.getKey());
                         break;
                     }
                 }
@@ -169,10 +157,14 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
+
     }
 
-    void addPlayerToGame(String gameId) {
-        Games.child(gameId + "/player1").setValue(true);
+    void addPlayerToGame(String gameID) {
+        Games.child(gameID + "/player1").setValue(true);
+        GameManager.GetInstance().setGameID(gameID);
+        GameManager.GetInstance().setLocalPlayer(true); // Player 1 if joined game
+        addSubscriber(GameManager.GetInstance());
     }
 
 

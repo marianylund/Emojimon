@@ -5,11 +5,14 @@ import com.progark.emojimon.model.GameBoard;
 import com.progark.emojimon.model.Move;
 import com.progark.emojimon.model.Player;
 import com.progark.emojimon.model.Position;
+import com.progark.emojimon.model.fireBaseData.Converter;
+import com.progark.emojimon.model.fireBaseData.LastTurnData;
 import com.progark.emojimon.model.interfaces.Die;
 
 
 import java.lang.reflect.Modifier;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class GameBoardController {
     private GameBoard gameBoard;
@@ -42,8 +45,8 @@ public class GameBoardController {
     }
 
 
-    public List<Die> getDice(){
-        return gameBoard.getDice();
+    public List<Die> getDieList(){
+        return gameBoard.getDice().getDieList();
     }
 
     public void doMove(Move move){
@@ -53,6 +56,27 @@ public class GameBoardController {
     // TODO: move to PlayerController?
     public void rollDice(){
         gameBoard.rollDice();
+    }
+
+    public void showLastTurn(LastTurnData lastTurn) {
+        //Set dices
+        for (int i = 0; i < 2; i++) {
+            Die die = getDieList().get(i);
+            int dieValue = lastTurn.getDices().get(i);
+            System.out.println("DieValue" + dieValue);
+            die.setValue(dieValue);
+        }
+
+        //Update gameboard with moves
+        List<Move> moves = Converter.fromListToMoves(lastTurn.getActions());
+        for (Move move : moves) {
+            doMove(move);
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();  // set interrupt flag
+            }
+        }
     }
 
 }
