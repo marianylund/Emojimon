@@ -8,5 +8,5 @@ import com.progark.emojimon.model.interfaces.Die;
 import java.util.List;
 
 public interface MoveValidationStrategy {
-    boolean isAvailableMove(Position startPosition, Position endPosition, int blot);
+    boolean isAvailableMove(Position startPosition, Position endPosition);
 }

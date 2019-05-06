@@ -18,11 +18,10 @@ public class Player {
     private MoveValidationStrategy moveValidationStrategy;
     private CanClearStrategy canClearStrategy;
     private int piecesInGame; // hold count of pieces that haven't been cleared off
-    private int blot; // blot: piece/s that can be thrown out to bar
     private Position goal;
 
 
-    public Player(int piecesInGame, int homeAreaStartIndex, int homeAreaEndIndex, Position goal, boolean moveClockwise, MoveValidationStrategy moveValidationStrategy, CanClearStrategy canClearStrategy, int blot, boolean isCreator){
+    public Player(int piecesInGame, int homeAreaStartIndex, int homeAreaEndIndex, Position goal, boolean moveClockwise, MoveValidationStrategy moveValidationStrategy, CanClearStrategy canClearStrategy, boolean isCreator){
         this.piecesInGame = piecesInGame;
         this.homeAreaStartIndex = homeAreaStartIndex;
         this.homeAreaEndIndex = homeAreaEndIndex;
@@ -31,7 +30,6 @@ public class Player {
         this.moveValidationStrategy = moveValidationStrategy;
         // set strategies for piece movement
         this.canClearStrategy = canClearStrategy;
-        this.blot = blot;
         this.creator = isCreator;
     }
 
@@ -78,7 +76,7 @@ public class Player {
             Position endPosition = positions.get(endPositionIndex);
 
             //apply move validation strategy to check if move is valid
-            if(moveValidationStrategy.isAvailableMove(positions.get(0), endPosition, blot)){
+            if(moveValidationStrategy.isAvailableMove(positions.get(0), endPosition)){
                 moves.add(new Move(barIndex, endPositionIndex, die));
             }
         }
@@ -131,7 +129,7 @@ public class Player {
                     }
 
                     //apply move validation strategy to check if move is valid
-                    if(moveValidationStrategy.isAvailableMove(startPosition, endPosition, blot)){
+                    if(moveValidationStrategy.isAvailableMove(startPosition, endPosition)){
                         moves.add(new Move(positionIndex, endPositionIndex, die));
                     }
                 }
@@ -175,7 +173,7 @@ public class Player {
 
     // returns whether move is available
     public boolean isAvailableMove(Position start, Position end){
-        return moveValidationStrategy.isAvailableMove(start, end, blot);
+        return moveValidationStrategy.isAvailableMove(start, end);
     }
 
     public boolean isCreator() {
