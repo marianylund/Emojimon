@@ -1,15 +1,19 @@
 package com.progark.emojimon.controller;
 
 import com.progark.emojimon.Emojimon;
+import com.progark.emojimon.GameManager;
 import com.progark.emojimon.model.GameBoard;
 import com.progark.emojimon.model.Move;
 import com.progark.emojimon.model.Player;
 import com.progark.emojimon.model.Position;
+import com.progark.emojimon.model.fireBaseData.Converter;
+import com.progark.emojimon.model.fireBaseData.LastTurnData;
 import com.progark.emojimon.model.interfaces.Die;
 
 
 import java.lang.reflect.Modifier;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class GameBoardController {
     private GameBoard gameBoard;
@@ -77,4 +81,36 @@ public class GameBoardController {
         gameBoard.rollDice();
     }
 
+    public void showLastTurn(LastTurnData lastTurn) {
+        //Set dices
+        for (int i = 0; i < 2; i++) {
+            Die die = getDieList().get(i);
+            int dieValue = lastTurn.getDices().get(i);
+            System.out.println("DieValue" + dieValue);
+            die.setValue(dieValue);
+        }
+
+        //Update gameboard with moves
+        List<Move> moves = Converter.fromListToMoves(lastTurn.getActions());
+        for (Move move : moves) {
+            doMove(move);
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();  // set interrupt flag
+            }
+        }
+    }
+
+    public void endTurn(Player player){
+        if(player.isDone()){
+            // TODO End Game
+        }else{
+            // Push Last turn data
+            FBC.I().get().addLastTurnByGameID(GameManager.GetInstance().getGameID(), !player.isCreator(),
+                    Converter.fromDiceToList(gameBoard.getDice().getDieList()),
+                    Converter.fromMovesToList(gameBoard.getCurrentTurnMoves()));
+            gameBoard.emptyCurrentTurnMoves();
+        }
+    }
 }

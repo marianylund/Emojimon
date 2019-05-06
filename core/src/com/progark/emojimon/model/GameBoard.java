@@ -26,7 +26,7 @@ public class GameBoard {
 
     private int boardSize;
     private int piecesPerPlayer;
-    private List<Move> currentTurnMoves; //TODO empty it out when the turn changes
+    private List<Move> currentTurnMoves; // moves done during this turn, it is emptied when the turn is ended
 
     //dice
     private Dice dice;
@@ -38,6 +38,7 @@ public class GameBoard {
     private int blot = 1; // blot: piece/s that can be thrown out to bar, standard 1
 
     // strategies
+    private DiceMultiplicationStrategy diceMultiplicationStrategy;
     private MoveSetStrategy moveSetStrategy; //
     private MoveValidationStrategy moveValidationStrategy;
     private CanClearStrategy canClearStrategy;
@@ -108,6 +109,7 @@ public class GameBoard {
         if(move.die != null){
             move.die.setUsed(true);
         }
+        currentTurnMoves.add(move);
         return moveSetStrategy.doMove(move, boardPositions);
     }
 
@@ -165,5 +167,14 @@ public class GameBoard {
             throw new IndexOutOfBoundsException("Invalid player index " + playerIndex);
         }
     }
+
+    public List<Move> getCurrentTurnMoves() {
+        return currentTurnMoves;
+    }
+
+    public void emptyCurrentTurnMoves(){
+        currentTurnMoves.clear();
+    }
+
     //endregion
 }
