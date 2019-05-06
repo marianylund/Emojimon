@@ -136,6 +136,30 @@ public class Player {
             }
         }
 
+        if(canClear(positions)){
+            //allow removal of furthest piece in home area if no other move is valid
+            if(moves.size() == 0){
+                if(moveClockwise){
+                    for(int i = homeAreaEndIndex; i >= homeAreaStartIndex; i--){
+                        Position p = positions.get(i);
+                        if(p.getOwner() == this && p.getPieceCount() > 0){
+
+                            //use dice with highest value
+                            int maxValue = 0;
+                            for(int diceIndex = 0; diceIndex < dice.size(); diceIndex++){
+                                if(dice.get(diceIndex).getUsed()){
+                                    continue;
+                                }
+                                maxValue = dice.get(i).getValue();
+                            }
+                            //TODO: Add move with correct die
+                            //moves.add(new Move(i, goal.getPositionIndex()))
+                        }
+                    }
+                }
+            }
+        }
+
         return moves;
     }
 
