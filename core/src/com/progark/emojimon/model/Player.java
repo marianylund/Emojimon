@@ -10,8 +10,8 @@ import java.util.List;
 public class Player {
 
     private boolean creator = false;
-    private int homeAreaStartIndex;
-    private int homeAreaEndIndex;
+    private int homeAreaStartIndex; //lowest index of home area
+    private int homeAreaEndIndex; //highest index of home area
     private boolean moveClockwise;
     private MoveValidationStrategy moveValidationStrategy;
     private CanClearStrategy canClearStrategy;
@@ -139,21 +139,32 @@ public class Player {
         if(canClear(positions)){
             //allow removal of furthest piece in home area if no other move is valid
             if(moves.size() == 0){
-                if(moveClockwise){
-                    for(int i = homeAreaEndIndex; i >= homeAreaStartIndex; i--){
-                        Position p = positions.get(i);
-                        if(p.getOwner() == this && p.getPieceCount() > 0){
+                int positionIndex = moveClockwise ? homeAreaEndIndex : homeAreaStartIndex;
+                while(positionIndex >= homeAreaStartIndex && positionIndex <= homeAreaEndIndex){
+                    //update positionindex
+                    if(moveClockwise) positionIndex--;
+                    else positionIndex++;
 
-                            //use dice with highest value
-                            int maxValue = 0;
-                            for(int diceIndex = 0; diceIndex < dice.size(); diceIndex++){
-                                if(dice.get(diceIndex).getUsed()){
-                                    continue;
-                                }
-                                maxValue = dice.get(i).getValue();
+                    Position p = positions.get(positionIndex);
+                    if(p.getOwner() == this && p.getPieceCount() > 0){
+
+                        //use dice with highest value
+                        int maxValue = 0;
+                        int maxValueIndex = -1;
+                        for(int diceIndex = 0; diceIndex < dice.size(); diceIndex++){
+                            Die d = dice.get(diceIndex);
+                            if(d.getUsed()){
+                                continue;
                             }
-                            //TODO: Add move with correct die
-                            //moves.add(new Move(i, goal.getPositionIndex()))
+                            if(d.getValue() > maxValue){
+                                maxValue = d.getValue();
+                                maxValueIndex = diceIndex;
+                            }
+                        }
+                        //add move using highest die available
+                        if(maxValueIndex > -1){
+                            moves.add(new Move(positionIndex, goal.getPositionIndex(), dice.get(maxValueIndex)));
+                            break; //only one move should be added
                         }
                     }
                 }
