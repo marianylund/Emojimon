@@ -27,6 +27,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.progark.emojimon.Emojimon;
 import com.progark.emojimon.GameManager;
 import com.progark.emojimon.controller.GameBoardController;
+import com.progark.emojimon.model.Move;
 import com.progark.emojimon.model.Position;
 
 
@@ -59,6 +60,8 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
     float sw = Gdx.graphics.getWidth();
     float sh = Gdx.graphics.getHeight();
+
+    private int fieldReference;
 
 
 
@@ -232,7 +235,9 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         diceButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                debugLabel.setText("Pew Pew");
+                gameBoardController.rollDice();
+                //gameBoardController.getDieList().get(0);
+                debugLabel.setText(gameBoardController.getDieList().get(0).getValue() + " "+ gameBoardController.getDieList().get(1).getValue());
                 // TODO throw dice
             }
         });
@@ -269,7 +274,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     private void addTriangles(Table t, int n, boolean rotationUp, int startTriangle){
         TextureRegion chosenTriangle = null;
         TextureRegion emoji = null;
-        List<Position> positions = gameBoardController.getBoardPositions();
+        final List<Position> positions = gameBoardController.getBoardPositions();
         for(int i = 0; i < n; i++){
             Position position = positions.get(i+1);
             if(position.getPieceCount()>0){
@@ -302,7 +307,46 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                 triangle.addListener(new ClickListener(){
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        debugLabel.setText(triangleNumber);
+                        List<Move> movelist = gameBoardController.getMoves(GameManager.GetInstance().getLocalPlayer());
+                        if(fieldReference == triangleNumber){
+                            fieldReference = 0;
+                            debugLabel.setText(fieldReference);
+                        }
+                        else if (fieldReference == 0){
+                            fieldReference = triangleNumber;
+
+                            Position pos = positions.get(triangleNumber);
+
+
+                            for(int i =0; i< movelist.size(); i++){
+                                if(movelist.get(i).startPosition == pos.getPositionIndex()){
+
+                                    System.out.print(movelist.get(i).startPosition);
+                                    System.out.print(movelist.get(i).endPosition);
+                                    System.out.print(movelist.get(i).die.getValue());
+                                    System.out.println("");
+
+                                }
+                            }
+                            debugLabel.setText(fieldReference);
+                        }
+                        else {
+                            //Todo combine the direction of the player with the dices thrown so to check if a move is allowed
+
+                            Move move = new Move(fieldReference,triangleNumber);
+                            for(int i =0; i < movelist.size();i++){
+                                if(movelist.get(i).startPosition == fieldReference && movelist.get(i).endPosition== triangleNumber){
+                                    gameBoardController.doMove(movelist.get(i));
+                                    System.out.print("noe skjer!");
+                                    movelist= gameBoardController.getMoves(GameManager.GetInstance().getLocalPlayer());
+                                }
+                            }
+
+
+                            debugLabel.setText(fieldReference + " " + triangleNumber);
+                        }
+
+
                     }
                 });
             } else {
@@ -310,7 +354,23 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                 triangle.addListener(new ClickListener(){
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        debugLabel.setText(triangleNumber);
+                        if(fieldReference == triangleNumber){
+                            fieldReference = 0;
+                            debugLabel.setText(fieldReference);
+                        }
+                        else if (fieldReference == 0){
+                            fieldReference = triangleNumber;
+                            debugLabel.setText(fieldReference);
+                        }
+                        else {
+                            //Todo combine the direction of the player with the dices thrown so to check if a move is allowed
+                            /*
+                            Position pos = positions.get(triangleNumber);
+                            if(pos.getPieceCount()>0);
+                            gameBoardController.getMoves(GameManager.GetInstance().getLocalPlayer());
+                            */
+                            debugLabel.setText(fieldReference + " " + triangleNumber);
+                        }
                     }
                 });
             }
