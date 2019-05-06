@@ -1,6 +1,6 @@
 package com.progark.emojimon.model.factories;
 
-import com.progark.emojimon.model.BasicStartStartPiecePlacementStrategy;
+import com.progark.emojimon.model.BasicStartPiecePlacementStrategy;
 import com.progark.emojimon.model.strategyPattern.StartPiecePlacementStrategy;
 
 // implements factory method for StartPiecePlacementStrategy
@@ -12,7 +12,7 @@ public class StartPiecePlacementStrategyFactory {
             return null;
         }
         if (startPiecePlacementValidation.equalsIgnoreCase("BASIC")){
-            return new BasicStartStartPiecePlacementStrategy();
+            return new BasicStartPiecePlacementStrategy();
         }
         return null;
     }

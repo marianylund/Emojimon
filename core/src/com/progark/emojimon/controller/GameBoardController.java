@@ -21,8 +21,6 @@ public class GameBoardController {
     public GameBoardController(){
     }
 
-    public int getBoardSize(){return gameBoard.getBoardSize();}
-
     //create gameboard with standard settings
     public void createStandardGameBoard(){
         gameBoard = new GameBoard();
@@ -30,44 +28,50 @@ public class GameBoardController {
 
     //create gameboard with given size
     public void createGameBoard(int boardSize){
-        //check if boardsize is valid
-        if(boardSize % 4 != 0){
-            throw new IllegalArgumentException(String.format("Board size %d is invalid. Size must be divisible by 4. ", boardSize));
-        }
-        else{
-            gameBoard = new GameBoard(boardSize);
-        }
-
+        validateGameBoard(boardSize, true); //check if boardsize is valid
+        gameBoard = new GameBoard(boardSize);
     }
 
-    // TODO: add possibility to choose dice
     // create gameboard with given size and pieces
-    public void createDynamicBoard(int boardSize, int piecesPerPlayer){
-
-        if(boardSize % 4 != 0){ //check if boardsize is valid
-            throw new IllegalArgumentException(String.format("Board size %d is invalid. Size must be divisible by 4. ", boardSize));
-        }
-        // check if amount of pieces is valid (between 15-30)
-        else if (piecesPerPlayer < 15){
-            throw new IllegalArgumentException(String.format("Pieces per player %d is invalid. Can't be less than 15", piecesPerPlayer));
-        }
-        else if (piecesPerPlayer > 30){
-            throw new IllegalArgumentException(String.format("Pieces per player %d is invalid. Cannot have over 30 pieces per player.", piecesPerPlayer));
-        }
-        else{
-            gameBoard = new GameBoard(boardSize, piecesPerPlayer, 2, 6, 2, "BASIC", "BASIC", "BASIC", "BASIC");
-        }
+    public void createDynamicGameBoard(int boardSize, int piecesPerPlayer, int baseNumberOfDice, int dieSides, int diceMultiplier){
+        validateGameBoard(boardSize, true);
+        validatePieces(piecesPerPlayer, true);
+        gameBoard = new GameBoard(boardSize, piecesPerPlayer, baseNumberOfDice, dieSides, diceMultiplier, "BASIC", "BASIC", "BASIC", "BASIC");
     }
 
+    // validation methods
+    private boolean validateGameBoard(int boardSize, boolean throwException) {
+        if(boardSize % 4 != 0){ //check if boardsize is valid
+            if (throwException){
+                throw new IllegalArgumentException(String.format("Board size %d is invalid. Size must be divisible by 4. ", boardSize));
+            }
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validatePieces(int piecesPerPlayer, boolean throwException){
+        if (piecesPerPlayer < 15 || piecesPerPlayer > 30){ // check if amount of pieces is valid (between 15-30)
+            if (throwException) {
+                throw new IllegalArgumentException(String.format("Pieces per player %d is invalid. Can't be less than 15 or more than 30.", piecesPerPlayer));
+            }
+            return false;
+        }
+        return true;
+    }
+
+    // getters
     public List<Position> getBoardPositions(){
         return gameBoard.getBoardPositions();
     }
-
 
     public List<Die> getDieList(){
         return gameBoard.getDice().getDieList();
     }
 
+    public int getBoardSize(){return gameBoard.getBoardSize();}
+
+    // methods
     public void doMove(Move move){
         gameBoard.movePiece(move);
     }
