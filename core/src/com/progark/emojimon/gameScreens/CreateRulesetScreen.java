@@ -26,10 +26,14 @@ import com.progark.emojimon.Emojimon;
 import com.progark.emojimon.GameManager;
 import com.progark.emojimon.controller.FBC;
 import com.progark.emojimon.controller.GameBoardController;
+import com.progark.emojimon.model.factories.MoveValidationStrategyFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import com.progark.emojimon.model.factories.MoveValidationStrategyFactory.MoveValStrat;
+import com.progark.emojimon.model.factories.MoveSetStrategyFactory.MoveSetStrat;
+import com.progark.emojimon.model.factories.CanClearStrategyFactory.CanClearStrat;
 
 public class CreateRulesetScreen implements Screen {
 
@@ -42,6 +46,9 @@ public class CreateRulesetScreen implements Screen {
     private String diceAmount;
     private String startPosition;
     private String diceSize;
+    private MoveValStrat moveValStrat = MoveValStrat.BASIC;
+    private MoveSetStrat moveSetStrat = MoveSetStrat.BASIC;
+    private CanClearStrat canClearStrat = CanClearStrat.BASIC;
 
     public CreateRulesetScreen(final Emojimon game) {
         this.game = game;
@@ -67,6 +74,9 @@ public class CreateRulesetScreen implements Screen {
         TextButton createLobbyButton = new TextButton("Create Lobby!", skin);
 
         Label screenLabel = new Label("Create Ruleset", skin);
+        Label moveValidationLabel = new Label("Moves allowed", skin);
+        final Label moveSetLabel = new Label("Move logic", skin);
+        final Label canClearLabel = new Label("Bear off", skin);
         Label diceAmountLabel = new Label("Amount of dice", skin);
         Label diceSizeLabel = new Label("Dice size", skin);
         Label startPositionLabel = new Label("Start position", skin);
@@ -76,6 +86,15 @@ public class CreateRulesetScreen implements Screen {
         diceAmountField.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
         TextField diceSizeField = new TextField("", skin);
         diceSizeField.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
+
+        final SelectBox<MoveValStrat> moveValidationStrategiesBox = new SelectBox<MoveValStrat>(skin);
+        moveValidationStrategiesBox.setItems(MoveValStrat.BASIC, MoveValStrat.MOVEBACKWARDS);
+
+        final SelectBox<MoveSetStrat> moveSetStrategiesBox = new SelectBox<MoveSetStrat>(skin);
+        moveSetStrategiesBox.setItems(MoveSetStrat.BASIC);
+
+        final SelectBox<CanClearStrat> canClearStrategiesBox = new SelectBox<CanClearStrat>(skin);
+        canClearStrategiesBox.setItems(CanClearStrat.BASIC);
 
         final SelectBox<String> diceAmountBox = new SelectBox<String>(skin);
         diceAmountBox.setItems("1","2","3","4","5");
@@ -109,10 +128,10 @@ public class CreateRulesetScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 // Initiate GameBoardController
                 GameManager.GetInstance().setGameBoardController(new GameBoardController());
-                ArrayList<String> strategyList = new ArrayList<String>();
-                strategyList.add("BASIC");
-                strategyList.add("BASIC");
-                strategyList.add("BASIC");
+                ArrayList strategyList = new ArrayList();
+                strategyList.add(moveSetStrat);
+                strategyList.add(moveValStrat);
+                strategyList.add(canClearStrat);
                 FBC.I().get().addNewGame("TEST", strategyList);
                 game.setScreen(new LobbyScreen(game));
             }
@@ -123,6 +142,30 @@ public class CreateRulesetScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 startPosition = startPositionBox.getSelected();
                 System.out.println(startPosition);
+            }
+        });
+
+        moveValidationStrategiesBox.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                moveValStrat = moveValidationStrategiesBox.getSelected();
+                System.out.println(moveValStrat.toString());
+            }
+        });
+
+        moveSetStrategiesBox.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                moveSetStrat = moveSetStrategiesBox.getSelected();
+                System.out.println(moveSetStrat.toString());
+            }
+        });
+
+        canClearStrategiesBox.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                canClearStrat = canClearStrategiesBox.getSelected();
+                System.out.println(canClearStrat.toString());
             }
         });
 
@@ -146,12 +189,18 @@ public class CreateRulesetScreen implements Screen {
         mainTable.add(screenLabel).pad(20);
         // mainTable.add(screenLabel).pad(10).width(Value.percentWidth(.75F, mainTable));
         mainTable.row();
+        mainTable.add(moveValidationLabel).pad(Gdx.graphics.getWidth()/24);
+        mainTable.add(moveValidationStrategiesBox).pad(Gdx.graphics.getWidth()/24).width(Value.percentWidth(.25F, mainTable));
+        mainTable.add(moveSetLabel).pad(Gdx.graphics.getWidth()/24);
+        mainTable.add(moveSetStrategiesBox).pad(Gdx.graphics.getWidth()/24).width(Value.percentWidth(.25F, mainTable));
+        mainTable.row();
+        mainTable.add(canClearLabel).pad(Gdx.graphics.getWidth()/24);
+        mainTable.add(canClearStrategiesBox).pad(Gdx.graphics.getWidth()/24).width(Value.percentWidth(.25F, mainTable));
         mainTable.add(diceAmountLabel).pad(Gdx.graphics.getWidth()/24);
         mainTable.add(diceAmountBox).pad(Gdx.graphics.getWidth()/24).width(Value.percentWidth(.25F, mainTable));
         mainTable.row();
         mainTable.add(diceSizeLabel).pad(Gdx.graphics.getWidth()/24);
         mainTable.add(diceSizeBox).pad(Gdx.graphics.getWidth()/24).width(Value.percentWidth(.25F, mainTable));
-        mainTable.row();
         mainTable.add(startPositionLabel).pad(Gdx.graphics.getWidth()/24);
         mainTable.add(startPositionBox).pad(Gdx.graphics.getWidth()/24).width(Value.percentWidth(.25F, mainTable));
         mainTable.row();

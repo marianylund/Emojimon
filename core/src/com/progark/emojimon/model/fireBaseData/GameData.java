@@ -1,6 +1,9 @@
 package com.progark.emojimon.model.fireBaseData;
 
 import java.util.List;
+import com.progark.emojimon.model.factories.MoveValidationStrategyFactory.MoveValStrat;
+import com.progark.emojimon.model.factories.MoveSetStrategyFactory.MoveSetStrat;
+import com.progark.emojimon.model.factories.CanClearStrategyFactory.CanClearStrat;
 
 public class GameData {
     private String status;
@@ -14,6 +17,7 @@ public class GameData {
     public GameData(String player0, List<String> strategies) {
         this.status = "Waiting";
         this.strategies = strategies;
+        // Convert Strings to ENUMS
         // The player who has created the game
         this.player0Key = player0;
     }
