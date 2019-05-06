@@ -7,8 +7,6 @@ import com.progark.emojimon.model.strategyPattern.MoveValidationStrategy;
 import java.util.ArrayList;
 import java.util.List;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 public class Player {
 
     private boolean creator = false;
@@ -17,12 +15,12 @@ public class Player {
     private boolean moveClockwise;
     private MoveValidationStrategy moveValidationStrategy;
     private CanClearStrategy canClearStrategy;
-    private int piecesInGame; // hold count of pieces that haven't been cleared off
+    private int numberOfPieces; // hold count of pieces that haven't been cleared off
     private Position goal;
 
 
-    public Player(int piecesInGame, int homeAreaStartIndex, int homeAreaEndIndex, Position goal, boolean moveClockwise, MoveValidationStrategy moveValidationStrategy, CanClearStrategy canClearStrategy, boolean isCreator){
-        this.piecesInGame = piecesInGame;
+    public Player(int numberOfPieces, int homeAreaStartIndex, int homeAreaEndIndex, Position goal, boolean moveClockwise, MoveValidationStrategy moveValidationStrategy, CanClearStrategy canClearStrategy, boolean isCreator){
+        this.numberOfPieces = numberOfPieces;
         this.homeAreaStartIndex = homeAreaStartIndex;
         this.homeAreaEndIndex = homeAreaEndIndex;
         this.goal = goal;
@@ -158,12 +156,7 @@ public class Player {
 
     // returns whether player has cleared all of their pieces, i.e. won
     public boolean isDone() {
-        return (piecesInGame == 0);
-    }
-
-    // everytime a piece is cleared up, decrement pieces in play
-    public void updatePieceClearance(){
-        --piecesInGame;
+        return (goal.getPieceCount() == numberOfPieces);
     }
 
     //returns whether player is in a position to start clearing pieces
