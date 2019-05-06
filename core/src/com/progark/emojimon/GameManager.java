@@ -70,4 +70,8 @@ public class GameManager implements SubscriberToFirebase {
     public void setGameID(String gameID){
         this.gameID = gameID;
     }
+
+    public String getGameID(){
+        return gameID;
+    }
 }
