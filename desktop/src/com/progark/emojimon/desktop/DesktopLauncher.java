@@ -9,6 +9,8 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
+		config.width = Emojimon.WIDTH;
+		config.height = Emojimon.HEIGHT;
 		config.title = "Emojimon";
 		config.useGL30 = false;
 

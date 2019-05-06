@@ -1,0 +1,124 @@
+emojipack.png
+size: 480, 960
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+aubergine_1f346
+  rotate: false
+  xy: 0, 720
+  size: 240, 240
+  orig: 240, 240
+  offset: 0, 0
+  index: -1
+brain_1f9e0
+  rotate: false
+  xy: 0, 432
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+collision-symbol_1f4a5
+  rotate: false
+  xy: 288, 432
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+extraterrestrial-alien_1f47d
+  rotate: false
+  xy: 288, 576
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+eyes_1f440
+  rotate: false
+  xy: 0, 576
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+face-screaming-in-fear_1f631
+  rotate: false
+  xy: 144, 576
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+face-with-tears-of-joy_1f602
+  rotate: false
+  xy: 144, 432
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+grinning-face-with-star-eyes_1f929
+  rotate: false
+  xy: 144, 288
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+hundred-points-symbol_1f4af
+  rotate: false
+  xy: 288, 288
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+pile-of-poo_1f4a9
+  rotate: false
+  xy: 144, 0
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+scissors
+  rotate: false
+  xy: 0, 144
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: 2702
+shocked-face-with-exploding-head_1f92f
+  rotate: false
+  xy: 0, 288
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+smiling-face-with-halo_1f607
+  rotate: false
+  xy: 144, 144
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+smiling-face-with-horns_1f608
+  rotate: false
+  xy: 288, 144
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+smiling-face-with-sunglasses_1f60e
+  rotate: false
+  xy: 288, 0
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+wastebasket_1f5d1
+  rotate: false
+  xy: 0, 0
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+winking-face_1f609
+  rotate: false
+  xy: 240, 720
+  size: 240, 240
+  orig: 240, 240
+  offset: 0, 0
+  index: -1

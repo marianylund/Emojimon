@@ -102,6 +102,15 @@ public class GameBoardController {
         }
     }
 
+
+    public List<Move> getMoves(int playerindex) {
+        if (playerindex == 0) {
+            return gameBoard.getPlayer0Moves();
+        } else {
+            return gameBoard.getPlayer1Moves();
+        }
+    }
+
     public void endTurn(Player player){
         if(player.isDone()){
             // TODO End Game

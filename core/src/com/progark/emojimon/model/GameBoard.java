@@ -53,6 +53,8 @@ public class GameBoard {
 
     //create dynamic board
     public GameBoard(int boardSize, int piecesPerPlayer, int baseNumberOfDice, int dieSides, int diceMultiplier, String moveSetStrategyID, String moveValidationStrategyID, String canClearStrategyID, String startPiecePlacementStrategyID){
+        currentTurnMoves = new ArrayList<Move>();
+
         this.piecesPerPlayer = piecesPerPlayer;
 
         // Choose moveset strategy

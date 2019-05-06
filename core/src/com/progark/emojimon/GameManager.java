@@ -11,7 +11,7 @@ import com.progark.emojimon.model.interfaces.SubscriberToFirebase;
 public class GameManager implements SubscriberToFirebase {
     //Implements Singleton pattern with lazy initialization
     private static GameManager INSTANCE;
-
+    private String emoji = "face-with-tears-of-joy_1f602"; // default emoji
     private String gameID;
     private LastTurnData lastTurnData;
     private GameData gameData;
@@ -67,11 +67,26 @@ public class GameManager implements SubscriberToFirebase {
         this.localPlayer = localPlayer;
     }
 
+    public int getLocalPlayer(){
+        if(localPlayer){
+            return 1;
+        }
+        return 0;
+    }
+
     public void setGameID(String gameID){
         this.gameID = gameID;
     }
 
     public String getGameID(){
         return gameID;
+    }
+
+    public String getEmoji() {
+        return emoji;
+    }
+
+    public void setEmoji(String emoji) {
+        this.emoji = emoji;
     }
 }

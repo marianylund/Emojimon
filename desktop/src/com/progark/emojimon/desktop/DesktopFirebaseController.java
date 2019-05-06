@@ -14,9 +14,8 @@ public class DesktopFirebaseController implements FirebaseControllerInterface {
     }
 
 
-
     @Override
-    public void addNewGame(String creatorPlayer) {
+    public void addNewGame(String creatorPlayer, List<String> strategies) {
 
     }
 

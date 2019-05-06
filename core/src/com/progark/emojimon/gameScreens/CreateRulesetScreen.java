@@ -34,9 +34,8 @@ public class CreateRulesetScreen implements Screen {
     private Viewport viewport;
     private TextureAtlas atlas;
     private Skin skin;
-    private String diceAmount;
-    private String startPosition;
-    private String diceSize;
+
+    private String diceAmount, startPosition, diceSize;
 
     public CreateRulesetScreen(final Emojimon game) {
         this.game = game;
@@ -76,7 +75,7 @@ public class CreateRulesetScreen implements Screen {
         diceAmountBox.setItems("1","2","3","4","5");
 
         final SelectBox<String> diceSizeBox = new SelectBox<String>(skin);
-        diceSizeBox.setItems("4","6","12","20");
+        diceSizeBox.setItems("4","6","10","20");
 
         final SelectBox<String> startPositionBox = new SelectBox<String>(skin);
         startPositionBox.setItems("Top right","Top left","Bottom right","Bottom left");
