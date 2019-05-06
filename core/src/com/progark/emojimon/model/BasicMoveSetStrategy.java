@@ -23,6 +23,8 @@ public class BasicMoveSetStrategy implements MoveSetStrategy {
         if (startPosition.getOwner().isAvailableMove(startPosition, endPosition)){
 
             // throw opposite players piece
+            System.out.println(endPosition.getOwner());
+            System.out.print(bar.getOwner());
             if (!endPosition.getOwner().equals(startPosition.getOwner())){
                 bar.addPieces(blot);
                 endPosition.removePieces(blot);
