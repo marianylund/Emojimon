@@ -1,27 +1,25 @@
 package com.progark.emojimon.model.fireBaseData;
 
+import java.util.HashMap;
 import java.util.List;
-import com.progark.emojimon.model.factories.MoveValidationStrategyFactory.MoveValStrat;
-import com.progark.emojimon.model.factories.MoveSetStrategyFactory.MoveSetStrat;
-import com.progark.emojimon.model.factories.CanClearStrategyFactory.CanClearStrat;
+import java.util.Set;
 
 public class GameData {
     private String status;
     private String player0Key;
     private String player1Key;
     private List<List<Integer>> GameBoard;
-    private List<String> strategies;
+    private Settings settings;
 
     public GameData(){} // Reguires for Firebase
 
-    public GameData(String player0, List<String> strategies) {
+    public GameData(String player0, Settings settings) {
         this.status = "Waiting";
-        this.strategies = strategies;
+        this.settings = settings;
         // Convert Strings to ENUMS
         // The player who has created the game
         this.player0Key = player0;
     }
-
 
     public String getStatus() {
         return status;
@@ -55,8 +53,8 @@ public class GameData {
         this.GameBoard = gameBoard;
     }
 
-    public List<String> getStrategies() {
-        return strategies;
+    public Settings getSettings() {
+        return settings;
     }
 
     @Override
@@ -72,6 +70,6 @@ public class GameData {
         } else {
             s += " and no player";
         }
-        return s;
+        return settings.toString();
     }
 }

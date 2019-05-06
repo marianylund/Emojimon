@@ -30,10 +30,13 @@ import com.progark.emojimon.model.factories.MoveValidationStrategyFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import com.progark.emojimon.model.factories.MoveValidationStrategyFactory.MoveValStrat;
 import com.progark.emojimon.model.factories.MoveSetStrategyFactory.MoveSetStrat;
 import com.progark.emojimon.model.factories.CanClearStrategyFactory.CanClearStrat;
+import com.progark.emojimon.model.fireBaseData.GameData;
+import com.progark.emojimon.model.fireBaseData.Settings;
 
 public class CreateRulesetScreen implements Screen {
 
@@ -128,11 +131,12 @@ public class CreateRulesetScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 // Initiate GameBoardController
                 GameManager.GetInstance().setGameBoardController(new GameBoardController());
-                ArrayList strategyList = new ArrayList();
-                strategyList.add(moveSetStrat);
-                strategyList.add(moveValStrat);
-                strategyList.add(canClearStrat);
-                FBC.I().get().addNewGame("TEST", strategyList);
+                Settings settingsList = new Settings("test", "test", "test", "tet");
+                /*settingsList.put("MoveSetStrat", "test");
+                settingsList.put("MoveValStrat", "test");
+                settingsList.put("CanClearStrat", "test");
+                settingsList.put("NumOfDice", diceAmount);*/
+                FBC.I().get().addNewGame("TEST", settingsList);
                 game.setScreen(new LobbyScreen(game));
             }
         });
