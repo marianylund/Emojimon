@@ -3,12 +3,14 @@ package com.progark.emojimon.model;
 import com.progark.emojimon.model.factories.CanClearStrategyFactory;
 import com.progark.emojimon.model.factories.DieFactory;
 import com.progark.emojimon.model.factories.MoveSetStrategyFactory;
+import com.progark.emojimon.model.factories.StartPiecePlacementStrategyFactory;
 import com.progark.emojimon.model.interfaces.DiceMultiplicationStrategy;
 import com.progark.emojimon.model.factories.MoveValidationStrategyFactory;
 import com.progark.emojimon.model.interfaces.Die;
 import com.progark.emojimon.model.strategyPattern.CanClearStrategy;
 import com.progark.emojimon.model.strategyPattern.MoveSetStrategy;
 import com.progark.emojimon.model.strategyPattern.MoveValidationStrategy;
+import com.progark.emojimon.model.strategyPattern.StartPiecePlacementStrategy;
 import com.sun.org.apache.xpath.internal.operations.Mult;
 
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ public class GameBoard {
     private Position bar;
 
     private int boardSize;
+    private int piecesPerPlayer;
     private List<Move> currentTurnMoves; //TODO empty it out when the turn changes
 
     //dice
@@ -39,20 +42,21 @@ public class GameBoard {
     private MoveSetStrategy moveSetStrategy; //
     private MoveValidationStrategy moveValidationStrategy;
     private CanClearStrategy canClearStrategy;
+    private StartPiecePlacementStrategy startPiecePlacementStrategy;
 
     //constructors
     //creates standard gameboard
     public GameBoard(){
-        this(24, 15,2, 6, 2, "BASIC", "BASIC", "BASIC");
+        this(24, 15,2, 6, 2, "BASIC", "BASIC", "BASIC", "BASIC");
     }
 
     public GameBoard(int boardSize){
-        this(boardSize, 15, 2, 6, 2, "BASIC", "BASIC", "BASIC");
+        this(boardSize, 15, 2, 6, 2, "BASIC", "BASIC", "BASIC", "BASIC");
     }
 
     //create dynamic board
-    public GameBoard(int boardSize, int pieces, int baseNumberOfDice, int dieSides, int diceMultiplier, String moveSetStrategyID, String moveValidationStrategyID, String canClearStrategyID){
-        this.pieces = pieces;
+    public GameBoard(int boardSize, int piecesPerPlayer, int baseNumberOfDice, int dieSides, int diceMultiplier, String moveSetStrategyID, String moveValidationStrategyID, String canClearStrategyID, String startPiecePlacementStrategyID){
+        this.piecesPerPlayer = piecesPerPlayer;
 
         // Choose moveset strategy
         moveSetStrategy = MoveSetStrategyFactory.GetMoveSet(moveSetStrategyID, blot);
@@ -64,6 +68,8 @@ public class GameBoard {
         // Choose can clear strategy
         canClearStrategy = CanClearStrategyFactory.getCanClearStrategy(canClearStrategyID);
 
+        // Choose a startPiecePlacementStrategy
+        startPiecePlacementStrategy = StartPiecePlacementStrategyFactory.getPiecePlacementStrategy(startPiecePlacementStrategyID);
 
         this.boardSize = boardSize;
 
@@ -93,30 +99,8 @@ public class GameBoard {
         //create dice
         dice = new Dice(baseNumberOfDice, diceMultiplier, dieSides);
 
-        //create pieces
-        //TODO: Should number of pieces and piece placement strategy be choosable for the player?
-        //player0
-        //place white pieces according to standard piece placements
-        boardPositions.get(24).addPieces(2);
-        boardPositions.get(24).setOwner(player0);
-        boardPositions.get(13).addPieces(5);
-        boardPositions.get(13).setOwner(player0);
-        boardPositions.get(8).addPieces(3);
-        boardPositions.get(8).setOwner(player0);
-        boardPositions.get(6).addPieces(5);
-        boardPositions.get(6).setOwner(player0);
-
-
-        //place player1 pieces according to standard piece placements
-        boardPositions.get(1).addPieces(2);
-        boardPositions.get(1).setOwner(player1);
-        boardPositions.get(12).addPieces(5);
-        boardPositions.get(12).setOwner(player1);
-        boardPositions.get(17).addPieces(3);
-        boardPositions.get(17).setOwner(player1);
-        boardPositions.get(19).addPieces(5);
-        boardPositions.get(19).setOwner(player1);
-
+        // add pieces to board
+        startPiecePlacementStrategy.placeStartPieces(boardSize, piecesPerPlayer, boardPositions, player0, player1, piecesPerPlayer);
 
     }
 
