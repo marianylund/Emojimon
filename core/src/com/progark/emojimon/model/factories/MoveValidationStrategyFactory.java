@@ -7,12 +7,12 @@ import com.progark.emojimon.model.strategyPattern.MoveValidationStrategy;
 public class MoveValidationStrategyFactory {
 
     // Create a concrete strategy for validating a move
-    public static MoveValidationStrategy getMoveValidationStrategy(String moveValidation){
+    public static MoveValidationStrategy getMoveValidationStrategy(String moveValidation, int blot){
         if (moveValidation == null){
             return null;
         }
         if (moveValidation.equalsIgnoreCase("BASIC")){
-            return new BasicAvailableMoveStrategy();
+            return new BasicAvailableMoveStrategy(blot);
         }
         return null;
     }

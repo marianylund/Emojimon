@@ -25,17 +25,14 @@ public class GameBoard {
     private Position bar;
 
     private int boardSize;
+    //all pieces must be in goalSize before being able to be cleared off
     private int piecesPerPlayer;
     private List<Move> currentTurnMoves; // moves done during this turn, it is emptied when the turn is ended
 
     //dice
     private Dice dice;
 
-    //all pieces must be in goalSize before being able to be cleared off
-    private int pieces;
-
-
-    private int blot = 1; // blot: piece/s that can be thrown out to bar, standard 1
+    private int blot = 1; // blot is how many of the opposing pieces in an endposition can be thrown of to bar
 
     // strategies
     private DiceMultiplicationStrategy diceMultiplicationStrategy;
@@ -62,8 +59,7 @@ public class GameBoard {
         moveSetStrategy = MoveSetStrategyFactory.GetMoveSet(moveSetStrategyID, blot);
 
         // Choose move validation strategy
-        // TODO: add blot to move validation
-        moveValidationStrategy = MoveValidationStrategyFactory.getMoveValidationStrategy(moveValidationStrategyID);
+        moveValidationStrategy = MoveValidationStrategyFactory.getMoveValidationStrategy(moveValidationStrategyID, blot);
 
         // Choose can clear strategy
         canClearStrategy = CanClearStrategyFactory.getCanClearStrategy(canClearStrategyID);
@@ -93,8 +89,8 @@ public class GameBoard {
         //create players
         //homearea of player0 will be first quadrant of the board
         //homearea of player1 will be last quadrant of the board
-        player0 = new Player(pieces,1, boardSize/4, player0Goal, false, moveValidationStrategy, canClearStrategy, blot, true);
-        player1 = new Player(pieces, boardSize + 1 - (boardSize/4), boardSize, player1Goal, true, moveValidationStrategy, canClearStrategy, blot, false);
+        player0 = new Player(piecesPerPlayer, 1, boardSize/4, player0Goal, false, moveValidationStrategy, canClearStrategy, true);
+        player1 = new Player(piecesPerPlayer, boardSize + 1 - (boardSize/4), boardSize, player1Goal, true, moveValidationStrategy, canClearStrategy, false);
         player0Goal.setOwner(player0);
         player1Goal.setOwner(player1);
 
