@@ -26,7 +26,11 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.progark.emojimon.Emojimon;
 import com.progark.emojimon.GameManager;
+import com.progark.emojimon.controller.GameBoardController;
+import com.progark.emojimon.model.Position;
 
+
+import java.util.List;
 
 import sun.rmi.runtime.Log;
 
@@ -34,6 +38,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
     private Stage stage;
     final Emojimon game;
+    private GameBoardController gameBoardController;
     private OrthographicCamera camera;
     private Viewport viewport;
     private TextureAtlas atlas;
@@ -43,6 +48,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     private Image cells;
 
     private TextureAtlas boardAtlas;
+    private TextureAtlas emojiAtlas;
 
     private TextureRegion triUpWhite;
     private TextureRegion triDownWhite;
@@ -59,6 +65,8 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     public GameScreenStandard(final Emojimon game) {
         Gdx.graphics.setContinuousRendering(true);
         this.game = game;
+        this.gameBoardController = new GameBoardController();//need to be changed to the singelton reference
+        this.gameBoardController.createStandardGameBoard();
 
         atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"), atlas);
@@ -72,6 +80,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         stage = new Stage(viewport);
 
         boardAtlas = new TextureAtlas(Gdx.files.internal("Board/Output/triangles.atlas"));
+        emojiAtlas = new TextureAtlas(Gdx.files.internal("Emojis/Output/emojiatlas.atlas"));
 
         triUpWhite = boardAtlas.findRegion("Triangle-white-up");
         triDownWhite = boardAtlas.findRegion("Triangle-white-down");
@@ -165,7 +174,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         Table out0 = new Table();
         Table home0 = new Table();
 
-        int boardSize = 24;
+        int boardSize = gameBoardController.getBoardSize();
         int trianglesPerZone = boardSize/4;
 
         addTriangles(out1, trianglesPerZone, false, 1+trianglesPerZone*2);
@@ -209,7 +218,6 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         sideMenu.add(backButton); sideMenu.row();//.pad(10);
 
         // Add Turn emoji
-        TextureAtlas emojiAtlas = new TextureAtlas(Gdx.files.internal("Emojis/Output/emojiatlas.atlas"));
         TextureAtlas.AtlasRegion emojiRegion = emojiAtlas.findRegion(GameManager.GetInstance().getEmoji());
         sideMenu.add(new Image(emojiRegion)).size(100); sideMenu.row().pad(10);
 
@@ -260,7 +268,19 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
     private void addTriangles(Table t, int n, boolean rotationUp, int startTriangle){
         TextureRegion chosenTriangle = null;
+        TextureRegion emoji = null;
+        List<Position> positions = gameBoardController.getBoardPositions();
         for(int i = 0; i < n; i++){
+            Position position = positions.get(i+1);
+            if(position.getPieceCount()>0){
+                //Todo Velge riktig emoji
+                emoji =  emojiAtlas.findRegion(GameManager.GetInstance().getEmoji());
+                Image chosenImage = new Image(emoji);
+                t.add(chosenImage).pad(10).size(40, 40);
+            }
+
+
+
             if(rotationUp){
                 if(i%2 == 0){
                     chosenTriangle = triUpWhite;
@@ -296,6 +316,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
             }
 
             t.add(triangle).pad(10).size(120,400);
+
         }
     }
 
