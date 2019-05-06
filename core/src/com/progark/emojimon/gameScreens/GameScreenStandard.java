@@ -333,7 +333,6 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                         else {
                             //Todo combine the direction of the player with the dices thrown so to check if a move is allowed
 
-                            Move move = new Move(fieldReference,triangleNumber);
                             for(int i =0; i < movelist.size();i++){
                                 if(movelist.get(i).startPosition == fieldReference && movelist.get(i).endPosition== triangleNumber){
                                     gameBoardController.doMove(movelist.get(i));
@@ -415,6 +414,10 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     public void dispose() {
         batch.dispose();
         //triangle.dispose();
+    }
+
+    private void OnTriangleClick(){
+
     }
 
 
