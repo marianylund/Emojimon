@@ -5,37 +5,25 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.progark.emojimon.Emojimon;
 import com.progark.emojimon.GameManager;
 import com.progark.emojimon.controller.FBC;
 import com.progark.emojimon.controller.GameBoardController;
-import com.progark.emojimon.model.factories.MoveValidationStrategyFactory;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import com.progark.emojimon.model.factories.MoveValidationStrategyFactory.MoveValStrat;
 import com.progark.emojimon.model.factories.MoveSetStrategyFactory.MoveSetStrat;
 import com.progark.emojimon.model.factories.CanClearStrategyFactory.CanClearStrat;
-import com.progark.emojimon.model.fireBaseData.GameData;
 import com.progark.emojimon.model.fireBaseData.Settings;
 
 public class CreateRulesetScreen implements Screen {
@@ -46,19 +34,12 @@ public class CreateRulesetScreen implements Screen {
     private Viewport viewport;
     private TextureAtlas atlas;
     private Skin skin;
-    private String diceAmount;
-    private String startPosition;
-    private String diceSize;
-    private MoveValStrat moveValStrat = MoveValStrat.BASIC;
-    private MoveSetStrat moveSetStrat = MoveSetStrat.BASIC;
-    private CanClearStrat canClearStrat = CanClearStrat.BASIC;
 
     public CreateRulesetScreen(final Emojimon game) {
         this.game = game;
         atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"), atlas);
         camera = new OrthographicCamera();
-        //camera.setToOrtho(false, game.WIDTH, game.HEIGHT);
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         viewport.apply();
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
@@ -73,17 +54,21 @@ public class CreateRulesetScreen implements Screen {
         Table mainTable = new Table();
         mainTable.setFillParent(true);
 
+        Container container = new Container();
+        container.setFillParent(true);
+
         TextButton backButton = new TextButton("Back", skin);
         TextButton createLobbyButton = new TextButton("Create Lobby!", skin);
 
         Label screenLabel = new Label("Create Ruleset", skin);
         Label moveValidationLabel = new Label("Moves allowed", skin);
-        final Label moveSetLabel = new Label("Move logic", skin);
-        final Label canClearLabel = new Label("Bear off", skin);
+        Label moveSetLabel = new Label("Move logic", skin);
+        Label canClearLabel = new Label("Bear off", skin);
+        Label boardSizeLabel = new Label("Board size", skin);
+        Label numOfPiecesLabel = new Label("Number of pieces", skin);
         Label diceAmountLabel = new Label("Amount of dice", skin);
         Label diceSizeLabel = new Label("Dice size", skin);
-        Label startPositionLabel = new Label("Start position", skin);
-        Label allowNegativeRoll = new Label("Number of rolls", skin);
+        Label diceMultiplierLabel = new Label("Dice Multiplier", skin);
 
         TextField diceAmountField = new TextField("", skin);
         diceAmountField.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
@@ -98,6 +83,15 @@ public class CreateRulesetScreen implements Screen {
 
         final SelectBox<CanClearStrat> canClearStrategiesBox = new SelectBox<CanClearStrat>(skin);
         canClearStrategiesBox.setItems(CanClearStrat.BASIC);
+
+        final SelectBox<String> boardSizeBox = new SelectBox<String>(skin);
+        boardSizeBox.setItems("20","24","30");
+
+        final SelectBox<String> numOfPiecesBox = new SelectBox<String>(skin);
+        numOfPiecesBox.setItems("11","15","19");
+
+        final SelectBox<String> diceMultiplierBox = new SelectBox<String>(skin);
+        diceMultiplierBox.setItems("1","2","3", "4");
 
         final SelectBox<String> diceAmountBox = new SelectBox<String>(skin);
         diceAmountBox.setItems("1","2","3","4","5");
@@ -118,98 +112,65 @@ public class CreateRulesetScreen implements Screen {
             }
         });
 
-//        diceAmountField.setTextFieldListener(new TextField.TextFieldListener() {
-//            @Override
-//            public void keyTyped(TextField textField, char c) { //bug her et sted, appen kræsjer hvis all text slettes
-//                int value = Integer.parseInt(textField.getText());
-//                diceAmount = value;
-//            }
-//        });
-
         createLobbyButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Initiate GameBoardController
                 GameManager.GetInstance().setGameBoardController(new GameBoardController());
-                Settings settingsList = new Settings("test", "test", "test", "tet");
-                /*settingsList.put("MoveSetStrat", "test");
-                settingsList.put("MoveValStrat", "test");
-                settingsList.put("CanClearStrat", "test");
-                settingsList.put("NumOfDice", diceAmount);*/
-                FBC.I().get().addNewGame("TEST", settingsList);
+                Settings settings = new Settings(
+                        Integer.parseInt(boardSizeBox.getSelected()),
+                        Integer.parseInt(numOfPiecesBox.getSelected()),
+                        Integer.parseInt(diceAmountBox.getSelected()),
+                        Integer.parseInt(diceSizeBox.getSelected()),
+                        Integer.parseInt(diceMultiplierBox.getSelected()),
+                        moveSetStrategiesBox.getSelected(),
+                        moveValidationStrategiesBox.getSelected(),
+                        canClearStrategiesBox.getSelected()
+                );
+                FBC.I().get().addNewGame("TEST", settings);
                 game.setScreen(new LobbyScreen(game));
             }
         });
 
-        startPositionBox.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                startPosition = startPositionBox.getSelected();
-                System.out.println(startPosition);
-            }
-        });
+        mainTable.defaults().width(Gdx.graphics.getWidth()/6).space(20);
+        mainTable.columnDefaults(2).spaceLeft(Gdx.graphics.getWidth() / 6);
+        mainTable.defaults().expandY();
 
-        moveValidationStrategiesBox.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                moveValStrat = moveValidationStrategiesBox.getSelected();
-                System.out.println(moveValStrat.toString());
-            }
-        });
+        mainTable.add(backButton);
+        mainTable.add(screenLabel);
 
-        moveSetStrategiesBox.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                moveSetStrat = moveSetStrategiesBox.getSelected();
-                System.out.println(moveSetStrat.toString());
-            }
-        });
-
-        canClearStrategiesBox.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                canClearStrat = canClearStrategiesBox.getSelected();
-                System.out.println(canClearStrat.toString());
-            }
-        });
-
-        diceAmountBox.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                diceAmount = diceAmountBox.getSelected();
-                System.out.println(diceAmount);
-            }
-        });
-
-        diceSizeBox.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                diceSize = diceSizeBox.getSelected();
-                System.out.println(diceSize);
-            }
-        });
-
-        mainTable.add(backButton).pad(20);
-        mainTable.add(screenLabel).pad(20);
-        // mainTable.add(screenLabel).pad(10).width(Value.percentWidth(.75F, mainTable));
         mainTable.row();
-        mainTable.add(moveValidationLabel).pad(Gdx.graphics.getWidth()/24);
-        mainTable.add(moveValidationStrategiesBox).pad(Gdx.graphics.getWidth()/24).width(Value.percentWidth(.25F, mainTable));
-        mainTable.add(moveSetLabel).pad(Gdx.graphics.getWidth()/24);
-        mainTable.add(moveSetStrategiesBox).pad(Gdx.graphics.getWidth()/24).width(Value.percentWidth(.25F, mainTable));
+        mainTable.add(moveValidationLabel);
+        mainTable.add(moveValidationStrategiesBox);
+
+        mainTable.add(moveSetLabel);
+        mainTable.add(moveSetStrategiesBox);
+
         mainTable.row();
-        mainTable.add(canClearLabel).pad(Gdx.graphics.getWidth()/24);
-        mainTable.add(canClearStrategiesBox).pad(Gdx.graphics.getWidth()/24).width(Value.percentWidth(.25F, mainTable));
-        mainTable.add(diceAmountLabel).pad(Gdx.graphics.getWidth()/24);
-        mainTable.add(diceAmountBox).pad(Gdx.graphics.getWidth()/24).width(Value.percentWidth(.25F, mainTable));
+        mainTable.add(canClearLabel);
+        mainTable.add(canClearStrategiesBox);
+
+        mainTable.add(boardSizeLabel);
+        mainTable.add(boardSizeBox);
+
         mainTable.row();
-        mainTable.add(diceSizeLabel).pad(Gdx.graphics.getWidth()/24);
-        mainTable.add(diceSizeBox).pad(Gdx.graphics.getWidth()/24).width(Value.percentWidth(.25F, mainTable));
-        mainTable.add(startPositionLabel).pad(Gdx.graphics.getWidth()/24);
-        mainTable.add(startPositionBox).pad(Gdx.graphics.getWidth()/24).width(Value.percentWidth(.25F, mainTable));
+        mainTable.add(numOfPiecesLabel);
+        mainTable.add(numOfPiecesBox);
+
+        mainTable.add(diceAmountLabel);
+        mainTable.add(diceAmountBox);
+
         mainTable.row();
-        mainTable.add(createLobbyButton).pad(20).colspan(2);
+        mainTable.add(diceSizeLabel);
+        mainTable.add(diceSizeBox);
+
+
         mainTable.row();
+        mainTable.add(diceMultiplierLabel);
+        mainTable.add(diceMultiplierBox);
+
+        mainTable.row();
+        mainTable.add(createLobbyButton).colspan(4);
 
         stage.addActor(mainTable);
 
@@ -219,25 +180,6 @@ public class CreateRulesetScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-//        stage = new Stage(new ScreenViewport());
-//        Gdx.input.setInputProcessor(stage);
-//        Skin mySkin = new Skin(Gdx.files.internal("skin/uiskin.json"));
-//        final TextButton backbtn = new TextButton("Back",mySkin);
-//        //button2.setSize(col_width*4,row_height);
-//        backbtn.setPosition(0, Gdx.graphics.getHeight()-backbtn.getHeight());
-//        backbtn.addListener(new InputListener(){
-//            //            @Override
-////            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-////                System.out.println("Touch up");
-////            }
-//            @Override
-//            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-//                System.out.println("Back");
-//                game.setScreen(new MainMenuScreen(game));
-//                return true;
-//            }
-//        });
-//        stage.addActor(backbtn);
         stage.act();
         stage.draw();
     }
