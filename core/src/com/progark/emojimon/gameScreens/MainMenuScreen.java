@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.progark.emojimon.Emojimon;
+import com.progark.emojimon.controller.FBC;
 
 public class MainMenuScreen implements Screen {
 
@@ -83,6 +84,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 //((Game)Gdx.app.getApplicationListener()).setScreen(new ChooseGameScreen(game));
+                FBC.I().get().joinGame();
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new GameScreenStandard(game));
             }
         });

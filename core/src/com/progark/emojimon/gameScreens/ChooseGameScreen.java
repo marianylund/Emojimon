@@ -58,7 +58,6 @@ public class ChooseGameScreen implements Screen {
         joinButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                FBC.I().get().joinGame();
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new CountDownScreen(game));
             }
         });

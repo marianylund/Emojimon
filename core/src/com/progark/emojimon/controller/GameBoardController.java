@@ -112,7 +112,7 @@ public class GameBoardController {
 
     public void endTurn(Player player){
         if(player.isDone()){
-            // TODO End Game
+            GameManager.GetInstance().endGame();
         }else{
             // Push Last turn data
             FBC.I().get().addLastTurnByGameID(GameManager.GetInstance().getGameID(), !player.isCreator(),

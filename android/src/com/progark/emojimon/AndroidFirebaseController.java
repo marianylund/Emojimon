@@ -15,6 +15,7 @@ import com.progark.emojimon.model.interfaces.FirebaseControllerInterface;
 import com.progark.emojimon.model.fireBaseData.GameData;
 import com.progark.emojimon.model.fireBaseData.LastTurnData;
 import com.progark.emojimon.model.interfaces.SubscriberToFirebase;
+import com.progark.emojimon.GameManager.GameStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,7 +69,7 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 GameData sm = dataSnapshot.getValue(GameData.class);
                 gamesData.put(gameID, sm); //Update that gameData class
-                System.out.println(gamesData);
+                System.out.println(sm.getSettings().toString());
                 notifyGameDataSubs(gameID, sm);
             }
 
@@ -117,7 +118,7 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
 
     //region SETTERS
 
-    public void setGameStatusByGameID(String gameID, String newStatus){
+    public void setGameStatusByGameID(String gameID, GameStatus newStatus){
         //TODO Check if it is an allowed status to set
         if(gamesData.containsKey(gameID)){
             Games.child(gameID).child("status").setValue(newStatus);
@@ -145,10 +146,11 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
                 @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snap : dataSnapshot.getChildren()){
-                    if(snap.child("status").getValue().equals("Waiting")) {
+                    if(GameStatus.valueOf((String) snap.child("status").getValue()) == (GameStatus.WAITING)) {
                         addPlayerToGame(snap.getKey());
+                        System.out.println(snap.getKey());
                         addGameDataChangeListener(snap.getKey());
-                        //addLastTurnDataChangeListener(snap.getKey());
+                        addLastTurnDataChangeListener(snap.getKey());
                         break;
                     }
                 }
@@ -173,6 +175,11 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
         if(!subscribers.contains(subscriber)){
             subscribers.add(subscriber);
         }
+    }
+
+    @Override
+    public void endGame(String gameId) {
+        setGameStatusByGameID(gameId, GameStatus.ENDED);
     }
 
     @Override

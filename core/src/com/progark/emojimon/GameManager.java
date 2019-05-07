@@ -17,6 +17,12 @@ public class GameManager implements SubscriberToFirebase {
     private GameData gameData;
     private GameBoardController gameBoardController;
 
+    public enum GameStatus {
+        WAITING,
+        STARTET,
+        ENDED
+    }
+
     private boolean currentPlayer = false; // The creator is the first one to go
 
     // LocalPlayer is defined in AndroidFireBaseController when the player has created or joined the game
@@ -43,13 +49,15 @@ public class GameManager implements SubscriberToFirebase {
 
     @Override
     public void notifyOfNewLastTurn(String gameID, LastTurnData lastTurn) {
-        lastTurnData = lastTurn;
-        currentPlayer = !lastTurnData.getPlayer();
-        if(isItLocalPlayerTurn()){
-            if(gameBoardController != null) {
-                gameBoardController.showLastTurn(lastTurn);
-                // TODO: GUI: Start turn by enabling roll dice button for player
+        if (lastTurn != null) {
+            lastTurnData = lastTurn;
+            currentPlayer = !lastTurnData.getPlayer();
+            if(isItLocalPlayerTurn()){
+                if(gameBoardController != null) {
+                    gameBoardController.showLastTurn(lastTurn);
+                    // TODO: GUI: Start turn by enabling roll dice button for player
 
+                }
             }
         }
     }
@@ -88,5 +96,9 @@ public class GameManager implements SubscriberToFirebase {
 
     public void setEmoji(String emoji) {
         this.emoji = emoji;
+    }
+
+    public void endGame() {
+        FBC.I().get().endGame(gameID);
     }
 }
