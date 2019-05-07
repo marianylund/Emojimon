@@ -7,29 +7,27 @@ import com.progark.emojimon.model.strategyPattern.MoveValidationStrategy;
 import java.util.ArrayList;
 import java.util.List;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 public class Player {
 
     private boolean creator = false;
-    private int homeAreaStartIndex;
-    private int homeAreaEndIndex;
+    private int homeAreaStartIndex; //lowest index of home area
+    private int homeAreaEndIndex; //highest index of home area
     private boolean moveClockwise;
     private MoveValidationStrategy moveValidationStrategy;
     private CanClearStrategy canClearStrategy;
-    private int piecesInGame; // hold count of pieces that haven't been cleared off
-    private int blot; // blot: piece/s that can be thrown out to bar
+    private int numberOfPieces; // hold count of pieces that haven't been cleared off
+    private Position goal;
 
 
-    public Player(int piecesInGame, int homeAreaStartIndex, int homeAreaEndIndex, boolean moveClockwise, MoveValidationStrategy moveValidationStrategy, CanClearStrategy canClearStrategy, int blot, boolean isCreator){
-        this.piecesInGame = piecesInGame;
+    public Player(int numberOfPieces, int homeAreaStartIndex, int homeAreaEndIndex, Position goal, boolean moveClockwise, MoveValidationStrategy moveValidationStrategy, CanClearStrategy canClearStrategy, boolean isCreator){
+        this.numberOfPieces = numberOfPieces;
         this.homeAreaStartIndex = homeAreaStartIndex;
         this.homeAreaEndIndex = homeAreaEndIndex;
+        this.goal = goal;
         this.moveClockwise = moveClockwise;
         this.moveValidationStrategy = moveValidationStrategy;
         // set strategies for piece movement
         this.canClearStrategy = canClearStrategy;
-        this.blot = blot;
         this.creator = isCreator;
     }
 
@@ -76,7 +74,7 @@ public class Player {
             Position endPosition = positions.get(endPositionIndex);
 
             //apply move validation strategy to check if move is valid
-            if(moveValidationStrategy.isAvailableMove(positions.get(0), endPosition, blot)){
+            if(moveValidationStrategy.isAvailableMove(positions.get(0), endPosition)){
                 moves.add(new Move(barIndex, endPositionIndex, die));
             }
         }
@@ -85,7 +83,6 @@ public class Player {
     }
 
     //Get available moves using pieces on the board (i.e. not on bar)
-    //TODO: logic for clearing
     public List<Move> getAvailableBoardMoves(List<Die> dice, List<Position> positions) {
         List<Move> moves = new ArrayList<Move>();
 
@@ -101,17 +98,72 @@ public class Player {
                     if(die.getUsed()) continue;
 
                     int diceValue = die.getValue();
+
                     int endPositionIndex = moveClockwise ? (positionIndex + diceValue) : (positionIndex - diceValue);
 
-                    //ignore if endposition index is bar or out of bounds
-                    if(endPositionIndex < 1 || endPositionIndex >= positions.size()){
-                        continue;
+                    Position endPosition = null;
+
+                    //check if player can "clear" pieces off the board
+                    if(canClear(positions)) {
+                        //moving off the board is valid
+                        //if player moves anticlockwise, off the board = position 0
+                        //if player moves clockwise, off the board = boardPositions.size
+                        if (moveClockwise && endPositionIndex == 0 || !moveClockwise && endPositionIndex == positions.size()) {
+                            endPosition = goal;
+                        }
+                        else{
+                            //ignore move if endposition index is bar or out of bounds
+                            if(endPositionIndex < 0 || endPositionIndex > positions.size()){
+                                continue;
+                            }
+                        }
                     }
-                    Position endPosition = positions.get(endPositionIndex);
+                    else{
+                        //ignore if endposition index is bar or out of bounds
+                        if(endPositionIndex < 1 || endPositionIndex >= positions.size()){
+                            continue;
+                        }
+                        endPosition = positions.get(endPositionIndex);
+                    }
 
                     //apply move validation strategy to check if move is valid
-                    if(moveValidationStrategy.isAvailableMove(startPosition, endPosition, blot)){
+                    if(moveValidationStrategy.isAvailableMove(startPosition, endPosition)){
                         moves.add(new Move(positionIndex, endPositionIndex, die));
+                    }
+                }
+            }
+        }
+
+        if(canClear(positions)){
+            //allow removal of furthest piece in home area if no other move is valid
+            if(moves.size() == 0){
+                int positionIndex = moveClockwise ? homeAreaEndIndex : homeAreaStartIndex;
+                while(positionIndex >= homeAreaStartIndex && positionIndex <= homeAreaEndIndex){
+                    //update positionindex
+                    if(moveClockwise) positionIndex--;
+                    else positionIndex++;
+
+                    Position p = positions.get(positionIndex);
+                    if(p.getOwner() == this && p.getPieceCount() > 0){
+
+                        //use dice with highest value
+                        int maxValue = 0;
+                        int maxValueIndex = -1;
+                        for(int diceIndex = 0; diceIndex < dice.size(); diceIndex++){
+                            Die d = dice.get(diceIndex);
+                            if(d.getUsed()){
+                                continue;
+                            }
+                            if(d.getValue() > maxValue){
+                                maxValue = d.getValue();
+                                maxValueIndex = diceIndex;
+                            }
+                        }
+                        //add move using highest die available
+                        if(maxValueIndex > -1){
+                            moves.add(new Move(positionIndex, goal.getPositionIndex(), dice.get(maxValueIndex)));
+                            break; //only one move should be added
+                        }
                     }
                 }
             }
@@ -133,14 +185,13 @@ public class Player {
         return moveClockwise;
     }
 
-    // returns whether player has cleared all of their pieces, i.e. won
-    public boolean isDone() {
-        return (piecesInGame == 0);
+    public Position getGoal(){
+        return goal;
     }
 
-    // everytime a piece is cleared up, decrement pieces in play
-    public void updatePieceClearance(){
-        --piecesInGame;
+    // returns whether player has cleared all of their pieces, i.e. won
+    public boolean isDone() {
+        return (goal.getPieceCount() == numberOfPieces);
     }
 
     //returns whether player is in a position to start clearing pieces
@@ -150,7 +201,7 @@ public class Player {
 
     // returns whether move is available
     public boolean isAvailableMove(Position start, Position end){
-        return moveValidationStrategy.isAvailableMove(start, end, blot);
+        return moveValidationStrategy.isAvailableMove(start, end);
     }
 
     public boolean isCreator() {
