@@ -100,31 +100,6 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         //triangle = new TextureRegion(new Texture(Gdx.files.internal("blacktri3.png")));
     }
 
-    private Container createButtonContainer() {
-        // Add Back button
-        TextButton backButton = new TextButton("Back", skin);
-        backButton.setTransform(true);
-        backButton.setScale(3f);
-        backButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MainMenuScreen(game));
-            }
-        });
-        //Add button container
-        Container buttonContainer = new Container();
-
-        float cw = sw * 0.8f;
-        float ch = sh * 0.5f;
-        buttonContainer.center();
-        buttonContainer.setPosition(sw * 0.5f - backButton.getWidth(), ch * 0.66f);
-        buttonContainer.fillX();
-
-        buttonContainer.setActor(backButton);
-
-        return buttonContainer;
-    }
-
     private Container createGameBoard() {
         // Create GameBoardContainer
         Container gameBoardContainer = new Container();
@@ -182,9 +157,6 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
         sideMenu.add(backButton).expand().uniform(); sideMenu.row();//.pad(10);
 
-        sideMenu.add(backButton);
-        sideMenu.row();//.pad(10);
-
         // Add Turn emoji
         TextureAtlas.AtlasRegion emojiRegion = emojiAtlas.findRegion(GameManager.GetInstance().getEmoji());
         sideMenu.add(new Image(emojiRegion)).size(100);
@@ -193,9 +165,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         // Add timer label wannabe, is used for debug for now
         debugLabel = new Label("Debug:", skin);
         sideMenu.add(debugLabel); sideMenu.row().pad(10);
-        debugLabel = new Label("Debug: ", skin);
-        sideMenu.add(debugLabel);
-        sideMenu.row().pad(10);
+
         // Add throw dice button
 
         TextButton diceButton = new TextButton("Throw\nDice", skin);
