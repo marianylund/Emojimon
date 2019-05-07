@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -23,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.progark.emojimon.Emojimon;
@@ -56,6 +58,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     private TextureRegion triDownRed;
 
     private TextureRegion squareBoard;
+    private TextureRegion squareBoardHighlighted;
     private TextureRegion line;
 
     private Label debugLabel;
@@ -95,6 +98,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         triDownRed = boardAtlas.findRegion("Triangle-red-down");
 
         squareBoard = boardAtlas.findRegion("board");
+        squareBoardHighlighted = boardAtlas.findRegion("board-highlighted");
         line = boardAtlas.findRegion("line");
 
         cells = new Image(new Texture(Gdx.files.internal("blacktri3.png")));
