@@ -17,8 +17,8 @@ import java.util.List;
 
 public class Emojimon extends Game {
 
-    public static final int WIDTH = 800;
-    public static final int HEIGHT = 800;
+    public static final int WIDTH = 1200;
+    public static final int HEIGHT = 600;
     SpriteBatch batch;
     Texture img;
     GameBoardController gameBoardController;

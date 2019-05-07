@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
@@ -64,7 +65,6 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     private int fieldReference;
 
 
-
     public GameScreenStandard(final Emojimon game) {
         Gdx.graphics.setContinuousRendering(true);
         this.game = game;
@@ -96,11 +96,81 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     }
 
     @Override
-    public void create(){
+    public void create() {
         //triangle = new TextureRegion(new Texture(Gdx.files.internal("blacktri3.png")));
     }
 
+<<<<<<< Updated upstream
     private Container createGameBoard(){
+=======
+    private Container createChosenEmojiContainer() {
+        Container container = new Container();
+        // Chosen emoji
+        Table chosenEmojiTable = new Table();
+        Label chosenEmojiLabel = new Label("Chosen emoji: ", skin);
+
+        chosenEmojiTable.add(chosenEmojiLabel).pad(20).center();
+        //chosenEmojiTable.add(chosenEmoji).size(100).center();
+
+        container.setActor(chosenEmojiTable);
+
+        float cw = sw * 0.8f;
+        float ch = sh * 0.2f;
+
+        container.setSize(cw, ch);
+        container.setPosition((sw - cw) / 2.0f, (sh - ch));
+        container.fillX();
+
+        return container;
+    }
+
+    private Container createEmojiChoicesContainer() {
+        Table imagesTable = new Table();
+
+        Container container = new Container();
+
+        float cw = sw * 0.8f;
+        float ch = sh * 0.5f;
+
+        container.setSize(cw, ch);
+        container.setPosition((sw - cw) / 2.0f, (sh - ch) / 2f);
+        container.fillX();
+
+        ScrollPane sp = new ScrollPane(imagesTable);
+        sp.setFillParent(true);
+
+        container.setActor(sp);
+
+        return container;
+    }
+
+    private Container createButtonContainer() {
+        // Add Back button
+        TextButton backButton = new TextButton("Back", skin);
+        backButton.setTransform(true);
+        backButton.setScale(3f);
+        backButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new MainMenuScreen(game));
+            }
+        });
+        //Add button container
+        Container buttonContainer = new Container();
+
+        float cw = sw * 0.8f;
+        float ch = sh * 0.5f;
+        buttonContainer.center();
+        buttonContainer.setPosition(sw * 0.5f - backButton.getWidth(), ch * 0.66f);
+        buttonContainer.fillX();
+
+        buttonContainer.setActor(backButton);
+
+        return buttonContainer;
+    }
+
+    private Container createGameBoard() {
+>>>>>>> Stashed changes
         // Create GameBoardContainer
         Container gameBoardContainer = new Container();
         gameBoardContainer.setSize(sw * 0.8f, sh);
@@ -115,11 +185,11 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         Table home0 = new Table();
 
         int boardSize = gameBoardController.getBoardSize();
-        int trianglesPerZone = boardSize/4;
+        int trianglesPerZone = boardSize / 4;
 
-        addTriangles(out1, trianglesPerZone, false, 1+trianglesPerZone*2);
-        addTriangles(out0, trianglesPerZone, true, 1+trianglesPerZone);
-        addTriangles(home1, trianglesPerZone, false, 1+trianglesPerZone*3);
+        addTriangles(out1, trianglesPerZone, false, 1 + trianglesPerZone * 2);
+        addTriangles(out0, trianglesPerZone, true, 1 + trianglesPerZone);
+        addTriangles(home1, trianglesPerZone, false, 1 + trianglesPerZone * 3);
         addTriangles(home0, trianglesPerZone, true, 1);
 
         gameBoard.add(out1);
@@ -137,7 +207,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         return gameBoardContainer;
     }
 
-    private Container createSideMenu(){
+    private Container createSideMenu() {
         Container sideMenuContainer = new Container();
         sideMenuContainer.setSize(sw * 0.1f, sh);
         sideMenuContainer.setPosition(0, 0);
@@ -147,33 +217,51 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
         // Add leave button
         TextButton backButton = new TextButton("Back", skin);
+<<<<<<< Updated upstream
         backButton.addListener(new ClickListener(){
+=======
+        backButton.setTransform(true);
+        backButton.setScale(2f);
+        backButton.addListener(new ClickListener() {
+>>>>>>> Stashed changes
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new MainMenuScreen(game));
             }
         });
+<<<<<<< Updated upstream
         sideMenu.add(backButton).expand().uniform(); sideMenu.row();//.pad(10);
+=======
+        sideMenu.add(backButton);
+        sideMenu.row();//.pad(10);
+>>>>>>> Stashed changes
 
         // Add Turn emoji
         TextureAtlas.AtlasRegion emojiRegion = emojiAtlas.findRegion(GameManager.GetInstance().getEmoji());
-        sideMenu.add(new Image(emojiRegion)).size(100); sideMenu.row().pad(10);
+        sideMenu.add(new Image(emojiRegion)).size(100);
+        sideMenu.row().pad(10);
 
         // Add timer label wannabe, is used for debug for now
+<<<<<<< Updated upstream
         debugLabel = new Label("Debug:", skin);
         sideMenu.add(debugLabel); sideMenu.row().pad(10);
+=======
+        debugLabel = new Label("Debug: ", skin);
+        sideMenu.add(debugLabel);
+        sideMenu.row().pad(10);
+>>>>>>> Stashed changes
         // Add throw dice button
 
         TextButton diceButton = new TextButton("Throw\nDice", skin);
         diceButton.setTransform(true);
         //diceButton.setScale(3f);
-        diceButton.addListener(new ClickListener(){
+        diceButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 gameBoardController.rollDice();
                 //gameBoardController.getDieList().get(0);
-                debugLabel.setText(gameBoardController.getDieList().get(0).getValue() + " "+ gameBoardController.getDieList().get(1).getValue());
-                // TODO throw dice
+                debugLabel.setText(gameBoardController.getDieList().get(0).getValue() + " " + gameBoardController.getDieList().get(1).getValue());
+                // TODO begrenes hvor mange ganger man kaster terning
             }
         });
         sideMenu.add(diceButton).expand().uniform();
@@ -181,20 +269,51 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         return sideMenuContainer;
     }
 
-    private Container createSideBoard(){
-        Container sideBoardContainer = new Container();
-        sideBoardContainer.setSize(sw * 0.1f, sh);
-        sideBoardContainer.setPosition(sw * 0.9f, 0); //TODO does it even make sense?
-        sideBoardContainer.fillX(); // TODO fill y too?
 
+    private Container createPlayer1Board() {
         // Add player1's goal
+        Container player1home = new Container();
+        player1home.setSize(sw * 0.1f, sh * 0.4f);
+        player1home.setPosition(sw * 0.9f, 0);
+        player1home.fillX();
 
-        // Add dieded pieces
+        Table scoreboard = new Table();
 
-        // Add player0's goal
+        Image img = new Image(new Texture(Gdx.files.internal("rect.png")));
+        img.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                debugLabel.setText("scorefield");
 
-        return sideBoardContainer;
+            }
+        });
+        scoreboard.add(img);
+
+        return player1home;
     }
+
+    private Container createBarBoard() {
+        // Add bar field
+        Container barfield = new Container();
+        barfield.setSize(sw * 0.1f, sh * 0.2f);
+        barfield.setPosition(sw * 0.9f, sh * 0.4f);
+        barfield.fillX();
+
+        return barfield;
+    }
+
+
+    private Container createPlayer0Board() {
+        // Add player0's goal
+        Container player0home = new Container();
+        player0home.setSize(sw * 0.1f, sh * 0.4f);
+        player0home.setPosition(sw * 0.9f, sh * 0.6f);
+        player0home.fillX();
+
+
+        return player0home;
+    }
+
 
     @Override
     public void show() {
@@ -203,55 +322,65 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
         stage.addActor(createSideMenu());
         stage.addActor(createGameBoard());
-        stage.addActor(createSideBoard());
+        stage.addActor(createPlayer1Board());
+        stage.addActor(createPlayer0Board());
+        stage.addActor(createBarBoard());
     }
 
-    private void addTriangles(Table t, int n, boolean rotationUp, int startTriangle){
+    private void addTriangles(Table t, int n, boolean rotationUp, int startTriangle) {
         TextureRegion chosenTriangle = null;
         TextureRegion emoji = null;
         final List<Position> positions = gameBoardController.getBoardPositions();
-        for(int i = 0; i < n; i++){
-            Position position = positions.get(i+1);
-            if(position.getPieceCount()>0){
+        for (int i = 0; i < n; i++) {
+            Position position = positions.get(i + 1);
+            if (position.getPieceCount() > 0) {
                 //Todo Velge riktig emoji
-                emoji =  emojiAtlas.findRegion(GameManager.GetInstance().getEmoji());
+                emoji = emojiAtlas.findRegion(GameManager.GetInstance().getEmoji());
                 Image chosenImage = new Image(emoji);
                 t.add(chosenImage).pad(10).size(40, 40);
+<<<<<<< Updated upstream
             }
             if(rotationUp){
                 if(i%2 == 0){
+=======
+
+                chosenImage.setDrawable(new SpriteDrawable(new Sprite(emoji)));
+            }
+
+
+            if (rotationUp) {
+                if (i % 2 == 0) {
+>>>>>>> Stashed changes
                     chosenTriangle = triUpWhite;
-                }else{
+                } else {
                     chosenTriangle = triUpRed;
                 }
-            }else{
+            } else {
 
-                if(i%2 == 0){
+                if (i % 2 == 0) {
                     chosenTriangle = triDownWhite;
-                }else{
+                } else {
                     chosenTriangle = triDownRed;
                 }
             }
             Image triangle = new Image(chosenTriangle);
 
-            if(rotationUp){
+            if (rotationUp) {
                 final int triangleNumber = startTriangle + n - i - 1;
-                triangle.addListener(new ClickListener(){
+                triangle.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         List<Move> movelist = gameBoardController.getMoves(GameManager.GetInstance().getLocalPlayer());
-                        if(fieldReference == triangleNumber){
+                        if (fieldReference == triangleNumber) {
                             fieldReference = 0;
                             debugLabel.setText(fieldReference);
-                        }
-                        else if (fieldReference == 0){
+                        } else if (fieldReference == 0) {
                             fieldReference = triangleNumber;
 
                             Position pos = positions.get(triangleNumber);
 
-
-                            for(int i =0; i< movelist.size(); i++){
-                                if(movelist.get(i).startPosition == pos.getPositionIndex()){
+                            for (int i = 0; i < movelist.size(); i++) {
+                                if (movelist.get(i).startPosition == pos.getPositionIndex()) {
 
                                     System.out.print(movelist.get(i).startPosition);
                                     System.out.print(movelist.get(i).endPosition);
@@ -261,39 +390,30 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                                 }
                             }
                             debugLabel.setText(fieldReference);
-                        }
-                        else {
-                            //Todo combine the direction of the player with the dices thrown so to check if a move is allowed
-
-                            for(int i =0; i < movelist.size();i++){
-                                if(movelist.get(i).startPosition == fieldReference && movelist.get(i).endPosition== triangleNumber){
+                        } else {
+                            for (int i = 0; i < movelist.size(); i++) {
+                                if (movelist.get(i).startPosition == fieldReference && movelist.get(i).endPosition == triangleNumber) {
                                     gameBoardController.doMove(movelist.get(i));
                                     System.out.print("noe skjer!");
-                                    movelist= gameBoardController.getMoves(GameManager.GetInstance().getLocalPlayer());
+                                    movelist = gameBoardController.getMoves(GameManager.GetInstance().getLocalPlayer());
                                 }
                             }
-
-
                             debugLabel.setText(fieldReference + " " + triangleNumber);
                         }
-
-
                     }
                 });
             } else {
                 final int triangleNumber = startTriangle + i;
-                triangle.addListener(new ClickListener(){
+                triangle.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        if(fieldReference == triangleNumber){
+                        if (fieldReference == triangleNumber) {
                             fieldReference = 0;
                             debugLabel.setText(fieldReference);
-                        }
-                        else if (fieldReference == 0){
+                        } else if (fieldReference == 0) {
                             fieldReference = triangleNumber;
                             debugLabel.setText(fieldReference);
-                        }
-                        else {
+                        } else {
                             //Todo combine the direction of the player with the dices thrown so to check if a move is allowed
                             /*
                             Position pos = positions.get(triangleNumber);
@@ -306,7 +426,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                 });
             }
 
-            t.add(triangle).pad(10).size(120,400);
+            t.add(triangle).pad(10).size(120, 400);
 
         }
     }
@@ -348,7 +468,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         //triangle.dispose();
     }
 
-    private void OnTriangleClick(){
+    private void OnTriangleClick() {
 
     }
 
