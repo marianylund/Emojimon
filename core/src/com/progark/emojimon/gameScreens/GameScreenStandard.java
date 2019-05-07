@@ -7,6 +7,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -24,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -103,14 +105,21 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     }
 
     private Container createGameBoard() {
+        // Create background
+        NinePatch patch = new NinePatch(new Texture(Gdx.files.internal("rect.png")),
+                3, 3, 3, 3);
+        NinePatchDrawable background = new NinePatchDrawable(patch);
+
         // Create GameBoardContainer
         Container gameBoardContainer = new Container();
+        gameBoardContainer.setBackground(background);
         gameBoardContainer.setSize(sw * 0.8f, sh);
         gameBoardContainer.setPosition(sw * 0.1f, 0);
         gameBoardContainer.fillX(); // TODO fill y too?
         gameBoardContainer.fillY();
 
         Table gameBoard = new Table();
+
         Table out1 = new Table();
         Table home1 = new Table();
         Table out0 = new Table();
