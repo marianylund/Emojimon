@@ -19,8 +19,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -254,12 +256,12 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         final List<Position> positions = gameBoardController.getBoardPositions();
         for (int i = 0; i < n; i++) {
             Position position = positions.get(i + 1);
-            if (position.getPieceCount() > 0) {
+/*            if (position.getPieceCount() > 0) {
                 //Todo Velge riktig emoji
                 emoji = emojiAtlas.findRegion(GameManager.GetInstance().getEmoji());
                 Image chosenImage = new Image(emoji);
                 t.add(chosenImage).pad(10).size(40, 40);
-            }
+            }*/
             if (rotationUp) {
                 if (i % 2 == 0) {
                     chosenTriangle = triUpWhite;
@@ -337,7 +339,20 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                 });
             }
 
-            t.add(triangle).pad(10).size(120, 400);
+            emoji =  emojiAtlas.findRegion(GameManager.GetInstance().getEmoji());
+            Image sEmoji = new Image(emoji);
+
+            Stack stack = new Stack();
+
+            VerticalGroup group = new VerticalGroup();
+
+            group.addActor(sEmoji);
+            group.bottom();
+
+            stack.add(triangle);
+            stack.add(group);
+
+            t.add(stack).pad(10).size(120,400);
 
         }
     }
