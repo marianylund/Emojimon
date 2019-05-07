@@ -1,0 +1,33 @@
+triangles.png
+size: 280, 156
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Triangle-red-down
+  rotate: false
+  xy: 0, 0
+  size: 73, 156
+  orig: 73, 156
+  offset: 0, 0
+  index: -1
+Triangle-red-up
+  rotate: false
+  xy: 73, 0
+  size: 73, 151
+  orig: 73, 151
+  offset: 0, 0
+  index: -1
+Triangle-white-down
+  rotate: false
+  xy: 146, 0
+  size: 65, 155
+  orig: 65, 155
+  offset: 0, 0
+  index: -1
+Triangle-white-up
+  rotate: false
+  xy: 211, 0
+  size: 69, 151
+  orig: 69, 151
+  offset: 0, 0
+  index: -1

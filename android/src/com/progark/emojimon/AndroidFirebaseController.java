@@ -51,7 +51,6 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
     public void addNewGame(String creatorPlayer, Settings strategies){
         GameData gd = new GameData(creatorPlayer, strategies);
 
-
         String gameID = Games.push().getKey();
         Games.child(gameID).setValue(gd);
         gamesData.put(gameID, gd);

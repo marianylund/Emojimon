@@ -17,8 +17,8 @@ import java.util.List;
 
 public class Emojimon extends Game {
 
-    public static final int WIDTH = 480;
-    public static final int HEIGHT = 880;
+    public static final int WIDTH = 800;
+    public static final int HEIGHT = 800;
     SpriteBatch batch;
     Texture img;
     GameBoardController gameBoardController;
@@ -40,14 +40,7 @@ public class Emojimon extends Game {
 
 		//test write to Firebase
 
-		/*
-		FBC.I().get().addNewGame("Player0Olala");
-		//tempLastTurn();
-		//FBC.I().get().joinGame();
-        String tempGameID = FBC.I().get().getGameIDs()[0].toString();
-        FBC.I().get().setGameBoardByGameID(tempGameID, createTempDoubleArrayList());
-        FBC.I().get().setGameStatusByGameID(tempGameID, "Playing");
-        */
+
 	}
 
 	//debugging

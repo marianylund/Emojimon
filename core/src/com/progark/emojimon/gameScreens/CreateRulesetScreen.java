@@ -24,6 +24,7 @@ import com.progark.emojimon.controller.GameBoardController;
 import com.progark.emojimon.model.factories.MoveValidationStrategyFactory.MoveValStrat;
 import com.progark.emojimon.model.factories.MoveSetStrategyFactory.MoveSetStrat;
 import com.progark.emojimon.model.factories.CanClearStrategyFactory.CanClearStrat;
+import com.progark.emojimon.model.factories.StartPiecePlacementStrategyFactory.PiecePlacementStrat;
 import com.progark.emojimon.model.fireBaseData.Settings;
 
 public class CreateRulesetScreen implements Screen {
@@ -34,6 +35,8 @@ public class CreateRulesetScreen implements Screen {
     private Viewport viewport;
     private TextureAtlas atlas;
     private Skin skin;
+
+    private String diceAmount, startPosition, diceSize;
 
     public CreateRulesetScreen(final Emojimon game) {
         this.game = game;
@@ -97,7 +100,7 @@ public class CreateRulesetScreen implements Screen {
         diceAmountBox.setItems("1","2","3","4","5");
 
         final SelectBox<String> diceSizeBox = new SelectBox<String>(skin);
-        diceSizeBox.setItems("4","6","12","20");
+        diceSizeBox.setItems("4","6","10","20");
 
         final SelectBox<String> startPositionBox = new SelectBox<String>(skin);
         startPositionBox.setItems("Top right","Top left","Bottom right","Bottom left");
@@ -125,7 +128,8 @@ public class CreateRulesetScreen implements Screen {
                         Integer.parseInt(diceMultiplierBox.getSelected()),
                         moveSetStrategiesBox.getSelected(),
                         moveValidationStrategiesBox.getSelected(),
-                        canClearStrategiesBox.getSelected()
+                        canClearStrategiesBox.getSelected(),
+                        PiecePlacementStrat.BASIC
                 );
                 FBC.I().get().addNewGame("TEST", settings);
                 game.setScreen(new LobbyScreen(game));

@@ -7,7 +7,9 @@ import java.util.Set;
 public class GameData {
     private String status;
     private String player0Key;
+    private String player0emoji;
     private String player1Key;
+    private String player1emoji;
     private List<List<Integer>> GameBoard;
     private Settings settings;
 
@@ -19,6 +21,7 @@ public class GameData {
         // Convert Strings to ENUMS
         // The player who has created the game
         this.player0Key = player0;
+
     }
 
     public String getStatus() {
@@ -51,6 +54,22 @@ public class GameData {
 
     public void setGameBoard(List<List<Integer>> gameBoard) {
         this.GameBoard = gameBoard;
+    }
+
+    public String getPlayer0emoji() {
+        return player0emoji;
+    }
+
+    public void setPlayer0emoji(String player0emoji) {
+        this.player0emoji = player0emoji;
+    }
+
+    public String getPlayer1emoji() {
+        return player1emoji;
+    }
+
+    public void setPlayer1emoji(String player1emoji) {
+        this.player1emoji = player1emoji;
     }
 
     public Settings getSettings() {
