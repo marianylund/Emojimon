@@ -350,13 +350,13 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
             emoji =  emojiAtlas.findRegion(GameManager.GetInstance().getEmoji());
             Image sEmoji = new Image(emoji);
-
             Stack stack = new Stack();
-
             VerticalGroup group = new VerticalGroup();
 
             group.addActor(sEmoji);
-            group.bottom();
+            if(rotationUp){
+                group.bottom();
+            }
 
             stack.add(triangle);
             stack.add(group);

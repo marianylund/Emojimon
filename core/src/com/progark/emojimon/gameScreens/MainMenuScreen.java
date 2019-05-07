@@ -41,13 +41,14 @@ public class MainMenuScreen implements Screen {
         //import skin to be used for GUI elements
         atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"), atlas);
+        skin.getFont("font").getData().setScale(3f,3f);
 
-/*        //Generate font
-        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Roboto-Regular.ttf"));
-        fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        fontParameter.size = 12;
-        font = fontGenerator.generateFont(fontParameter);
-*/
+//        //Generate font
+//        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("Fonts/Roboto-Regular.ttf"));
+//        fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+//        fontParameter.size = 12;
+//        font = fontGenerator.generateFont(fontParameter);
+
 
         camera = new OrthographicCamera();
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
@@ -100,15 +101,14 @@ public class MainMenuScreen implements Screen {
         });
 
         //Add labels and buttons to menu
-        mainTable.add(emojimonLabel).pad(10);
+        mainTable.add(emojimonLabel).pad(10).colspan(2).height(Gdx.graphics.getHeight()*0.20f);
         mainTable.row();
-        mainTable.add(createGameButton).pad(10).width(Gdx.graphics.getWidth()/2).height(Gdx.graphics.getWidth()/6);
+        mainTable.add(createGameButton).pad(0.1f).width(Gdx.graphics.getWidth()*0.40f).height(Gdx.graphics.getHeight()*0.50f);
+        mainTable.add(joinGameButton).pad(0.1f).width(Gdx.graphics.getWidth()*0.40f).height(Gdx.graphics.getHeight()*0.50f);
         mainTable.row();
-        mainTable.add(joinGameButton).pad(10).width(Gdx.graphics.getWidth()/2).height(Gdx.graphics.getWidth()/6);
+        mainTable.add(selectEmojiButton).pad(10).colspan(2).width(Gdx.graphics.getWidth()*0.8f).height(Gdx.graphics.getHeight()*0.20f);
         mainTable.row();
-        mainTable.add(selectEmojiButton).pad(10).width(Gdx.graphics.getWidth()/2);
-        mainTable.row();
-        mainTable.add(exitButton).pad(10);
+//        mainTable.add(exitButton).pad(10);
 
         //Add menu to stage as an actor
         stage.addActor(mainTable);
