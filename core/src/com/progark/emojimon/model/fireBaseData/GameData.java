@@ -1,6 +1,8 @@
 package com.progark.emojimon.model.fireBaseData;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class GameData {
     private String status;
@@ -9,18 +11,18 @@ public class GameData {
     private String player1Key;
     private String player1emoji;
     private List<List<Integer>> GameBoard;
-    private List<String> strategies;
+    private Settings settings;
 
     public GameData(){} // Reguires for Firebase
 
-    public GameData(String player0, List<String> strategies) {
+    public GameData(String player0, Settings settings) {
         this.status = "Waiting";
-        this.strategies = strategies;
+        this.settings = settings;
+        // Convert Strings to ENUMS
         // The player who has created the game
         this.player0Key = player0;
 
     }
-
 
     public String getStatus() {
         return status;
@@ -54,7 +56,6 @@ public class GameData {
         this.GameBoard = gameBoard;
     }
 
-
     public String getPlayer0emoji() {
         return player0emoji;
     }
@@ -71,9 +72,8 @@ public class GameData {
         this.player1emoji = player1emoji;
     }
 
-    public List<String> getStrategies() {
-        return strategies;
-
+    public Settings getSettings() {
+        return settings;
     }
 
     @Override
@@ -89,6 +89,6 @@ public class GameData {
         } else {
             s += " and no player";
         }
-        return s;
+        return settings.toString();
     }
 }

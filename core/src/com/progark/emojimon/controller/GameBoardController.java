@@ -1,6 +1,5 @@
 package com.progark.emojimon.controller;
 
-import com.progark.emojimon.Emojimon;
 import com.progark.emojimon.GameManager;
 import com.progark.emojimon.model.GameBoard;
 import com.progark.emojimon.model.Move;
@@ -8,10 +7,10 @@ import com.progark.emojimon.model.Player;
 import com.progark.emojimon.model.Position;
 import com.progark.emojimon.model.fireBaseData.Converter;
 import com.progark.emojimon.model.fireBaseData.LastTurnData;
+import com.progark.emojimon.model.fireBaseData.Settings;
 import com.progark.emojimon.model.interfaces.Die;
 
 
-import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -33,10 +32,10 @@ public class GameBoardController {
     }
 
     // create gameboard with given size and pieces
-    public void createDynamicGameBoard(int boardSize, int piecesPerPlayer, int baseNumberOfDice, int dieSides, int diceMultiplier){
-        validateGameBoard(boardSize, true);
-        validatePieces(piecesPerPlayer, true);
-        gameBoard = new GameBoard(boardSize, piecesPerPlayer, baseNumberOfDice, dieSides, diceMultiplier, "BASIC", "BASIC", "BASIC", "BASIC");
+    public void createDynamicGameBoard(Settings settings){
+        validateGameBoard(settings.getBoardSize(), true);
+        validatePieces(settings.getPiecesPerPlayer(), true);
+        gameBoard = new GameBoard(settings);
     }
 
     // validation methods

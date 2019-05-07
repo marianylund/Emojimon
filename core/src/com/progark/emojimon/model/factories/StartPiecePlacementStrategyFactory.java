@@ -6,12 +6,17 @@ import com.progark.emojimon.model.strategyPattern.StartPiecePlacementStrategy;
 // implements factory method for StartPiecePlacementStrategy
 
 public class StartPiecePlacementStrategyFactory {
+
+    public enum PiecePlacementStrat{
+        BASIC
+    }
+
     // Create a concrete strategy for placing the start positions of the pieces
-    public static StartPiecePlacementStrategy getPiecePlacementStrategy(String startPiecePlacementValidation){
-        if (startPiecePlacementValidation == null){
+    public static StartPiecePlacementStrategy getPiecePlacementStrategy(PiecePlacementStrat piecePlacementStrat){
+        if (piecePlacementStrat == null){
             return null;
         }
-        if (startPiecePlacementValidation.equalsIgnoreCase("BASIC")){
+        if (piecePlacementStrat == PiecePlacementStrat.BASIC){
             return new BasicStartPiecePlacementStrategy();
         }
         return null;

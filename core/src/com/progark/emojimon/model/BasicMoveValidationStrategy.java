@@ -6,11 +6,11 @@ import com.progark.emojimon.model.strategyPattern.MoveValidationStrategy;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BasicAvailableMoveStrategy implements MoveValidationStrategy {
+public class BasicMoveValidationStrategy implements MoveValidationStrategy {
 
     private int blot;
 
-    public BasicAvailableMoveStrategy(int blot) {
+    public BasicMoveValidationStrategy(int blot) {
         this.blot = blot;
     }
 
