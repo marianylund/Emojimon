@@ -52,7 +52,9 @@ public class GameBoard {
     }
 
     //create dynamic board
+
     public GameBoard(int boardSize, int pieces, int baseNumberOfDice, int dieSides, int diceMultiplier, MoveSetStrat moveSetStrat, MoveValStrat moveValStrat, CanClearStrat canClearStrat){
+
         this.pieces = pieces;
 
         // Choose moveset strategy

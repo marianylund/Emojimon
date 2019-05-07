@@ -35,6 +35,8 @@ public class CreateRulesetScreen implements Screen {
     private TextureAtlas atlas;
     private Skin skin;
 
+    private String diceAmount, startPosition, diceSize;
+
     public CreateRulesetScreen(final Emojimon game) {
         this.game = game;
         atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));

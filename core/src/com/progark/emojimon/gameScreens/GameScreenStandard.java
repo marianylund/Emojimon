@@ -26,7 +26,12 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.progark.emojimon.Emojimon;
 import com.progark.emojimon.GameManager;
+import com.progark.emojimon.controller.GameBoardController;
+import com.progark.emojimon.model.Move;
+import com.progark.emojimon.model.Position;
 
+
+import java.util.List;
 
 import sun.rmi.runtime.Log;
 
@@ -34,6 +39,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
     private Stage stage;
     final Emojimon game;
+    private GameBoardController gameBoardController;
     private OrthographicCamera camera;
     private Viewport viewport;
     private TextureAtlas atlas;
@@ -43,6 +49,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     private Image cells;
 
     private TextureAtlas boardAtlas;
+    private TextureAtlas emojiAtlas;
 
     private TextureRegion triUpWhite;
     private TextureRegion triDownWhite;
@@ -54,11 +61,15 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     float sw = Gdx.graphics.getWidth();
     float sh = Gdx.graphics.getHeight();
 
+    private int fieldReference;
+
 
 
     public GameScreenStandard(final Emojimon game) {
         Gdx.graphics.setContinuousRendering(true);
         this.game = game;
+        this.gameBoardController = new GameBoardController();//need to be changed to the singelton reference
+        this.gameBoardController.createStandardGameBoard();
 
         atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"), atlas);
@@ -72,6 +83,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         stage = new Stage(viewport);
 
         boardAtlas = new TextureAtlas(Gdx.files.internal("Board/Output/triangles.atlas"));
+        emojiAtlas = new TextureAtlas(Gdx.files.internal("Emojis/Output/emojiatlas.atlas"));
 
         triUpWhite = boardAtlas.findRegion("Triangle-white-up");
         triDownWhite = boardAtlas.findRegion("Triangle-white-down");
@@ -141,7 +153,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         Table out0 = new Table();
         Table home0 = new Table();
 
-        int boardSize = 24;
+        int boardSize = gameBoardController.getBoardSize();
         int trianglesPerZone = boardSize/4;
 
         addTriangles(out1, trianglesPerZone, false, 1+trianglesPerZone*2);
@@ -185,7 +197,6 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         sideMenu.add(backButton); sideMenu.row();//.pad(10);
 
         // Add Turn emoji
-        TextureAtlas emojiAtlas = new TextureAtlas(Gdx.files.internal("Emojis/Output/emojiatlas.atlas"));
         TextureAtlas.AtlasRegion emojiRegion = emojiAtlas.findRegion(GameManager.GetInstance().getEmoji());
         sideMenu.add(new Image(emojiRegion)).size(100); sideMenu.row().pad(10);
 
@@ -200,7 +211,9 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         diceButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                debugLabel.setText("Pew Pew");
+                gameBoardController.rollDice();
+                //gameBoardController.getDieList().get(0);
+                debugLabel.setText(gameBoardController.getDieList().get(0).getValue() + " "+ gameBoardController.getDieList().get(1).getValue());
                 // TODO throw dice
             }
         });
@@ -236,7 +249,19 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
     private void addTriangles(Table t, int n, boolean rotationUp, int startTriangle){
         TextureRegion chosenTriangle = null;
+        TextureRegion emoji = null;
+        final List<Position> positions = gameBoardController.getBoardPositions();
         for(int i = 0; i < n; i++){
+            Position position = positions.get(i+1);
+            if(position.getPieceCount()>0){
+                //Todo Velge riktig emoji
+                emoji =  emojiAtlas.findRegion(GameManager.GetInstance().getEmoji());
+                Image chosenImage = new Image(emoji);
+                t.add(chosenImage).pad(10).size(40, 40);
+            }
+
+
+
             if(rotationUp){
                 if(i%2 == 0){
                     chosenTriangle = triUpWhite;
@@ -258,7 +283,45 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                 triangle.addListener(new ClickListener(){
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        debugLabel.setText(triangleNumber);
+                        List<Move> movelist = gameBoardController.getMoves(GameManager.GetInstance().getLocalPlayer());
+                        if(fieldReference == triangleNumber){
+                            fieldReference = 0;
+                            debugLabel.setText(fieldReference);
+                        }
+                        else if (fieldReference == 0){
+                            fieldReference = triangleNumber;
+
+                            Position pos = positions.get(triangleNumber);
+
+
+                            for(int i =0; i< movelist.size(); i++){
+                                if(movelist.get(i).startPosition == pos.getPositionIndex()){
+
+                                    System.out.print(movelist.get(i).startPosition);
+                                    System.out.print(movelist.get(i).endPosition);
+                                    System.out.print(movelist.get(i).die.getValue());
+                                    System.out.println("");
+
+                                }
+                            }
+                            debugLabel.setText(fieldReference);
+                        }
+                        else {
+                            //Todo combine the direction of the player with the dices thrown so to check if a move is allowed
+
+                            for(int i =0; i < movelist.size();i++){
+                                if(movelist.get(i).startPosition == fieldReference && movelist.get(i).endPosition== triangleNumber){
+                                    gameBoardController.doMove(movelist.get(i));
+                                    System.out.print("noe skjer!");
+                                    movelist= gameBoardController.getMoves(GameManager.GetInstance().getLocalPlayer());
+                                }
+                            }
+
+
+                            debugLabel.setText(fieldReference + " " + triangleNumber);
+                        }
+
+
                     }
                 });
             } else {
@@ -266,12 +329,29 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                 triangle.addListener(new ClickListener(){
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        debugLabel.setText(triangleNumber);
+                        if(fieldReference == triangleNumber){
+                            fieldReference = 0;
+                            debugLabel.setText(fieldReference);
+                        }
+                        else if (fieldReference == 0){
+                            fieldReference = triangleNumber;
+                            debugLabel.setText(fieldReference);
+                        }
+                        else {
+                            //Todo combine the direction of the player with the dices thrown so to check if a move is allowed
+                            /*
+                            Position pos = positions.get(triangleNumber);
+                            if(pos.getPieceCount()>0);
+                            gameBoardController.getMoves(GameManager.GetInstance().getLocalPlayer());
+                            */
+                            debugLabel.setText(fieldReference + " " + triangleNumber);
+                        }
                     }
                 });
             }
 
             t.add(triangle).pad(10).size(120,400);
+
         }
     }
 
@@ -310,6 +390,10 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     public void dispose() {
         batch.dispose();
         //triangle.dispose();
+    }
+
+    private void OnTriangleClick(){
+
     }
 
 

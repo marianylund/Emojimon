@@ -67,6 +67,13 @@ public class GameManager implements SubscriberToFirebase {
         this.localPlayer = localPlayer;
     }
 
+    public int getLocalPlayer(){
+        if(localPlayer){
+            return 1;
+        }
+        return 0;
+    }
+
     public void setGameID(String gameID){
         this.gameID = gameID;
     }

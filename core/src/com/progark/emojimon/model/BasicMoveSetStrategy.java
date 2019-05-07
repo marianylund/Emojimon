@@ -23,13 +23,16 @@ public class BasicMoveSetStrategy implements MoveSetStrategy {
         if (startPosition.getOwner().isAvailableMove(startPosition, endPosition)){
 
             // throw opposite players piece
-            if (!endPosition.getOwner().equals(startPosition.getOwner())){
-                bar.addPieces(blot);
-                endPosition.removePieces(blot);
+            if(endPosition.getOwner() != null){
+                if (!endPosition.getOwner().equals(startPosition.getOwner())){
+                    //move pieces from endposition to bar
+                    bar.addPieces(blot);
+                    endPosition.removePieces(blot);
 
-                // set bar owner
-                if (!bar.getOwner().equals(endPosition.getOwner())){
-                    bar.setOwner(endPosition.getOwner());
+                    // set bar owner
+                    if (!bar.getOwner().equals(endPosition.getOwner())){
+                        bar.setOwner(endPosition.getOwner());
+                    }
                 }
             }
 
@@ -37,15 +40,16 @@ public class BasicMoveSetStrategy implements MoveSetStrategy {
             startPosition.removePieces(1);
             endPosition.addPieces(1);
 
-            //update owner of endposition if necessary
-            if(endPosition.getOwner() != startPosition.getOwner()){
-                endPosition.setOwner(startPosition.getOwner());
+            //update owner of endposition
+            endPosition.setOwner(startPosition.getOwner());
+
+            if(bar.getOwner() != null){
+                // if the player has cleared their bar, set owner to null
+                if (bar.getPieceCount() == 0 && bar.getOwner().equals(endPosition.getOwner())) {
+                    bar.setOwner(null);
+                }
             }
 
-            // if the player has cleared their bar, set owner to null
-            if (bar.getPieceCount() == 0 && bar.getOwner().equals(endPosition.getOwner())) {
-                bar.setOwner(null);
-            }
 
             return true;
         }
