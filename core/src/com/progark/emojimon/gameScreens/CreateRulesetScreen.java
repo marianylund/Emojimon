@@ -24,6 +24,7 @@ import com.progark.emojimon.controller.GameBoardController;
 import com.progark.emojimon.model.factories.MoveValidationStrategyFactory.MoveValStrat;
 import com.progark.emojimon.model.factories.MoveSetStrategyFactory.MoveSetStrat;
 import com.progark.emojimon.model.factories.CanClearStrategyFactory.CanClearStrat;
+import com.progark.emojimon.model.factories.StartPiecePlacementStrategyFactory.PiecePlacementStrat;
 import com.progark.emojimon.model.fireBaseData.Settings;
 
 public class CreateRulesetScreen implements Screen {
@@ -127,7 +128,8 @@ public class CreateRulesetScreen implements Screen {
                         Integer.parseInt(diceMultiplierBox.getSelected()),
                         moveSetStrategiesBox.getSelected(),
                         moveValidationStrategiesBox.getSelected(),
-                        canClearStrategiesBox.getSelected()
+                        canClearStrategiesBox.getSelected(),
+                        PiecePlacementStrat.BASIC
                 );
                 FBC.I().get().addNewGame("TEST", settings);
                 game.setScreen(new LobbyScreen(game));

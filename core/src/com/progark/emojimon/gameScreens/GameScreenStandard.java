@@ -254,6 +254,10 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 debugLabel.setText("player0goal");
+                List<Move> movelist = gameBoardController.getMoves(GameManager.GetInstance().getLocalPlayer());
+                if(GameManager.GetInstance().isItLocalPlayerTurn()){
+
+                }
 
             }
         });
@@ -366,13 +370,13 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
             emoji =  emojiAtlas.findRegion(GameManager.GetInstance().getEmoji());
             Image sEmoji = new Image(emoji);
-
             Stack stack = new Stack();
-
             VerticalGroup group = new VerticalGroup();
 
             group.addActor(sEmoji);
-            group.bottom();
+            if(rotationUp){
+                group.bottom();
+            }
 
             stack.add(triangle);
             stack.add(group);
