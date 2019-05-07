@@ -1,18 +1,15 @@
 package com.progark.emojimon.gameScreens;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
@@ -26,8 +23,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
-import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
-import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.progark.emojimon.Emojimon;
@@ -38,8 +33,6 @@ import com.progark.emojimon.model.Position;
 
 
 import java.util.List;
-
-import sun.rmi.runtime.Log;
 
 public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
@@ -62,6 +55,9 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     private TextureRegion triUpRed;
     private TextureRegion triDownRed;
 
+    private TextureRegion squareBoard;
+    private TextureRegion line;
+
     private Label debugLabel;
 
     float sw = Gdx.graphics.getWidth();
@@ -76,10 +72,12 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         this.gameBoardController = new GameBoardController();//need to be changed to the singelton reference
         this.gameBoardController.createStandardGameBoard();
 
+        // Get UI skin
         atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"), atlas);
         skin.getFont("font").getData().setScale(1.5f,1.5f);
 
+        // Fix Camera and viewport
         camera = new OrthographicCamera();
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         viewport.apply();
@@ -87,6 +85,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         camera.update();
         stage = new Stage(viewport);
 
+        // Add regions used in the game
         emojiAtlas = new TextureAtlas(Gdx.files.internal("Emojis/Output/emojiatlas.atlas"));
         boardAtlas = new TextureAtlas(Gdx.files.internal("Board/Output/board.atlas"));
 
@@ -95,6 +94,8 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         triUpRed = boardAtlas.findRegion("Triangle-red-up");
         triDownRed = boardAtlas.findRegion("Triangle-red-down");
 
+        squareBoard = boardAtlas.findRegion("board");
+        line = boardAtlas.findRegion("line");
 
         cells = new Image(new Texture(Gdx.files.internal("blacktri3.png")));
         //triangle.setDrawable(new SpriteDrawable(new Sprite(emojiRegion)));
@@ -106,19 +107,20 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     }
 
     private Container createGameBoard() {
-        // Create background
-        NinePatch patch = new NinePatch(boardAtlas.findRegion("board0"),
-                3, 3, 3, 3);
-        NinePatchDrawable background = new NinePatchDrawable(patch);
-
         // Create GameBoardContainer
         Container gameBoardContainer = new Container();
-        gameBoardContainer.setBackground(background);
         gameBoardContainer.setSize(sw * 0.8f, sh);
         gameBoardContainer.setPosition(sw * 0.1f, 0);
         gameBoardContainer.fillX();
         gameBoardContainer.fillY();
 
+        // Create background
+        NinePatch patch = new NinePatch(squareBoard,
+                3, 3, 3, 3);
+        NinePatchDrawable background = new NinePatchDrawable(patch);
+        gameBoardContainer.setBackground(background);
+
+        // Create board tables
         Table gameBoard = new Table();
 
         Table out1 = new Table();
@@ -126,6 +128,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         Table out0 = new Table();
         Table home0 = new Table();
 
+        // Create triangles
         int boardSize = gameBoardController.getBoardSize();
         int trianglesPerZone = boardSize / 4;
 
@@ -136,7 +139,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
         // Add dieded pieces
         Table barField = new Table();
-        Image barFieldImage = new Image(boardAtlas.findRegion("finish0"));
+        Image barFieldImage = new Image(squareBoard);
         barFieldImage.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -146,12 +149,12 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         });
         barField.add(barFieldImage).size(sw * 0.05f, sw * 0.05f);
 
-        Image img2 = new Image(boardAtlas.findRegion("line0"));
-        Image middle1 = new Image(boardAtlas.findRegion("line0"));
+        Image middle1 = new Image(line);
+        Image middle2 = new Image(line);
         float middleBoardHeight = (sh- sw * 0.05f)/2;
         // first row
         gameBoard.add(out1);
-        gameBoard.add(img2).size(sw * 0.05f, middleBoardHeight).expand().center(); //middle of the board
+        gameBoard.add(middle1).size(sw * 0.05f, middleBoardHeight).expand().center(); //middle of the board
         gameBoard.add(home1);
         gameBoard.row();
         // second row
@@ -161,7 +164,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         gameBoard.row();
         // third row
         gameBoard.add(out0);
-        gameBoard.add(middle1).size(sw * 0.05f, middleBoardHeight).expand().center(); //middle of the board
+        gameBoard.add(middle2).size(sw * 0.05f, middleBoardHeight).expand().center(); //middle of the board
         gameBoard.add(home0);
 
         ScrollPane sp = new ScrollPane(gameBoard);
@@ -172,6 +175,8 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     }
 
     private Container createSideMenu() {
+        // Side Menu contains back button, emojiturn and throw dice button
+
         Container sideMenuContainer = new Container();
         sideMenuContainer.setSize(sw * 0.1f, sh);
         sideMenuContainer.setPosition(0, 0);
@@ -180,16 +185,13 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         Table sideMenu = new Table();
 
         // Add leave button
-        TextButton backButton = new TextButton("Back", skin);
-
-        backButton.addListener(new ClickListener() {
+        sideMenu.add(createButton("Back", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new MainMenuScreen(game));
             }
-        });
+        })).expand().uniform(); sideMenu.row();
 
-        sideMenu.add(backButton).expand().uniform(); sideMenu.row();//.pad(10);
 
         // Add Turn emoji
         TextureAtlas.AtlasRegion emojiRegion = emojiAtlas.findRegion(GameManager.GetInstance().getEmoji());
@@ -201,10 +203,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         sideMenu.add(debugLabel); sideMenu.row().pad(10);
 
         // Add throw dice button
-
-        TextButton diceButton = new TextButton("Throw\nDice", skin);
-        //diceButton.setScale(3f);
-        diceButton.addListener(new ClickListener() {
+        sideMenu.add(createButton("Throw\nDice", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 gameBoardController.rollDice();
@@ -212,14 +211,14 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                 debugLabel.setText(gameBoardController.getDieList().get(0).getValue() + " " + gameBoardController.getDieList().get(1).getValue());
                 // TODO begrenes hvor mange ganger man kaster terning
             }
-        });
-        sideMenu.add(diceButton).expand().uniform();
+        })).expand().uniform();
+
         sideMenuContainer.setActor(sideMenu);
         return sideMenuContainer;
     }
 
 
-    private Container createSideBoard(){
+    private Container createPlayerGoals(){
         Container sideBoardContainer = new Container();
 
         sideBoardContainer.setSize(sw * 0.1f, sh);
@@ -229,45 +228,42 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         Table sideBoard = new Table();
 
         // Add player1's goal
-        Table player1goal = new Table();
-
-        Image player1goalImage = new Image(boardAtlas.findRegion("finish0"));
-
-        player1goalImage.addListener(new ClickListener() {
+        sideBoard.add(createGoal(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 debugLabel.setText("player1goal");
-
             }
-        });
-        player1goal.add(player1goalImage).size(sw * 0.1f, sh/2).expand().center();
+        }));
 
-        sideBoard.add(player1goal);
         sideBoard.row();
 
-
         // Add player0's goal
-        Table player0goal = new Table();
-
-        Image img0 = new Image(boardAtlas.findRegion("finish0"));
-        img0.addListener(new ClickListener() {
+        sideBoard.add(createGoal(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 debugLabel.setText("player0goal");
-                List<Move> movelist = gameBoardController.getMoves(GameManager.GetInstance().getLocalPlayer());
-                if(GameManager.GetInstance().isItLocalPlayerTurn()){
-
-                }
-
             }
-        });
-        player0goal.add(img0).size(sw * 0.1f, sh/2).expand().center();
-        sideBoard.add(player0goal);
+        }));
 
         sideBoardContainer.setActor(sideBoard);
+
         return sideBoardContainer;
     }
 
+    private Table createGoal(ClickListener listener){
+        Table player0goal = new Table();
+
+        Image player0goalImage = new Image(squareBoard);
+        player0goalImage.addListener(listener);
+        player0goal.add(player0goalImage).size(sw * 0.1f, sh/2).expand().center();
+        return player0goal;
+    }
+
+    private TextButton createButton(String buttonText, ClickListener listener){
+        TextButton button = new TextButton(buttonText, skin);
+        button.addListener(listener);
+        return button;
+    }
 
     @Override
     public void show() {
@@ -275,7 +271,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         //stage.setDebugAll(true);
         stage.addActor(createSideMenu());
         stage.addActor(createGameBoard());
-        stage.addActor(createSideBoard());
+        stage.addActor(createPlayerGoals());
 
     }
 
