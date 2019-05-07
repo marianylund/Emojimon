@@ -1,7 +1,15 @@
 package com.progark.emojimon;
 
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.progark.emojimon.controller.FBC;
 import com.progark.emojimon.controller.GameBoardController;
+import com.progark.emojimon.gameScreens.CreateRulesetScreen;
+import com.progark.emojimon.gameScreens.GameOverScreen;
+import com.progark.emojimon.gameScreens.GameScreen;
+import com.progark.emojimon.gameScreens.MainMenuScreen;
+import com.progark.emojimon.gameScreens.SelectEmojiScreen;
 import com.progark.emojimon.model.Player;
 import com.progark.emojimon.model.fireBaseData.Converter;
 import com.progark.emojimon.model.fireBaseData.GameData;
@@ -15,6 +23,8 @@ public class GameManager implements SubscriberToFirebase {
     private GameData gameData;
     private LastTurnData lastTurnData;
     private GameBoardController gameBoardController;
+    Emojimon game;
+    public boolean gameEnded = false;
 
     public enum GameStatus {
         WAITING,
@@ -74,6 +84,7 @@ public class GameManager implements SubscriberToFirebase {
         this.gameData = gameData;
         if (gameData.getStatus() == GameStatus.ENDED) {
             //TODO: send to endscreen
+            gameEnded = true;
         }
     }
 
@@ -110,5 +121,9 @@ public class GameManager implements SubscriberToFirebase {
 
     public void endGame() {
         FBC.I().get().endGame(gameData.getGameId());
+    }
+
+    public void createApp(final Emojimon game) {
+        this.game = game;
     }
 }

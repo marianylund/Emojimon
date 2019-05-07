@@ -29,6 +29,7 @@ public class Emojimon extends Game {
 	
 	@Override
 	public void create () {
+        GameManager.GetInstance().createApp(this);
         setScreen(new MainMenuScreen(this));
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");

@@ -68,6 +68,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     public GameScreenStandard(final Emojimon game) {
         Gdx.graphics.setContinuousRendering(true);
         this.game = game;
+        GameManager.GetInstance().createApp(game);
         this.gameBoardController = new GameBoardController();//need to be changed to the singelton reference
         this.gameBoardController.createStandardGameBoard();
 
@@ -385,6 +386,10 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
+        if (GameManager.GetInstance().gameEnded) {
+            game.setScreen(new GameOverScreen(game));
+        }
+
 //        batch.begin();
 //        batch.draw(spritesheet, 0, 0);
 //        batch.end();

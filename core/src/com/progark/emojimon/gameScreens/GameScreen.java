@@ -32,6 +32,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.progark.emojimon.Emojimon;
+import com.progark.emojimon.GameManager;
 import com.progark.emojimon.controller.GameBoardController;
 import com.progark.emojimon.mapTiles.Hud;
 import com.progark.emojimon.mapTiles.TiledMapStage;
@@ -52,6 +53,7 @@ public class GameScreen implements Screen {
     private TextureAtlas atlas;
     private BitmapFont font;
     private SpriteBatch batch;
+    public boolean gameEnded = false;
 
     private GameBoardController gameBoardController;
     final Emojimon game;
@@ -79,6 +81,7 @@ public class GameScreen implements Screen {
         guiviewport = new FitViewport(Gdx.graphics.getWidth(), (float)Gdx.graphics.getHeight()/8, guicamera);
         guiviewport.apply();
         this.buttonstage = new Stage(guiviewport);
+
 
     }
 
@@ -187,6 +190,7 @@ public class GameScreen implements Screen {
         renderer.setView(gamecamera);
         renderer.render();
 
+
         //prepare for the drawing of buttons on the far side
         //Gdx.gl.glViewport( 0,(Gdx.graphics.getHeight()*8)*7,Gdx.graphics.getWidth(),Gdx.graphics.getHeight() / 8 );
         //batch.setProjectionMatrix(hud.getStage().getCamera().combined); //set the spriteBatch to draw what our stageViewport sees
@@ -214,5 +218,9 @@ public class GameScreen implements Screen {
         //scorestage.getViewport().update(width,height,true);
         //hud.getStage().getViewport().update(width, height);
 
+    }
+
+    public void setGameEnded(boolean gameEnded){
+        this.gameEnded = gameEnded;
     }
 }

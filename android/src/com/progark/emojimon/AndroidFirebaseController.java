@@ -149,7 +149,6 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
 
     void addPlayerToGame(String gameID) {
         Games.child(gameID + "/player1").setValue(true);
-        gameManager.setGameID(gameID);
         gameManager.setLocalPlayer(true); // Player 1 if joined game
         addSubscriber(gameManager);
     }
