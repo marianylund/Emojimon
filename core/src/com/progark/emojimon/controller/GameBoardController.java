@@ -84,7 +84,7 @@ public class GameBoardController {
         for (int i = 0; i < 2; i++) {
             Die die = getDieList().get(i);
             int dieValue = lastTurn.getDices().get(i);
-            System.out.println("DieValue" + dieValue);
+            System.out.println("DieValue: " + dieValue);
             die.setValue(dieValue);
         }
 

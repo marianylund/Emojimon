@@ -73,7 +73,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
         atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"), atlas);
-
+        skin.getFont("font").getData().setScale(1.5f,1.5f);
 
         camera = new OrthographicCamera();
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
@@ -100,52 +100,13 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         //triangle = new TextureRegion(new Texture(Gdx.files.internal("blacktri3.png")));
     }
 
-    private Container createChosenEmojiContainer(){
-        Container container = new Container();
-        // Chosen emoji
-        Table chosenEmojiTable = new Table();
-        Label chosenEmojiLabel = new Label("Chosen emoji: ", skin);
-
-        chosenEmojiTable.add(chosenEmojiLabel).pad(20).center();
-        //chosenEmojiTable.add(chosenEmoji).size(100).center();
-
-        container.setActor(chosenEmojiTable);
-
-        float cw = sw * 0.8f;
-        float ch = sh * 0.2f;
-
-        container.setSize(cw, ch);
-        container.setPosition((sw - cw) / 2.0f, (sh - ch));
-        container.fillX();
-
-        return container;
-    }
-    private Container createEmojiChoicesContainer(){
-        Table imagesTable = new Table();
-
-        Container container = new Container();
-
-        float cw = sw * 0.8f;
-        float ch = sh * 0.5f;
-
-        container.setSize(cw, ch);
-        container.setPosition((sw - cw) / 2.0f, (sh - ch) / 2f);
-        container.fillX();
-
-        ScrollPane sp = new ScrollPane(imagesTable);
-        sp.setFillParent(true);
-
-        container.setActor(sp);
-
-        return container;
-    }
-
     private Container createGameBoard(){
         // Create GameBoardContainer
         Container gameBoardContainer = new Container();
         gameBoardContainer.setSize(sw * 0.8f, sh);
         gameBoardContainer.setPosition(sw * 0.1f, 0);
         gameBoardContainer.fillX(); // TODO fill y too?
+        gameBoardContainer.fillY();
 
         Table gameBoard = new Table();
         Table out1 = new Table();
@@ -180,32 +141,30 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         Container sideMenuContainer = new Container();
         sideMenuContainer.setSize(sw * 0.1f, sh);
         sideMenuContainer.setPosition(0, 0);
-        sideMenuContainer.fillX(); // TODO fill y too?
+        sideMenuContainer.fillY(); sideMenuContainer.fillX();
 
         Table sideMenu = new Table();
 
         // Add leave button
         TextButton backButton = new TextButton("Back", skin);
-        backButton.setTransform(true);
-        backButton.setScale(2f);
         backButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new MainMenuScreen(game));
             }
         });
-        sideMenu.add(backButton); sideMenu.row();//.pad(10);
+        sideMenu.add(backButton).expand().uniform(); sideMenu.row();//.pad(10);
 
         // Add Turn emoji
         TextureAtlas.AtlasRegion emojiRegion = emojiAtlas.findRegion(GameManager.GetInstance().getEmoji());
         sideMenu.add(new Image(emojiRegion)).size(100); sideMenu.row().pad(10);
 
         // Add timer label wannabe, is used for debug for now
-        debugLabel = new Label("Debug: ", skin);
+        debugLabel = new Label("Debug:", skin);
         sideMenu.add(debugLabel); sideMenu.row().pad(10);
         // Add throw dice button
 
-        TextButton diceButton = new TextButton("Throw Dice", skin);
+        TextButton diceButton = new TextButton("Throw\nDice", skin);
         diceButton.setTransform(true);
         //diceButton.setScale(3f);
         diceButton.addListener(new ClickListener(){
@@ -217,7 +176,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                 // TODO throw dice
             }
         });
-        sideMenu.add(diceButton);
+        sideMenu.add(diceButton).expand().uniform();
         sideMenuContainer.setActor(sideMenu);
         return sideMenuContainer;
     }
@@ -259,9 +218,6 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                 Image chosenImage = new Image(emoji);
                 t.add(chosenImage).pad(10).size(40, 40);
             }
-
-
-
             if(rotationUp){
                 if(i%2 == 0){
                     chosenTriangle = triUpWhite;
