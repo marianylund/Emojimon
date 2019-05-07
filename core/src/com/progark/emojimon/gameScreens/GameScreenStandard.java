@@ -237,6 +237,10 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 debugLabel.setText("player0goal");
+                List<Move> movelist = gameBoardController.getMoves(GameManager.GetInstance().getLocalPlayer());
+                if(GameManager.GetInstance().isItLocalPlayerTurn()){
+
+                }
 
             }
         });

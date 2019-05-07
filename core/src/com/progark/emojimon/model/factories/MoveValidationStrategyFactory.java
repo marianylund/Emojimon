@@ -12,12 +12,13 @@ public class MoveValidationStrategyFactory {
     }
 
     // Create a concrete strategy for validating a move
-    public static MoveValidationStrategy getMoveValidationStrategy(MoveValStrat moveValidation){
+
+    public static MoveValidationStrategy getMoveValidationStrategy(MoveValStrat moveValidation, int blot){
         if (moveValidation == null){
             return null;
         }
         if (moveValidation == MoveValStrat.BASIC){
-            return new BasicMoveValidationStrategy();
+            return new BasicMoveValidationStrategy(blot);
         }
         return null;
     }
