@@ -125,5 +125,10 @@ public class GameBoardController {
             gameBoard.emptyCurrentTurnMoves();
         }
     }
+
+    public Position getPlayerGoal(int index){
+        return gameBoard.getPlayerGoal(index);
+    }
+
 }
 

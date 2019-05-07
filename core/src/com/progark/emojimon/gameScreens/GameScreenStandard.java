@@ -56,6 +56,10 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     private TextureRegion triDownWhite;
     private TextureRegion triUpRed;
     private TextureRegion triDownRed;
+    private TextureRegion highUpWhite;
+    private TextureRegion highDownWhite;
+    private TextureRegion highUpRed;
+    private TextureRegion highDownRed;
 
     private TextureRegion squareBoard;
     private TextureRegion squareBoardHighlighted;
@@ -92,10 +96,16 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         emojiAtlas = new TextureAtlas(Gdx.files.internal("Emojis/Output/emojiatlas.atlas"));
         boardAtlas = new TextureAtlas(Gdx.files.internal("Board/Output/board.atlas"));
 
+        highUpWhite = boardAtlas.findRegion("Triangle-white-up-highlighted");
+        highDownWhite = boardAtlas.findRegion("Triangle-white-down-highlighted");
+        highUpRed = boardAtlas.findRegion("Triangle-red-up-highlighted");
+        highDownRed = boardAtlas.findRegion("Triangle-red-down-highlighted");
+
         triUpWhite = boardAtlas.findRegion("Triangle-white-up");
         triDownWhite = boardAtlas.findRegion("Triangle-white-down");
         triUpRed = boardAtlas.findRegion("Triangle-red-up");
         triDownRed = boardAtlas.findRegion("Triangle-red-down");
+
 
         squareBoard = boardAtlas.findRegion("board");
         squareBoardHighlighted = boardAtlas.findRegion("board-highlighted");
@@ -147,6 +157,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         barFieldImage.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+
                 debugLabel.setText("barField");
 
             }
@@ -282,15 +293,16 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     private void addTriangles(Table t, int n, boolean rotationUp, int startTriangle) {
         TextureRegion chosenTriangle = null;
         TextureRegion emoji = null;
+
+
         final List<Position> positions = gameBoardController.getBoardPositions();
         for (int i = 0; i < n; i++) {
-            Position position = positions.get(i + 1);
-/*            if (position.getPieceCount() > 0) {
-                //Todo Velge riktig emoji
-                emoji = emojiAtlas.findRegion(GameManager.GetInstance().getEmoji());
-                Image chosenImage = new Image(emoji);
-                t.add(chosenImage).pad(10).size(40, 40);
-            }*/
+            emoji =  emojiAtlas.findRegion(GameManager.GetInstance().getEmoji());
+            final Image sEmoji = new Image(emoji);
+            Stack stack = new Stack();
+            final VerticalGroup group = new VerticalGroup();
+
+
             if (rotationUp) {
                 if (i % 2 == 0) {
                     chosenTriangle = triUpWhite;
@@ -305,19 +317,31 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                     chosenTriangle = triDownRed;
                 }
             }
-            Image triangle = new Image(chosenTriangle);
+            final Image triangle = new Image(chosenTriangle);
 
             if (rotationUp) {
                 final int triangleNumber = startTriangle + n - i - 1;
+                final TextureRegion finalChosenTriangle = chosenTriangle;
+                final Position position = positions.get(triangleNumber);
+
+                if (position.getPieceCount() > 0) {
+                    //Todo Velge riktig emoji
+                    group.addActor(sEmoji);
+                    group.bottom();
+
+                }
+
                 triangle.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         List<Move> movelist = gameBoardController.getMoves(GameManager.GetInstance().getLocalPlayer());
                         if (fieldReference == triangleNumber) {
                             fieldReference = 0;
+                            triangle.setDrawable(new SpriteDrawable(new Sprite(finalChosenTriangle)));
                             debugLabel.setText(fieldReference);
                         } else if (fieldReference == 0) {
                             fieldReference = triangleNumber;
+                            triangle.setDrawable(new SpriteDrawable(new Sprite(highUpWhite)));
 
                             Position pos = positions.get(triangleNumber);
 
@@ -337,6 +361,11 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                                 if (movelist.get(i).startPosition == fieldReference && movelist.get(i).endPosition == triangleNumber) {
                                     gameBoardController.doMove(movelist.get(i));
                                     System.out.print("noe skjer!");
+                                    if(position.getPositionIndex()==movelist.get(i).endPosition+1 && position.getPieceCount()>0 && position.getPieceCount()<2){
+                                        group.addActor(sEmoji);
+                                        group.bottom();
+                                    }
+
                                     movelist = gameBoardController.getMoves(GameManager.GetInstance().getLocalPlayer());
                                 }
                             }
@@ -367,7 +396,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                     }
                 });
             }
-
+/*
             emoji =  emojiAtlas.findRegion(GameManager.GetInstance().getEmoji());
             Image sEmoji = new Image(emoji);
             Stack stack = new Stack();
@@ -377,9 +406,10 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
             if(rotationUp){
                 group.bottom();
             }
-
+*/
             stack.add(triangle);
-            stack.add(group);
+            stack.addActorAfter(triangle,group);
+
 
             t.add(stack).pad(10).size(120,400);
 
