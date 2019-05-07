@@ -41,6 +41,8 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
     private HashMap<String, LastTurnData> lastTurnData = new HashMap<>(); // the same key as the games id
     private List<SubscriberToFirebase> subscribers = new ArrayList<>();
 
+    private GameManager gameManager = GameManager.GetInstance();
+
     String gameId = null;
 
 
@@ -54,11 +56,10 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
 
         String gameID = Games.push().getKey();
         Games.child(gameID).setValue(gd);
-        gamesData.put(gameID, gd);
+        gameManager.setGameData(gd);
 
-        GameManager.GetInstance().setLocalPlayer(false); // Player 0 if created the game
-        GameManager.GetInstance().setGameID(gameID);
-        addSubscriber(GameManager.GetInstance());
+        gameManager.setLocalPlayer(false); // Player 0 if created the game
+        addSubscriber(gameManager);
 
         addGameDataChangeListener(gameID); // Listen to changes of that game
     }
@@ -68,7 +69,7 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 GameData sm = dataSnapshot.getValue(GameData.class);
-                gamesData.put(gameID, sm); //Update that gameData class
+                gameManager.setGameData(sm);
                 System.out.println(sm.getSettings().toString());
                 notifyGameDataSubs(gameID, sm);
             }
@@ -86,14 +87,9 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
     public void addLastTurnByGameID(String gameID, boolean player, List<Integer> dices, List<List<Integer>> moves){
         //TODO Better error handling on gameID
 
-        if(!gamesData.containsKey("gameID")){
-            Log.d("sondre", "There is no game with this GameID, jsyk");
-        }
-
         LastTurnData ltd = new LastTurnData(player, dices, moves);
         LastTurns.child(gameID).setValue(ltd);
-        lastTurnData.put(gameID, ltd);
-
+        gameManager.setLastTurnData(ltd);
         addLastTurnDataChangeListener(gameID);
     }
 
@@ -102,7 +98,7 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 LastTurnData sm = dataSnapshot.getValue(LastTurnData.class);
-                lastTurnData.put(gameID, sm); //Update that LastTurnData class
+                gameManager.setLastTurnData(sm); //Update that LastTurnData class
 
                 notifyLastTurnSubs(gameID,sm);
             }
@@ -120,25 +116,15 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
 
     public void setGameStatusByGameID(String gameID, GameStatus newStatus){
         //TODO Check if it is an allowed status to set
-        if(gamesData.containsKey(gameID)){
-            Games.child(gameID).child("status").setValue(newStatus);
-        }else{
-            throw new IllegalArgumentException("There is no game with the " + gameID + " ID");
-        }
+        Games.child(gameID).child("status").setValue(newStatus);
     }
 
     public void setGameBoardByGameID(String gameID, List<List<Integer>> gameBoard){
         //TODO Check if it is an allowed gameBoard format
-        if(gamesData.containsKey(gameID)){
-            Games.child(gameID).child("gameBoard").setValue(gameBoard);
-        }else{
-            throw new IllegalArgumentException("There is no game with the " + gameID + " ID");
-        }
+        Games.child(gameID).child("gameBoard").setValue(gameBoard);
     }
 
-    //end region
-
-    // Finds the first game with status == waiting.
+    // Finds the first game with status == WAITING.
     // Sets player 1 to true and subscribes to the gamedata
     public void joinGame() {
         Games.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -163,9 +149,9 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
 
     void addPlayerToGame(String gameID) {
         Games.child(gameID + "/player1").setValue(true);
-        GameManager.GetInstance().setGameID(gameID);
-        GameManager.GetInstance().setLocalPlayer(true); // Player 1 if joined game
-        addSubscriber(GameManager.GetInstance());
+        gameManager.setGameID(gameID);
+        gameManager.setLocalPlayer(true); // Player 1 if joined game
+        addSubscriber(gameManager);
     }
 
 

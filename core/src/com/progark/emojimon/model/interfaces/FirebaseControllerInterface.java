@@ -1,5 +1,6 @@
 package com.progark.emojimon.model.interfaces;
 
+import com.progark.emojimon.GameManager.GameStatus;
 import com.progark.emojimon.model.Player;
 import com.progark.emojimon.model.fireBaseData.GameData;
 import com.progark.emojimon.model.fireBaseData.Settings;
@@ -18,7 +19,7 @@ public interface FirebaseControllerInterface {
 
     // Setters
     void setGameBoardByGameID(String gameID, List<List<Integer>> gameBoard);
-    void setGameStatusByGameID(String gameID, String newStatus);
+    void setGameStatusByGameID(String gameID, GameStatus newStatus);
 
     void joinGame();
     Object[] getGameIDs();

@@ -12,9 +12,8 @@ public class GameManager implements SubscriberToFirebase {
     //Implements Singleton pattern with lazy initialization
     private static GameManager INSTANCE;
     private String emoji = "face-with-tears-of-joy_1f602"; // default emoji
-    private String gameID;
-    private LastTurnData lastTurnData;
     private GameData gameData;
+    private LastTurnData lastTurnData;
     private GameBoardController gameBoardController;
 
     public enum GameStatus {
@@ -47,6 +46,14 @@ public class GameManager implements SubscriberToFirebase {
         return gameBoardController;
     }
 
+    public void setGameData(GameData gameData) {
+        this.gameData = gameData;
+    }
+
+    public void setLastTurnData(LastTurnData lastTurnData) {
+        this.lastTurnData = lastTurnData;
+    }
+
     @Override
     public void notifyOfNewLastTurn(String gameID, LastTurnData lastTurn) {
         if (lastTurn != null) {
@@ -65,6 +72,9 @@ public class GameManager implements SubscriberToFirebase {
     @Override
     public void notifyOfGameData(String gameID, GameData gameData) {
         this.gameData = gameData;
+        if (gameData.getStatus() == GameStatus.ENDED) {
+            //TODO: send to endscreen
+        }
     }
 
     public boolean isItLocalPlayerTurn(){
@@ -82,12 +92,12 @@ public class GameManager implements SubscriberToFirebase {
         return 0;
     }
 
-    public void setGameID(String gameID){
-        this.gameID = gameID;
+    public void setGameID(String gameId){
+        this.gameData.setGameId(gameId);
     }
 
     public String getGameID(){
-        return gameID;
+        return gameData.getGameId();
     }
 
     public String getEmoji() {
@@ -99,6 +109,6 @@ public class GameManager implements SubscriberToFirebase {
     }
 
     public void endGame() {
-        FBC.I().get().endGame(gameID);
+        FBC.I().get().endGame(gameData.getGameId());
     }
 }

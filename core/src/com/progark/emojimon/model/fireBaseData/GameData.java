@@ -11,6 +11,7 @@ public class GameData {
     private String player1emoji;
     private List<List<Integer>> GameBoard;
     private Settings settings;
+    private String gameId;
 
     public GameData(){} // Reguires for Firebase
 
@@ -73,6 +74,14 @@ public class GameData {
 
     public Settings getSettings() {
         return settings;
+    }
+
+    public String getGameId() {
+        return gameId;
+    }
+
+    public void setGameId(String gameId) {
+        this.gameId = gameId;
     }
 
     @Override
