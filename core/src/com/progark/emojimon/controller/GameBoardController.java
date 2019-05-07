@@ -13,6 +13,7 @@ import com.progark.emojimon.model.interfaces.Die;
 
 import java.lang.reflect.Modifier;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class GameBoardController {
     private GameBoard gameBoard;
@@ -69,4 +70,25 @@ public class GameBoardController {
             gameBoard.emptyCurrentTurnMoves();
         }
     }
+    public void showLastTurn(LastTurnData lastTurn) {
+        //Set dices
+        for (int i = 0; i < 2; i++) {
+            Die die = getDieList().get(i);
+            int dieValue = lastTurn.getDices().get(i);
+            System.out.println("DieValue" + dieValue);
+            die.setValue(dieValue);
+        }
+
+        //Update gameboard with moves
+        List<Move> moves = Converter.fromListToMoves(lastTurn.getActions());
+        for (Move move : moves) {
+            doMove(move);
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();  // set interrupt flag
+            }
+        }
+    }
+
 }

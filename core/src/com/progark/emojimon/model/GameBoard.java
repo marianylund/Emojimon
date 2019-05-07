@@ -9,7 +9,9 @@ import com.progark.emojimon.model.interfaces.Die;
 import com.progark.emojimon.model.strategyPattern.CanClearStrategy;
 import com.progark.emojimon.model.strategyPattern.MoveSetStrategy;
 import com.progark.emojimon.model.strategyPattern.MoveValidationStrategy;
-import com.sun.org.apache.xpath.internal.operations.Mult;
+import com.progark.emojimon.model.factories.MoveValidationStrategyFactory.MoveValStrat;
+import com.progark.emojimon.model.factories.MoveSetStrategyFactory.MoveSetStrat;
+import com.progark.emojimon.model.factories.CanClearStrategyFactory.CanClearStrat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,26 +44,26 @@ public class GameBoard {
     //constructors
     //creates standard gameboard
     public GameBoard(){
-        this(24, 15,2, 6, 2, "BASIC", "BASIC", "BASIC");
+        this(24, 15,2, 6, 2, MoveSetStrat.BASIC, MoveValStrat.BASIC, CanClearStrat.BASIC);
     }
 
     public GameBoard(int boardSize){
-        this(boardSize, 15, 2, 6, 2, "BASIC", "BASIC", "BASIC");
+        this(boardSize, 15, 2, 6, 2, MoveSetStrat.BASIC, MoveValStrat.BASIC, CanClearStrat.BASIC);
     }
 
     //create dynamic board
-    public GameBoard(int boardSize, int pieces, int baseNumberOfDice, int dieSides, int diceMultiplier, String moveSetStrategyID, String moveValidationStrategyID, String canClearStrategyID){
+    public GameBoard(int boardSize, int pieces, int baseNumberOfDice, int dieSides, int diceMultiplier, MoveSetStrat moveSetStrat, MoveValStrat moveValStrat, CanClearStrat canClearStrat){
         this.pieces = pieces;
 
         // Choose moveset strategy
-        moveSetStrategy = MoveSetStrategyFactory.GetMoveSet(moveSetStrategyID, blot);
+        moveSetStrategy = MoveSetStrategyFactory.GetMoveSet(moveSetStrat, blot);
 
         // Choose move validation strategy
         // TODO: add blot to move validation
-        moveValidationStrategy = MoveValidationStrategyFactory.getMoveValidationStrategy(moveValidationStrategyID);
+        moveValidationStrategy = MoveValidationStrategyFactory.getMoveValidationStrategy(moveValStrat);
 
         // Choose can clear strategy
-        canClearStrategy = CanClearStrategyFactory.getCanClearStrategy(canClearStrategyID);
+        canClearStrategy = CanClearStrategyFactory.getCanClearStrategy(canClearStrat);
 
 
         this.boardSize = boardSize;

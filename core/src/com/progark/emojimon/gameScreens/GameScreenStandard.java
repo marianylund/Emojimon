@@ -127,30 +127,6 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
         return container;
     }
-    private Container createButtonContainer(){
-        // Add Back button
-        TextButton backButton = new TextButton("Back", skin);
-        backButton.setTransform(true);
-        backButton.setScale(3f);
-        backButton.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MainMenuScreen(game));
-            }
-        });
-        //Add button container
-        Container buttonContainer = new Container();
-
-        float cw = sw * 0.8f;
-        float ch = sh * 0.5f;
-        buttonContainer.center();
-        buttonContainer.setPosition(sw * 0.5f - backButton.getWidth(), ch * 0.66f);
-        buttonContainer.fillX();
-
-        buttonContainer.setActor(backButton);
-
-        return buttonContainer;
-    }
 
     private Container createGameBoard(){
         // Create GameBoardContainer

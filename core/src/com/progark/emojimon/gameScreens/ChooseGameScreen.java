@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.progark.emojimon.Emojimon;
+import com.progark.emojimon.controller.FBC;
 
 public class ChooseGameScreen implements Screen {
 
@@ -57,6 +58,7 @@ public class ChooseGameScreen implements Screen {
         joinButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                FBC.I().get().joinGame();
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new CountDownScreen(game));
             }
         });

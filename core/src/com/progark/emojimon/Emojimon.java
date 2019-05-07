@@ -52,7 +52,6 @@ public class Emojimon extends Game {
         String tempGameID = FBC.I().get().getGameIDs()[0].toString();
         FBC.I().get().setGameBoardByGameID(tempGameID, Converter.fromBoardPositionsToList(gameBoardController.getBoardPositions()));
         FBC.I().get().setGameStatusByGameID(tempGameID, "playing");
-        */
 	}
 
 	//debugging
