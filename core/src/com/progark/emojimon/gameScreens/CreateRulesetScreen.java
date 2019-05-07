@@ -42,6 +42,7 @@ public class CreateRulesetScreen implements Screen {
         this.game = game;
         atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"), atlas);
+        skin.getFont("font").getData().setScale(3f,3f);
         camera = new OrthographicCamera();
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         viewport.apply();
@@ -68,7 +69,7 @@ public class CreateRulesetScreen implements Screen {
         Label moveSetLabel = new Label("Move logic", skin);
         Label canClearLabel = new Label("Bear off", skin);
         Label boardSizeLabel = new Label("Board size", skin);
-        Label numOfPiecesLabel = new Label("Number of pieces", skin);
+        Label numOfPiecesLabel = new Label("Pieces", skin);
         Label diceAmountLabel = new Label("Amount of dice", skin);
         Label diceSizeLabel = new Label("Dice size", skin);
         Label diceMultiplierLabel = new Label("Dice Multiplier", skin);
@@ -141,7 +142,7 @@ public class CreateRulesetScreen implements Screen {
         mainTable.defaults().expandY();
 
         mainTable.add(backButton);
-        mainTable.add(screenLabel);
+        mainTable.add(screenLabel).colspan(5);
 
         mainTable.row();
         mainTable.add(moveValidationLabel);
@@ -169,12 +170,12 @@ public class CreateRulesetScreen implements Screen {
         mainTable.add(diceSizeBox);
 
 
-        mainTable.row();
+        //mainTable.row();
         mainTable.add(diceMultiplierLabel);
         mainTable.add(diceMultiplierBox);
 
         mainTable.row();
-        mainTable.add(createLobbyButton).colspan(4);
+        mainTable.add(createLobbyButton).colspan(4).width(Gdx.graphics.getWidth()*0.8f).height(Gdx.graphics.getHeight()*0.15f);
 
         stage.addActor(mainTable);
 
@@ -186,6 +187,7 @@ public class CreateRulesetScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
+        stage.setDebugAll(true);
     }
 
     @Override
