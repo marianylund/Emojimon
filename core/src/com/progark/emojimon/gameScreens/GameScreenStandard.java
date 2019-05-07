@@ -27,6 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.progark.emojimon.Emojimon;
@@ -86,8 +87,8 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         camera.update();
         stage = new Stage(viewport);
 
-        boardAtlas = new TextureAtlas(Gdx.files.internal("Board/Output/triangles.atlas"));
         emojiAtlas = new TextureAtlas(Gdx.files.internal("Emojis/Output/emojiatlas.atlas"));
+        boardAtlas = new TextureAtlas(Gdx.files.internal("Board/Output/board.atlas"));
 
         triUpWhite = boardAtlas.findRegion("Triangle-white-up");
         triDownWhite = boardAtlas.findRegion("Triangle-white-down");
@@ -106,7 +107,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
     private Container createGameBoard() {
         // Create background
-        NinePatch patch = new NinePatch(new Texture(Gdx.files.internal("rect.png")),
+        NinePatch patch = new NinePatch(boardAtlas.findRegion("board0"),
                 3, 3, 3, 3);
         NinePatchDrawable background = new NinePatchDrawable(patch);
 
@@ -115,7 +116,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         gameBoardContainer.setBackground(background);
         gameBoardContainer.setSize(sw * 0.8f, sh);
         gameBoardContainer.setPosition(sw * 0.1f, 0);
-        gameBoardContainer.fillX(); // TODO fill y too?
+        gameBoardContainer.fillX();
         gameBoardContainer.fillY();
 
         Table gameBoard = new Table();
@@ -133,12 +134,34 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         addTriangles(home1, trianglesPerZone, false, 1 + trianglesPerZone * 3);
         addTriangles(home0, trianglesPerZone, true, 1);
 
+        // Add dieded pieces
+        Table barField = new Table();
+        Image barFieldImage = new Image(boardAtlas.findRegion("finish0"));
+        barFieldImage.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                debugLabel.setText("barField");
+
+            }
+        });
+        barField.add(barFieldImage).size(sw * 0.05f, sw * 0.05f);
+
+        Image img2 = new Image(boardAtlas.findRegion("line0"));
+        Image middle1 = new Image(boardAtlas.findRegion("line0"));
+        float middleBoardHeight = (sh- sw * 0.05f)/2;
+        // first row
         gameBoard.add(out1);
-        gameBoard.add().pad(40); //middle of the board
+        gameBoard.add(img2).size(sw * 0.05f, middleBoardHeight).expand().center(); //middle of the board
         gameBoard.add(home1);
-        gameBoard.row().pad(50);
+        gameBoard.row();
+        // second row
+        gameBoard.add();
+        gameBoard.add(barField);
+        gameBoard.add();
+        gameBoard.row();
+        // third row
         gameBoard.add(out0);
-        gameBoard.add().pad(40); //middle of the board
+        gameBoard.add(middle1).size(sw * 0.05f, middleBoardHeight).expand().center(); //middle of the board
         gameBoard.add(home0);
 
         ScrollPane sp = new ScrollPane(gameBoard);
@@ -198,41 +221,35 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
     private Container createSideBoard(){
         Container sideBoardContainer = new Container();
+
         sideBoardContainer.setSize(sw * 0.1f, sh);
         sideBoardContainer.setPosition(sw * 0.9f, 0);
         sideBoardContainer.fillX(); sideBoardContainer.fillY();
 
         Table sideBoard = new Table();
+
         // Add player1's goal
         Table player1goal = new Table();
 
-        Image img = new Image(new Texture(Gdx.files.internal("rect.png")));
-        img.addListener(new ClickListener() {
+        Image player1goalImage = new Image(boardAtlas.findRegion("finish0"));
+
+        player1goalImage.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 debugLabel.setText("player1goal");
 
             }
         });
-        player1goal.add(img);
-        sideBoard.add(player1goal); sideBoard.row();
-        // Add dieded pieces
-        Table barField = new Table();
+        player1goal.add(player1goalImage).size(sw * 0.1f, sh/2).expand().center();
 
-        Image img2 = new Image(new Texture(Gdx.files.internal("rect.png")));
-        img2.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                debugLabel.setText("barField");
+        sideBoard.add(player1goal);
+        sideBoard.row();
 
-            }
-        });
-        barField.add(img2);
-        sideBoard.add(barField);sideBoard.row();
+
         // Add player0's goal
         Table player0goal = new Table();
 
-        Image img0 = new Image(new Texture(Gdx.files.internal("rect.png")));
+        Image img0 = new Image(boardAtlas.findRegion("finish0"));
         img0.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -240,7 +257,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
             }
         });
-        player0goal.add(img0);
+        player0goal.add(img0).size(sw * 0.1f, sh/2).expand().center();
         sideBoard.add(player0goal);
 
         sideBoardContainer.setActor(sideBoard);
@@ -251,8 +268,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-        stage.setDebugAll(true);
-
+        //stage.setDebugAll(true);
         stage.addActor(createSideMenu());
         stage.addActor(createGameBoard());
         stage.addActor(createSideBoard());

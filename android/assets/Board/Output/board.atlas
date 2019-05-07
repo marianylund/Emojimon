@@ -1,0 +1,82 @@
+board.png
+size: 219, 798
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+board0
+  rotate: false
+  xy: 0, 463
+  size: 188, 335
+  orig: 188, 335
+  offset: 0, 0
+  index: -1
+finish0
+  rotate: false
+  xy: 16, 0
+  size: 45, 150
+  orig: 45, 150
+  offset: 0, 0
+  index: -1
+line0
+  rotate: false
+  xy: 0, 0
+  size: 16, 83
+  orig: 16, 83
+  offset: 0, 0
+  index: -1
+Triangle-red-down-highlighted
+  rotate: false
+  xy: 73, 306
+  size: 73, 156
+  orig: 73, 156
+  offset: 0, 0
+  index: -1
+Triangle-red-down
+  rotate: false
+  xy: 0, 306
+  size: 73, 156
+  orig: 73, 156
+  offset: 0, 0
+  index: -1
+Triangle-red-up-highlighted
+  rotate: false
+  xy: 146, 306
+  size: 73, 157
+  orig: 73, 157
+  offset: 0, 0
+  index: -1
+Triangle-red-up
+  rotate: false
+  xy: 61, 0
+  size: 73, 151
+  orig: 73, 151
+  offset: 0, 0
+  index: -1
+Triangle-white-down-highlighted
+  rotate: false
+  xy: 134, 151
+  size: 65, 155
+  orig: 65, 155
+  offset: 0, 0
+  index: -1
+Triangle-white-down
+  rotate: false
+  xy: 69, 151
+  size: 65, 155
+  orig: 65, 155
+  offset: 0, 0
+  index: -1
+Triangle-white-up-highlighted
+  rotate: false
+  xy: 0, 151
+  size: 69, 153
+  orig: 69, 153
+  offset: 0, 0
+  index: -1
+Triangle-white-up
+  rotate: false
+  xy: 134, 0
+  size: 69, 151
+  orig: 69, 151
+  offset: 0, 0
+  index: -1
