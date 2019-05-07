@@ -100,50 +100,6 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         //triangle = new TextureRegion(new Texture(Gdx.files.internal("blacktri3.png")));
     }
 
-<<<<<<< Updated upstream
-    private Container createGameBoard(){
-=======
-    private Container createChosenEmojiContainer() {
-        Container container = new Container();
-        // Chosen emoji
-        Table chosenEmojiTable = new Table();
-        Label chosenEmojiLabel = new Label("Chosen emoji: ", skin);
-
-        chosenEmojiTable.add(chosenEmojiLabel).pad(20).center();
-        //chosenEmojiTable.add(chosenEmoji).size(100).center();
-
-        container.setActor(chosenEmojiTable);
-
-        float cw = sw * 0.8f;
-        float ch = sh * 0.2f;
-
-        container.setSize(cw, ch);
-        container.setPosition((sw - cw) / 2.0f, (sh - ch));
-        container.fillX();
-
-        return container;
-    }
-
-    private Container createEmojiChoicesContainer() {
-        Table imagesTable = new Table();
-
-        Container container = new Container();
-
-        float cw = sw * 0.8f;
-        float ch = sh * 0.5f;
-
-        container.setSize(cw, ch);
-        container.setPosition((sw - cw) / 2.0f, (sh - ch) / 2f);
-        container.fillX();
-
-        ScrollPane sp = new ScrollPane(imagesTable);
-        sp.setFillParent(true);
-
-        container.setActor(sp);
-
-        return container;
-    }
-
     private Container createButtonContainer() {
         // Add Back button
         TextButton backButton = new TextButton("Back", skin);
@@ -170,7 +126,6 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     }
 
     private Container createGameBoard() {
->>>>>>> Stashed changes
         // Create GameBoardContainer
         Container gameBoardContainer = new Container();
         gameBoardContainer.setSize(sw * 0.8f, sh);
@@ -217,24 +172,18 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
         // Add leave button
         TextButton backButton = new TextButton("Back", skin);
-<<<<<<< Updated upstream
-        backButton.addListener(new ClickListener(){
-=======
-        backButton.setTransform(true);
-        backButton.setScale(2f);
+
         backButton.addListener(new ClickListener() {
->>>>>>> Stashed changes
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new MainMenuScreen(game));
             }
         });
-<<<<<<< Updated upstream
+
         sideMenu.add(backButton).expand().uniform(); sideMenu.row();//.pad(10);
-=======
+
         sideMenu.add(backButton);
         sideMenu.row();//.pad(10);
->>>>>>> Stashed changes
 
         // Add Turn emoji
         TextureAtlas.AtlasRegion emojiRegion = emojiAtlas.findRegion(GameManager.GetInstance().getEmoji());
@@ -242,18 +191,14 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         sideMenu.row().pad(10);
 
         // Add timer label wannabe, is used for debug for now
-<<<<<<< Updated upstream
         debugLabel = new Label("Debug:", skin);
         sideMenu.add(debugLabel); sideMenu.row().pad(10);
-=======
         debugLabel = new Label("Debug: ", skin);
         sideMenu.add(debugLabel);
         sideMenu.row().pad(10);
->>>>>>> Stashed changes
         // Add throw dice button
 
         TextButton diceButton = new TextButton("Throw\nDice", skin);
-        diceButton.setTransform(true);
         //diceButton.setScale(3f);
         diceButton.addListener(new ClickListener() {
             @Override
@@ -338,19 +283,9 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                 emoji = emojiAtlas.findRegion(GameManager.GetInstance().getEmoji());
                 Image chosenImage = new Image(emoji);
                 t.add(chosenImage).pad(10).size(40, 40);
-<<<<<<< Updated upstream
             }
-            if(rotationUp){
-                if(i%2 == 0){
-=======
-
-                chosenImage.setDrawable(new SpriteDrawable(new Sprite(emoji)));
-            }
-
-
             if (rotationUp) {
                 if (i % 2 == 0) {
->>>>>>> Stashed changes
                     chosenTriangle = triUpWhite;
                 } else {
                     chosenTriangle = triUpRed;
