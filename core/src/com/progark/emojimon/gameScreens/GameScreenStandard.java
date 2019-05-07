@@ -185,48 +185,55 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     }
 
 
-    private Container createPlayer1Board() {
-        // Add player1's goal
-        Container player1home = new Container();
-        player1home.setSize(sw * 0.1f, sh * 0.4f);
-        player1home.setPosition(sw * 0.9f, 0);
-        player1home.fillX();
+    private Container createSideBoard(){
+        Container sideBoardContainer = new Container();
+        sideBoardContainer.setSize(sw * 0.1f, sh);
+        sideBoardContainer.setPosition(sw * 0.9f, 0);
+        sideBoardContainer.fillX(); sideBoardContainer.fillY();
 
-        Table scoreboard = new Table();
+        Table sideBoard = new Table();
+        // Add player1's goal
+        Table player1goal = new Table();
 
         Image img = new Image(new Texture(Gdx.files.internal("rect.png")));
         img.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                debugLabel.setText("scorefield");
+                debugLabel.setText("player1goal");
 
             }
         });
-        scoreboard.add(img);
+        player1goal.add(img);
+        sideBoard.add(player1goal); sideBoard.row();
+        // Add dieded pieces
+        Table barField = new Table();
 
-        return player1home;
-    }
+        Image img2 = new Image(new Texture(Gdx.files.internal("rect.png")));
+        img2.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                debugLabel.setText("barField");
 
-    private Container createBarBoard() {
-        // Add bar field
-        Container barfield = new Container();
-        barfield.setSize(sw * 0.1f, sh * 0.2f);
-        barfield.setPosition(sw * 0.9f, sh * 0.4f);
-        barfield.fillX();
-
-        return barfield;
-    }
-
-
-    private Container createPlayer0Board() {
+            }
+        });
+        barField.add(img2);
+        sideBoard.add(barField);sideBoard.row();
         // Add player0's goal
-        Container player0home = new Container();
-        player0home.setSize(sw * 0.1f, sh * 0.4f);
-        player0home.setPosition(sw * 0.9f, sh * 0.6f);
-        player0home.fillX();
+        Table player0goal = new Table();
 
+        Image img0 = new Image(new Texture(Gdx.files.internal("rect.png")));
+        img0.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                debugLabel.setText("player0goal");
 
-        return player0home;
+            }
+        });
+        player0goal.add(img0);
+        sideBoard.add(player0goal);
+
+        sideBoardContainer.setActor(sideBoard);
+        return sideBoardContainer;
     }
 
 
@@ -237,9 +244,8 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
         stage.addActor(createSideMenu());
         stage.addActor(createGameBoard());
-        stage.addActor(createPlayer1Board());
-        stage.addActor(createPlayer0Board());
-        stage.addActor(createBarBoard());
+        stage.addActor(createSideBoard());
+
     }
 
     private void addTriangles(Table t, int n, boolean rotationUp, int startTriangle) {
