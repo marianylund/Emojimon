@@ -19,12 +19,13 @@ public class BasicMoveSetStrategy implements MoveSetStrategy {
         Position endPosition = boardPositions.get(move.endPosition);
         Position bar = boardPositions.get(0);
 
+
         // check if players piece can be moved
         if (startPosition.getOwner().isAvailableMove(startPosition, endPosition)){
 
             // throw opposite players piece
             if(endPosition.getOwner() != null){
-                if (!endPosition.getOwner().equals(startPosition.getOwner())){
+                if (endPosition.getOwner() != startPosition.getOwner()){
                     //move pieces from endposition to bar
                     bar.addPieces(blot);
                     endPosition.removePieces(blot);
@@ -36,12 +37,15 @@ public class BasicMoveSetStrategy implements MoveSetStrategy {
                 }
             }
 
-            startPosition.addPieces(1);
             startPosition.removePieces(1);
             endPosition.addPieces(1);
 
-            //update owner of endposition
+            //update owners
+            System.out.println("Changing owner from " + endPosition.getOwner() + " to " + startPosition.getOwner());
             endPosition.setOwner(startPosition.getOwner());
+            if(startPosition.getPieceCount() == 0){
+                startPosition.setOwner(null);
+            }
 
             if(bar.getOwner() != null){
                 // if the player has cleared their bar, set owner to null
