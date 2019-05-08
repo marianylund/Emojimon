@@ -1,12 +1,10 @@
 package com.progark.emojimon.gameScreens;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -25,9 +23,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.progark.emojimon.Emojimon;
 import com.progark.emojimon.GameManager;
-
-
-import sun.rmi.runtime.Log;
 
 public class SelectEmojiScreen extends ApplicationAdapter implements Screen {
 
@@ -62,9 +57,9 @@ public class SelectEmojiScreen extends ApplicationAdapter implements Screen {
 
         atlas = new TextureAtlas(Gdx.files.internal("Emojis/Output/emojiatlas.atlas"));
 
-        TextureAtlas.AtlasRegion emojiRegion = atlas.findRegion(GameManager.GetInstance().getEmoji());
+        TextureAtlas.AtlasRegion emojiRegion = atlas.findRegion(GameManager.GetInstance().getLocalPlayerEmoji());
         if(emojiRegion == null){
-            throw new IllegalArgumentException("There is no emoji with the name: " + GameManager.GetInstance().getEmoji());
+            throw new IllegalArgumentException("There is no emoji with the name: " + GameManager.GetInstance().getLocalPlayerEmoji());
         } else {
             chosenEmoji = new Image(emojiRegion);
         }
@@ -76,9 +71,9 @@ public class SelectEmojiScreen extends ApplicationAdapter implements Screen {
     }
 
     private void changeChosenEmoji(){
-        TextureAtlas.AtlasRegion emojiRegion = atlas.findRegion(GameManager.GetInstance().getEmoji());
+        TextureAtlas.AtlasRegion emojiRegion = atlas.findRegion(GameManager.GetInstance().getLocalPlayerEmoji());
         if(emojiRegion == null){
-            throw new IllegalArgumentException("There is no emoji with the name: " + GameManager.GetInstance().getEmoji());
+            throw new IllegalArgumentException("There is no emoji with the name: " + GameManager.GetInstance().getLocalPlayerEmoji());
         } else {
 
             chosenEmoji.setDrawable(new SpriteDrawable(new Sprite(emojiRegion)));
@@ -209,7 +204,7 @@ public class SelectEmojiScreen extends ApplicationAdapter implements Screen {
             emojiImage.addListener(new ClickListener(){
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    GameManager.GetInstance().setEmoji(emojiName);
+                    GameManager.GetInstance().setLocalPlayerEmoji(emojiName);
                     changeChosenEmoji();
                 }
             });

@@ -130,5 +130,17 @@ public class GameBoardController {
         return gameBoard.getPlayerGoal(index);
     }
 
+    public Player getPlayer(int index){
+        if(index == 0){
+            return gameBoard.getPlayer0();
+        }
+        else if(index == 1){
+            return gameBoard.getPlayer1();
+        }
+        else{
+            throw new IllegalArgumentException("Invalid player index: " + index);
+        }
+    }
+
 }
 
