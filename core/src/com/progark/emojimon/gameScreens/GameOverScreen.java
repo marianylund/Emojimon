@@ -78,7 +78,7 @@ public class GameOverScreen implements Screen {
         //Add labels and buttons to menu
         mainTable.add(gameOverLabel).pad(10);
         mainTable.row();
-        if (GameManager.GetInstance().getLocalPlayer() == GameManager.GetInstance().getWinningPlayer()) {
+        if (GameManager.GetInstance().getLocalPlayerIndex() == GameManager.GetInstance().getWinningPlayer()) {
             mainTable.add(youWonLabel).pad(10);
         } else {mainTable.add(youLostLabel).pad(10);}
         mainTable.row();

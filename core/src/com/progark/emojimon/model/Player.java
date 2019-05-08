@@ -116,6 +116,7 @@ public class Player {
                             if(endPositionIndex < 0 || endPositionIndex > positions.size()){
                                 continue;
                             }
+                            endPosition = positions.get(endPositionIndex);
                         }
                     }
                     else{

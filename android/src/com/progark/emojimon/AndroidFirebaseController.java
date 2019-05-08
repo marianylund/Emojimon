@@ -57,9 +57,11 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
         String gameID = Games.push().getKey();
         gd.setGameId(gameID);
         Games.child(gameID).setValue(gd);
-        gameManager.setGameData(gd);
+        //gameManager.setGameData(gd);
+        gamesData.put(gameID, gd);
 
         gameManager.setLocalPlayer(false); // Player 0 if created the game
+        gameManager.setGameID(gameID);
         addSubscriber(gameManager);
 
         addGameDataChangeListener(gameID); // Listen to changes of that game
@@ -70,7 +72,8 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 GameData sm = dataSnapshot.getValue(GameData.class);
-                gameManager.setGameData(sm);
+                //gameManager.setGameData(sm);
+                gamesData.put(gameID, sm); //Update that gameData class
                 System.out.println(sm.getSettings().toString());
                 notifyGameDataSubs(gameID, sm);
             }
@@ -90,7 +93,8 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
 
         LastTurnData ltd = new LastTurnData(player, dices, moves);
         LastTurns.child(gameID).setValue(ltd);
-        gameManager.setLastTurnData(ltd);
+        //gameManager.setLastTurnData(ltd);
+        lastTurnData.put(gameID, ltd);
         addLastTurnDataChangeListener(gameID);
     }
 
@@ -99,7 +103,8 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 LastTurnData sm = dataSnapshot.getValue(LastTurnData.class);
-                gameManager.setLastTurnData(sm); //Update that LastTurnData class
+                //gameManager.setLastTurnData(sm); //Update that LastTurnData class
+                lastTurnData.put(gameID, sm); //Update that LastTurnData class
 
                 notifyLastTurnSubs(gameID,sm);
             }
@@ -151,6 +156,7 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
 
     void addPlayerToGame(String gameID) {
         Games.child(gameID + "/player1").setValue(true);
+        gameManager.setGameID(gameID);
         gameManager.setLocalPlayer(true); // Player 1 if joined game
         addSubscriber(gameManager);
     }

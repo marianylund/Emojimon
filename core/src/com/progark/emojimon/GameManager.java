@@ -1,8 +1,6 @@
 package com.progark.emojimon;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.progark.emojimon.controller.FBC;
 import com.progark.emojimon.controller.GameBoardController;
 import com.progark.emojimon.gameScreens.CreateRulesetScreen;
@@ -11,7 +9,6 @@ import com.progark.emojimon.gameScreens.GameScreen;
 import com.progark.emojimon.gameScreens.MainMenuScreen;
 import com.progark.emojimon.gameScreens.SelectEmojiScreen;
 import com.progark.emojimon.model.Player;
-import com.progark.emojimon.model.fireBaseData.Converter;
 import com.progark.emojimon.model.fireBaseData.GameData;
 import com.progark.emojimon.model.fireBaseData.LastTurnData;
 import com.progark.emojimon.model.interfaces.SubscriberToFirebase;
@@ -19,9 +16,11 @@ import com.progark.emojimon.model.interfaces.SubscriberToFirebase;
 public class GameManager implements SubscriberToFirebase {
     //Implements Singleton pattern with lazy initialization
     private static GameManager INSTANCE;
-    private String emoji = "face-with-tears-of-joy_1f602"; // default emoji
-    private GameData gameData;
+    private String localPlayerEmoji = "face-with-tears-of-joy_1f602"; // default localPlayerEmoji
+    private String otherPlayerEmoji = "face-screaming-in-fear_1f631";
+    private String gameID;
     private LastTurnData lastTurnData;
+    private GameData gameData;
     private GameBoardController gameBoardController;
     Emojimon game;
     public boolean gameOver = false;
@@ -97,27 +96,46 @@ public class GameManager implements SubscriberToFirebase {
         this.localPlayer = localPlayer;
     }
 
-    public int getLocalPlayer(){
+    public int getLocalPlayerIndex(){
         if(localPlayer){
             return 1;
         }
         return 0;
     }
 
-    public void setGameID(String gameId){
-        this.gameData.setGameId(gameId);
+    public Player getLocalPlayer(){
+        if(localPlayer){
+            return gameBoardController.getPlayer(1);
+        }
+        else{
+            return gameBoardController.getPlayer(0);
+        }
+    }
+
+
+
+    public void setGameID(String gameID){
+        this.gameID = gameID;
     }
 
     public String getGameID(){
         return gameData.getGameId();
     }
 
-    public String getEmoji() {
-        return emoji;
+    public String getLocalPlayerEmoji() {
+        return localPlayerEmoji;
     }
 
-    public void setEmoji(String emoji) {
-        this.emoji = emoji;
+    public void setLocalPlayerEmoji(String localPlayerEmoji) {
+        this.localPlayerEmoji = localPlayerEmoji;
+    }
+
+    public String getOtherPlayerEmoji(){
+        return otherPlayerEmoji;
+    }
+
+    public void setOtherPlayerEmoji(String otherPlayerEmoji){
+        this.otherPlayerEmoji = otherPlayerEmoji;
     }
 
     public void gameWon(boolean isCreator) {
