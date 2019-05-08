@@ -14,49 +14,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 public class Emojimon extends Game {
 
-    public static final int WIDTH = 800;
-    public static final int HEIGHT = 800;
+    public static final int WIDTH = 1200;
+    public static final int HEIGHT = 600;
     SpriteBatch batch;
     Texture img;
     GameBoardController gameBoardController;
 
-    public Emojimon(FirebaseControllerInterface firebaseControllerInterface){
+    public Emojimon(FirebaseControllerInterface firebaseControllerInterface) {
         FBC.I().setFirebase(firebaseControllerInterface);
     }
-	
-	@Override
-	public void create () {
+
+    @Override
+    public void create() {
         setScreen(new MainMenuScreen(this));
-		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+        batch = new SpriteBatch();
+        img = new Texture("badlogic.jpg");
 
-		//Test creation of gameboard
-		gameBoardController = new GameBoardController();
-		gameBoardController.createStandardGameBoard();
-
-
-		//test write to Firebase
+        //Test creation of gameboard
+        gameBoardController = new GameBoardController();
+        gameBoardController.createStandardGameBoard();
 
 
-	}
+    }
 
-	//debugging
+    //debugging
 
-    private List<List<Integer>> createTempDoubleArrayList(){
+    private List<List<Integer>> createTempDoubleArrayList() {
         List<Integer> action = new ArrayList<Integer>();
         //from;to;
-        action.add(2);action.add(3);
+        action.add(2);
+        action.add(3);
         List<List<Integer>> actions = new ArrayList<List<Integer>>();
         actions.add(action);
         return actions;
     }
 
-    private void tempLastTurn(){
+    private void tempLastTurn() {
         List<Integer> dices = new ArrayList<Integer>();
-        dices.add(5); dices.add(3);
+        dices.add(5);
+        dices.add(3);
 
         //FBC.I().get().addLastTurnByGameID("GameID00", false, "12:35", dices, createTempDoubleArrayList());
     }

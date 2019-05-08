@@ -54,6 +54,7 @@ public class GameBoard {
     }
 
     //create dynamic board
+
     public GameBoard(Settings settings){
         this.piecesPerPlayer = settings.getPiecesPerPlayer();
 

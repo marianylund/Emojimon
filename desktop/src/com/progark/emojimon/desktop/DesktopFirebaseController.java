@@ -1,5 +1,6 @@
 package com.progark.emojimon.desktop;
 
+import com.progark.emojimon.model.fireBaseData.Settings;
 import com.progark.emojimon.model.interfaces.FirebaseControllerInterface;
 import com.progark.emojimon.model.Player;
 import com.progark.emojimon.model.interfaces.SubscriberToFirebase;
@@ -15,7 +16,12 @@ public class DesktopFirebaseController implements FirebaseControllerInterface {
 
 
     @Override
-    public void addNewGame(String creatorPlayer, List<String> strategies) {
+    public void testWrite(String testMessage) {
+
+    }
+
+    @Override
+    public void addNewGame(String creatorPlayer, Settings strategies) {
 
     }
 

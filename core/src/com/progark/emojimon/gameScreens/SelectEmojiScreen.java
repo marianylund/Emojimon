@@ -38,7 +38,6 @@ public class SelectEmojiScreen extends ApplicationAdapter implements Screen {
     private TextureAtlas atlas;
     private Skin skin;
     private SpriteBatch batch; // ubrukt, må finne ut av textureatlas
-    private Texture spritesheet;
     private Image chosenEmoji;
 
     float sw = Gdx.graphics.getWidth();
@@ -61,9 +60,6 @@ public class SelectEmojiScreen extends ApplicationAdapter implements Screen {
         camera.update();
         stage = new Stage(viewport);
 
-        //unfinished, might be better to use textureatlas instead https://stackoverflow.com/questions/36111196/store-sprites-from-spritesheet-in-array-libgdx
-        spritesheet = new Texture("spritesheet.png");
-
         atlas = new TextureAtlas(Gdx.files.internal("Emojis/Output/emojiatlas.atlas"));
 
         TextureAtlas.AtlasRegion emojiRegion = atlas.findRegion(GameManager.GetInstance().getEmoji());
@@ -76,7 +72,7 @@ public class SelectEmojiScreen extends ApplicationAdapter implements Screen {
 
     @Override
     public void create(){
-//        spritesheet = new Texture("assets/spritesheet.png");
+
     }
 
     private void changeChosenEmoji(){
@@ -199,7 +195,6 @@ public class SelectEmojiScreen extends ApplicationAdapter implements Screen {
     @Override
     public void dispose() {
         batch.dispose();
-        spritesheet.dispose();
     }
 
     private void addEmoji(Table table, final String emojiName){
