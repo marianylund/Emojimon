@@ -24,7 +24,7 @@ public class GameManager implements SubscriberToFirebase {
     private LastTurnData lastTurnData;
     private GameBoardController gameBoardController;
     Emojimon game;
-    public boolean gameEnded = false;
+    public boolean gameOver = false;
 
     public enum GameStatus {
         WAITING,
@@ -38,7 +38,6 @@ public class GameManager implements SubscriberToFirebase {
     private boolean localPlayer;
 
     public GameManager(){
-
     }
 
     public static GameManager GetInstance() {
@@ -66,12 +65,17 @@ public class GameManager implements SubscriberToFirebase {
 
     @Override
     public void notifyOfNewLastTurn(String gameID, LastTurnData lastTurn) {
+        System.out.println("NEW LAST TURN");
         if (lastTurn != null) {
             lastTurnData = lastTurn;
             currentPlayer = !lastTurnData.getPlayer();
             if(isItLocalPlayerTurn()){
                 if(gameBoardController != null) {
                     gameBoardController.showLastTurn(lastTurn);
+                    // Check if game is over
+                    if(getWinningPlayer() == 0 || getWinningPlayer() == 1) {
+                        gameOver = true;
+                    }
                     // TODO: GUI: Start turn by enabling roll dice button for player
 
                 }
@@ -81,11 +85,8 @@ public class GameManager implements SubscriberToFirebase {
 
     @Override
     public void notifyOfGameData(String gameID, GameData gameData) {
+        System.out.println("NEW GAMEDATA");
         this.gameData = gameData;
-        if (gameData.getStatus() == GameStatus.ENDED) {
-            //TODO: send to endscreen
-            gameEnded = true;
-        }
     }
 
     public boolean isItLocalPlayerTurn(){
@@ -119,11 +120,13 @@ public class GameManager implements SubscriberToFirebase {
         this.emoji = emoji;
     }
 
-    public void endGame() {
-        FBC.I().get().endGame(gameData.getGameId());
+    public void gameWon(boolean isCreator) {
+        FBC.I().get().endGame(gameData.getGameId(), isCreator);
     }
 
     public void createApp(final Emojimon game) {
         this.game = game;
     }
+
+    public int getWinningPlayer () {return gameData.getWinningPlayer();}
 }

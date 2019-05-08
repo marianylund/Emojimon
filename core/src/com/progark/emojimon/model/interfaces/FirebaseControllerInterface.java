@@ -24,7 +24,7 @@ public interface FirebaseControllerInterface {
     void joinGame();
     Object[] getGameIDs();
     void addSubscriber(SubscriberToFirebase subscriber);
-    void endGame(String gameId);
+    void endGame(String gameId, boolean isCreator);
 
     ArrayList getGameStateByGameID(String id);
 

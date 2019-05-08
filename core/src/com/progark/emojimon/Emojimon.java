@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.progark.emojimon.controller.FBC;
+import com.progark.emojimon.gameScreens.GameOverScreen;
 import com.progark.emojimon.gameScreens.MainMenuScreen;
 import com.progark.emojimon.controller.GameBoardController;
 import com.progark.emojimon.model.fireBaseData.Converter;

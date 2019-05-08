@@ -12,6 +12,7 @@ public class GameData {
     private List<List<Integer>> GameBoard;
     private Settings settings;
     private String gameId;
+    private int winningPlayer = -1;
 
     public GameData(){} // Reguires for Firebase
 
@@ -82,6 +83,14 @@ public class GameData {
 
     public void setGameId(String gameId) {
         this.gameId = gameId;
+    }
+
+    public int getWinningPlayer() {
+        return winningPlayer;
+    }
+
+    public void setWinningPlayer(int winningPlayer) {
+        this.winningPlayer = winningPlayer;
     }
 
     @Override

@@ -112,13 +112,12 @@ public class GameBoardController {
 
     public void endTurn(Player player){
         if(player.isDone()){
-            GameManager.GetInstance().endGame();
-        }else{
-            // Push Last turn data
-            FBC.I().get().addLastTurnByGameID(GameManager.GetInstance().getGameID(), !player.isCreator(),
-                    Converter.fromDiceToList(gameBoard.getDice().getDieList()),
-                    Converter.fromMovesToList(gameBoard.getCurrentTurnMoves()));
-            gameBoard.emptyCurrentTurnMoves();
+            GameManager.GetInstance().gameWon(player.isCreator());
         }
+        // Push Last turn data
+        FBC.I().get().addLastTurnByGameID(GameManager.GetInstance().getGameID(), !player.isCreator(),
+                Converter.fromDiceToList(gameBoard.getDice().getDieList()),
+                Converter.fromMovesToList(gameBoard.getCurrentTurnMoves()));
+        gameBoard.emptyCurrentTurnMoves();
     }
 }

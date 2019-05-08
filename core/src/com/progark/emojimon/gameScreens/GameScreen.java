@@ -53,7 +53,6 @@ public class GameScreen implements Screen {
     private TextureAtlas atlas;
     private BitmapFont font;
     private SpriteBatch batch;
-    public boolean gameEnded = false;
 
     private GameBoardController gameBoardController;
     final Emojimon game;
@@ -218,9 +217,5 @@ public class GameScreen implements Screen {
         //scorestage.getViewport().update(width,height,true);
         //hud.getStage().getViewport().update(width, height);
 
-    }
-
-    public void setGameEnded(boolean gameEnded){
-        this.gameEnded = gameEnded;
     }
 }

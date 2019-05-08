@@ -28,6 +28,7 @@ import com.progark.emojimon.Emojimon;
 import com.progark.emojimon.GameManager;
 import com.progark.emojimon.controller.GameBoardController;
 import com.progark.emojimon.model.Move;
+import com.progark.emojimon.model.Player;
 import com.progark.emojimon.model.Position;
 
 
@@ -386,8 +387,8 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
-        if (GameManager.GetInstance().gameEnded) {
-            game.setScreen(new GameOverScreen(game));
+        if (GameManager.GetInstance().gameOver) {
+            game.setScreen(new GameOverScreen(game, GameManager.GetInstance().getWinningPlayer() ));
         }
 
 //        batch.begin();

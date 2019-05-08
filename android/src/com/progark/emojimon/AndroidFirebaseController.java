@@ -55,6 +55,7 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
         GameData gd = new GameData(creatorPlayer, strategies);
 
         String gameID = Games.push().getKey();
+        gd.setGameId(gameID);
         Games.child(gameID).setValue(gd);
         gameManager.setGameData(gd);
 
@@ -132,19 +133,20 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
                 @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snap : dataSnapshot.getChildren()){
-                    if(GameStatus.valueOf((String) snap.child("status").getValue()) == (GameStatus.WAITING)) {
-                        addPlayerToGame(snap.getKey());
-                        System.out.println(snap.getKey());
-                        addGameDataChangeListener(snap.getKey());
-                        addLastTurnDataChangeListener(snap.getKey());
-                        break;
-                    }
+                    try {
+                        if(GameStatus.valueOf((String) snap.child("status").getValue()) == (GameStatus.WAITING)) {
+                            addPlayerToGame(snap.getKey());
+                            System.out.println(snap.getKey());
+                            addGameDataChangeListener(snap.getKey());
+                            addLastTurnDataChangeListener(snap.getKey());
+                            break;
+                        }
+                    } catch (IllegalArgumentException e) {}
                 }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
-
     }
 
     void addPlayerToGame(String gameID) {
@@ -163,8 +165,15 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
     }
 
     @Override
-    public void endGame(String gameId) {
+    public void endGame(String gameId, boolean isCreator) {
         setGameStatusByGameID(gameId, GameStatus.ENDED);
+        if (isCreator) {
+            Games.child(gameId).child("winningPlayer").setValue(0);
+        }else {
+            Games.child(gameId).child("winningPlayer").setValue(1);
+        }
+
+
     }
 
     @Override
