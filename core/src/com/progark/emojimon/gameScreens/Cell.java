@@ -81,20 +81,22 @@ public class Cell extends Stack {
 
     //update emojigroup based on position data
     public void updateEmojiGroup(){
-        emojiGroup.clearChildren();
-        for(int i = 0; i < position.getPieceCount(); i++){
-            if(i >= emojiDrawLimit) break;
-            Image image;
+        if(emojiGroup.getChildren().size != position.getPieceCount()){
+            emojiGroup.clearChildren();
+            for(int i = 0; i < position.getPieceCount(); i++){
+                if(i >= emojiDrawLimit) break;
+                Image image;
 
-            //use local or other player's emoji?
-            if(position.getOwner() == GameManager.GetInstance().getLocalPlayer()){
-                image = new Image(localPlayerEmoji);
+                //use local or other player's emoji?
+                if(position.getOwner() == GameManager.GetInstance().getLocalPlayer()){
+                    image = new Image(localPlayerEmoji);
+                }
+                else{
+                    image = new Image(otherPlayerEmoji);
+                }
+                //image.setScale(0.7f);
+                emojiGroup.addActor(image);
             }
-            else{
-                image = new Image(otherPlayerEmoji);
-            }
-            //image.setScale(0.7f);
-            emojiGroup.addActor(image);
         }
     }
 
