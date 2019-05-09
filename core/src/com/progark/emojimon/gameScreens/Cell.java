@@ -44,21 +44,18 @@ public class Cell extends Stack {
 
     private int emojiDrawLimit = 1;
 
+    private Skin skin;
+    private TextureAtlas atlas;
+
+    private Label pieceCountLabel;
+    //private int currentPieceCount = -1;
+    private boolean rotationUp;
+
 
     public Cell(TextureRegion standardTexture, TextureRegion highlightedTexture, TextureRegion greenHighlightTexture, TextureRegion localPlayerEmoji, TextureRegion otherPlayerEmoji, final int positionIndex, Position position, boolean rotationUp){
         this.standardTexture = standardTexture;
         this.highlightedTexture = highlightedTexture;
         this.greenHighlightTexture = greenHighlightTexture;
-    private Skin skin;
-    private TextureAtlas atlas;
-
-    private Label pieceCountLabel;
-    private int currentPieceCount = -1;
-    private boolean rotationUp;
-
-    public Cell(TextureRegion standardTriangle, TextureRegion highlightedTriangle, TextureRegion localPlayerEmoji, TextureRegion otherPlayerEmoji, final int positionIndex, Position position, boolean rotationUp){
-        this.standardTriangle = standardTriangle;
-        this.highlightedTriangle = highlightedTriangle;
         this.localPlayerEmoji = localPlayerEmoji;
         this.otherPlayerEmoji = otherPlayerEmoji;
         this.positionIndex = positionIndex;
@@ -104,28 +101,23 @@ public class Cell extends Stack {
     }
 
     public void updateEmojiGroup() {
-        //Make sure only positions that have changed are updated
-        if(currentPieceCount != position.getPieceCount()){
-            currentPieceCount = position.getPieceCount();
-            if(position.getPieceCount() == 0){
-                emojiGroup.clear();
-            }
-            else if(position.getPieceCount() == 1){
-                emojiGroup.clear();
-                addPlayerEmoji();
+        if(position.getPieceCount() == 0){
+            emojiGroup.clear();
+        }
+        else if(position.getPieceCount() == 1){
+            emojiGroup.clear();
+            addPlayerEmoji();
+        }
+        else{
+            emojiGroup.clear();
+            addPlayerEmoji();
+            if(rotationUp){
+                emojiGroup.addActorAt(0, pieceCountLabel);
             }
             else{
-                emojiGroup.clear();
-                addPlayerEmoji();
-                if(rotationUp){
-                    emojiGroup.addActorAt(0, pieceCountLabel);
-                }
-                else{
-                    emojiGroup.addActorAt(1, pieceCountLabel);
-                }
-                pieceCountLabel.setText(position.getPieceCount());
+                emojiGroup.addActorAt(1, pieceCountLabel);
             }
-
+            pieceCountLabel.setText(position.getPieceCount());
         }
     }
 
