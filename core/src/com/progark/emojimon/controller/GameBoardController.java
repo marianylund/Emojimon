@@ -76,6 +76,9 @@ public class GameBoardController {
     // methods
     public void doMove(Move move) {
         gameBoard.movePiece(move);
+        if(getMoves(GameManager.GetInstance().getLocalPlayerIndex()).size()==0){
+            endTurn(GameManager.GetInstance().getLocalPlayer());
+        }
     }
 
     // move to PlayerController?

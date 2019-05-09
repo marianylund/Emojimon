@@ -240,9 +240,19 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
 
         // Add Turn emoji
-        TextureAtlas.AtlasRegion emojiRegion = emojiAtlas.findRegion(GameManager.GetInstance().getLocalPlayerEmoji());
-        sideMenu.add(new Image(emojiRegion)).size(100);
-        sideMenu.row().pad(10);
+
+        if(GameManager.GetInstance().isItLocalPlayerTurn()){
+            TextureAtlas.AtlasRegion emojiRegion = emojiAtlas.findRegion(GameManager.GetInstance().getLocalPlayerEmoji());
+            sideMenu.add(new Image(emojiRegion)).size(100);
+            sideMenu.row().pad(10);
+        }
+        else{
+            //todo
+            TextureAtlas.AtlasRegion emojiRegion = emojiAtlas.findRegion(GameManager.GetInstance().getOtherPlayerEmoji());
+            sideMenu.add(new Image(emojiRegion)).size(100);
+            sideMenu.row().pad(10);
+        }
+
 
         // Add timer label wannabe, is used for debug for now
         debugLabel = new Label("Debug:", skin);
@@ -252,11 +262,15 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         sideMenu.add(createButton("Throw\nDice", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gameBoardController.rollDice();
-                diceThrown = true;
-                highlightStartPositions();
-                //gameBoardController.getDieList().get(0);
-                debugLabel.setText(gameBoardController.getDieList().get(0).getValue() + " " + gameBoardController.getDieList().get(1).getValue());
+                if(GameManager.GetInstance().isItLocalPlayerTurn()){
+                    gameBoardController.rollDice();
+                    diceThrown = true;
+                    highlightStartPositions();
+                    //gameBoardController.getDieList().get(0);
+                    debugLabel.setText(gameBoardController.getDieList().get(0).getValue() + " " + gameBoardController.getDieList().get(1).getValue());
+                }
+                return;
+
                 // TODO begrenes hvor mange ganger man kaster terning
             }
         })).expand().uniform();
