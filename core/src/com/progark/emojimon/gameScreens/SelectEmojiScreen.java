@@ -2,6 +2,7 @@ package com.progark.emojimon.gameScreens;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -22,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.progark.emojimon.Emojimon;
+import com.progark.emojimon.EmojimonPreferences;
 import com.progark.emojimon.GameManager;
 
 public class SelectEmojiScreen extends ApplicationAdapter implements Screen {
@@ -34,6 +36,7 @@ public class SelectEmojiScreen extends ApplicationAdapter implements Screen {
     private Skin skin;
     private SpriteBatch batch; // ubrukt, må finne ut av textureatlas
     private Image chosenEmoji;
+    private EmojimonPreferences preferences;
 
     float sw = Gdx.graphics.getWidth();
     float sh = Gdx.graphics.getHeight();
@@ -54,14 +57,26 @@ public class SelectEmojiScreen extends ApplicationAdapter implements Screen {
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
         stage = new Stage(viewport);
+        preferences = GameManager.GetInstance().getPreferences();
 
         atlas = new TextureAtlas(Gdx.files.internal("Emojis/Output/emojiatlas.atlas"));
+        if(!preferences.isEmoji().equals("")){
+            TextureAtlas.AtlasRegion emojiRegion = atlas.findRegion(preferences.isEmoji());
+            if(emojiRegion == null){
+                throw new IllegalArgumentException("There is no emoji with the name: " + preferences.isEmoji());
+            } else {
+                chosenEmoji = new Image(emojiRegion);
+            }
+        }
+        else{
+            System.out.print(preferences.isEmoji());
+            TextureAtlas.AtlasRegion emojiRegion = atlas.findRegion(GameManager.GetInstance().getLocalPlayerEmoji());
+            if(emojiRegion == null){
+                throw new IllegalArgumentException("There is no emoji with the name: " + GameManager.GetInstance().getLocalPlayerEmoji());
+            } else {
+                chosenEmoji = new Image(emojiRegion);
 
-        TextureAtlas.AtlasRegion emojiRegion = atlas.findRegion(GameManager.GetInstance().getLocalPlayerEmoji());
-        if(emojiRegion == null){
-            throw new IllegalArgumentException("There is no emoji with the name: " + GameManager.GetInstance().getLocalPlayerEmoji());
-        } else {
-            chosenEmoji = new Image(emojiRegion);
+            }
         }
     }
 
@@ -75,9 +90,10 @@ public class SelectEmojiScreen extends ApplicationAdapter implements Screen {
         if(emojiRegion == null){
             throw new IllegalArgumentException("There is no emoji with the name: " + GameManager.GetInstance().getLocalPlayerEmoji());
         } else {
-
+            //System.out.print(emojiRegion.toString());
             chosenEmoji.setDrawable(new SpriteDrawable(new Sprite(emojiRegion)));
-
+            preferences.setEmoji(emojiRegion.toString());
+            System.out.println(preferences.isEmoji());
         }
     }
 

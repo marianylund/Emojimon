@@ -41,7 +41,6 @@ public class BasicMoveSetStrategy implements MoveSetStrategy {
             endPosition.addPieces(1);
 
             //update owners
-            System.out.println("Changing owner from " + endPosition.getOwner() + " to " + startPosition.getOwner());
             endPosition.setOwner(startPosition.getOwner());
             if(startPosition.getPieceCount() == 0){
                 startPosition.setOwner(null);
