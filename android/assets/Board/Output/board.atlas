@@ -1,81 +1,116 @@
 board.png
-size: 510, 357
+size: 236, 1224
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
+board-chosen
+  rotate: false
+  xy: 0, 0
+  size: 201, 201
+  orig: 201, 201
+  offset: 0, 0
+  index: -1
 board-highlighted
   rotate: false
-  xy: 274, 156
+  xy: 0, 201
   size: 201, 201
   orig: 201, 201
   offset: 0, 0
   index: -1
 board
   rotate: false
-  xy: 73, 156
+  xy: 0, 402
   size: 201, 201
   orig: 201, 201
   offset: 0, 0
   index: -1
 line
   rotate: false
-  xy: 475, 156
+  xy: 201, 402
   size: 35, 201
   orig: 35, 201
   offset: 0, 0
   index: -1
+Triangle-red-down-chosen
+  rotate: false
+  xy: 0, 603
+  size: 73, 156
+  orig: 73, 156
+  offset: 0, 0
+  index: -1
 Triangle-red-down-highlighted
   rotate: false
-  xy: 341, 0
+  xy: 73, 603
   size: 73, 156
   orig: 73, 156
   offset: 0, 0
   index: -1
 Triangle-red-down
   rotate: false
-  xy: 414, 0
+  xy: 146, 603
   size: 73, 156
   orig: 73, 156
   offset: 0, 0
   index: -1
+Triangle-red-up-chosen
+  rotate: false
+  xy: 0, 759
+  size: 73, 157
+  orig: 73, 157
+  offset: 0, 0
+  index: -1
 Triangle-red-up-highlighted
   rotate: false
-  xy: 0, 156
+  xy: 73, 759
   size: 73, 157
   orig: 73, 157
   offset: 0, 0
   index: -1
 Triangle-red-up
   rotate: false
-  xy: 0, 0
+  xy: 146, 759
   size: 73, 151
   orig: 73, 151
   offset: 0, 0
   index: -1
+Triangle-white-down-chosen
+  rotate: false
+  xy: 0, 916
+  size: 65, 155
+  orig: 65, 155
+  offset: 0, 0
+  index: -1
 Triangle-white-down-highlighted
   rotate: false
-  xy: 276, 0
+  xy: 65, 916
   size: 65, 155
   orig: 65, 155
   offset: 0, 0
   index: -1
 Triangle-white-down
   rotate: false
-  xy: 211, 0
+  xy: 130, 916
   size: 65, 155
   orig: 65, 155
   offset: 0, 0
   index: -1
+Triangle-white-up-chosen
+  rotate: false
+  xy: 0, 1071
+  size: 69, 153
+  orig: 69, 153
+  offset: 0, 0
+  index: -1
 Triangle-white-up-highlighted
   rotate: false
-  xy: 142, 0
+  xy: 69, 1071
   size: 69, 153
   orig: 69, 153
   offset: 0, 0
   index: -1
 Triangle-white-up
   rotate: false
-  xy: 73, 0
+  xy: 138, 1071
   size: 69, 151
   orig: 69, 151
   offset: 0, 0
