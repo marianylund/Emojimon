@@ -48,16 +48,22 @@ public class Dice {
     }
 
     public void rollDice(){
+        //revert dice include base number of die
+        revertDice();
+        
         boolean equalDice = true;
         int lastDieValue = 0;
         for(int i = 0; i < dieList.size(); i++){
             Die die = dieList.get(i);
             die.roll();
 
-            //keep track of whether all die have the same value
-            if(equalDice){
-                if(die.getValue() != lastDieValue){
-                    equalDice = false;
+            if(i == 0) lastDieValue = die.getValue();
+            else{
+                //keep track of whether all die have the same value
+                if(equalDice){
+                    if(die.getValue() != lastDieValue){
+                        equalDice = false;
+                    }
                 }
                 lastDieValue = die.getValue();
             }
