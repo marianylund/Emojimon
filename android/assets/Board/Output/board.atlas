@@ -1,116 +1,123 @@
 board.png
-size: 236, 1224
+size: 840, 358
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 board-chosen
   rotate: false
-  xy: 0, 0
+  xy: 401, 157
   size: 201, 201
   orig: 201, 201
   offset: 0, 0
   index: -1
 board-highlighted
   rotate: false
-  xy: 0, 201
+  xy: 637, 157
   size: 201, 201
   orig: 201, 201
   offset: 0, 0
   index: -1
 board
   rotate: false
-  xy: 0, 402
+  xy: 200, 157
   size: 201, 201
   orig: 201, 201
   offset: 0, 0
   index: -1
+dice
+  rotate: false
+  xy: 0, 157
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
 line
   rotate: false
-  xy: 201, 402
+  xy: 602, 157
   size: 35, 201
   orig: 35, 201
   offset: 0, 0
   index: -1
 Triangle-red-down-chosen
   rotate: false
-  xy: 0, 603
+  xy: 475, 0
   size: 73, 156
   orig: 73, 156
   offset: 0, 0
   index: -1
 Triangle-red-down-highlighted
   rotate: false
-  xy: 73, 603
+  xy: 548, 0
   size: 73, 156
   orig: 73, 156
   offset: 0, 0
   index: -1
 Triangle-red-down
   rotate: false
-  xy: 146, 603
+  xy: 621, 0
   size: 73, 156
   orig: 73, 156
   offset: 0, 0
   index: -1
 Triangle-red-up-chosen
   rotate: false
-  xy: 0, 759
+  xy: 767, 0
   size: 73, 157
   orig: 73, 157
   offset: 0, 0
   index: -1
 Triangle-red-up-highlighted
   rotate: false
-  xy: 73, 759
+  xy: 694, 0
   size: 73, 157
   orig: 73, 157
   offset: 0, 0
   index: -1
 Triangle-red-up
   rotate: false
-  xy: 146, 759
+  xy: 0, 0
   size: 73, 151
   orig: 73, 151
   offset: 0, 0
   index: -1
 Triangle-white-down-chosen
   rotate: false
-  xy: 0, 916
+  xy: 345, 0
   size: 65, 155
   orig: 65, 155
   offset: 0, 0
   index: -1
 Triangle-white-down-highlighted
   rotate: false
-  xy: 65, 916
+  xy: 410, 0
   size: 65, 155
   orig: 65, 155
   offset: 0, 0
   index: -1
 Triangle-white-down
   rotate: false
-  xy: 130, 916
+  xy: 280, 0
   size: 65, 155
   orig: 65, 155
   offset: 0, 0
   index: -1
 Triangle-white-up-chosen
   rotate: false
-  xy: 0, 1071
+  xy: 211, 0
   size: 69, 153
   orig: 69, 153
   offset: 0, 0
   index: -1
 Triangle-white-up-highlighted
   rotate: false
-  xy: 69, 1071
+  xy: 142, 0
   size: 69, 153
   orig: 69, 153
   offset: 0, 0
   index: -1
 Triangle-white-up
   rotate: false
-  xy: 138, 1071
+  xy: 73, 0
   size: 69, 151
   orig: 69, 151
   offset: 0, 0
