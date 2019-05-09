@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -72,7 +73,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     private TextureRegion otherPlayerEmoji;
 
 
-
+    private Label messages;
     private Label debugLabel;
 
     float sw = Gdx.graphics.getWidth();
@@ -320,6 +321,19 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         return button;
     }
 
+    private void showMessage(String text){
+        messages = new Label(text, skin);
+
+        messages.setFontScale(5f,5f);
+        messages.setPosition(sw/2-messages.getWidth()*5/2,sh/2-messages.getHeight()*5/2);
+        messages.setZIndex(1);
+        stage.addActor(messages);
+    }
+
+    private void removeMessage(){
+        messages.remove();
+    }
+
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
@@ -327,8 +341,6 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         stage.addActor(createSideMenu());
         stage.addActor(createGameBoard());
         stage.addActor(createPlayerGoals());
-
-
 
         //add listener for cell clicks
         stage.addListener(new CellClickEventListener() {
