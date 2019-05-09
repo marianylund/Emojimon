@@ -77,7 +77,7 @@ public class GameBoardController {
     public void doMove(Move move) {
         gameBoard.movePiece(move);
         if(getMoves(GameManager.GetInstance().getLocalPlayerIndex()).size()==0){
-            endTurn(GameManager.GetInstance().getLocalPlayer());
+            //endTurn(GameManager.GetInstance().getLocalPlayer()); //this funtion requires that the game is created with a game id from firebase, do not uncomment before that is in place
         }
     }
 
