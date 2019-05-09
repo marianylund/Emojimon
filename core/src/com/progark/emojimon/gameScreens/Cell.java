@@ -15,16 +15,17 @@ import com.progark.emojimon.model.Position;
 
 /*
 Custom cell class extending Stack (libgdx UI group)
-Maintains a backgroundImage Image and a VerticalGroup of emojis
+Maintains a currentImage Image and a VerticalGroup of emojis
 
-TODO: add texture for highlighting cell as currently selected
 TODO: way of displaying emojis when position count exceeds emojiNumber
  */
 public class Cell extends Stack {
 
-    private Image backgroundImage;
+
+    private Image currentImage;
     private TextureRegion standardTexture;
     private TextureRegion highlightedTexture;
+    private TextureRegion greenHighlightTexture;
     private TextureRegion localPlayerEmoji;
     private TextureRegion otherPlayerEmoji;
     private final int positionIndex;
@@ -38,19 +39,21 @@ public class Cell extends Stack {
 
     private int emojiDrawLimit = 1;
 
-    public Cell(TextureRegion standardTexture, TextureRegion highlightedTexture, TextureRegion localPlayerEmoji, TextureRegion otherPlayerEmoji, final int positionIndex, Position position, boolean rotationUp){
+
+    public Cell(TextureRegion standardTexture, TextureRegion highlightedTexture, TextureRegion greenHighlightTexture, TextureRegion localPlayerEmoji, TextureRegion otherPlayerEmoji, final int positionIndex, Position position, boolean rotationUp){
         this.standardTexture = standardTexture;
         this.highlightedTexture = highlightedTexture;
+        this.greenHighlightTexture = greenHighlightTexture;
         this.localPlayerEmoji = localPlayerEmoji;
         this.otherPlayerEmoji = otherPlayerEmoji;
         this.positionIndex = positionIndex;
         this.position = position;
 
-        //create backgroundImage image
-        this.backgroundImage = new Image(standardTexture);
+        //create currentImage image
+        this.currentImage = new Image(this.standardTexture);
 
         //add actors to stack
-        this.addActor(this.backgroundImage);
+        this.addActor(this.currentImage);
 
         //add emoji group
         emojiGroup = new VerticalGroup();
@@ -99,30 +102,22 @@ public class Cell extends Stack {
         }
     }
 
-    public void highlight(){
+    public void highlight(boolean chosen){
         if(!highlighted){
-            backgroundImage.setDrawable(new SpriteDrawable(new Sprite(highlightedTexture)));
+            if(!chosen){
+                currentImage.setDrawable(new SpriteDrawable(new Sprite(this.highlightedTexture)));
+            } else {
+                currentImage.setDrawable(new SpriteDrawable(new Sprite(greenHighlightTexture)));
+            }
             highlighted = true;
         }
     }
 
     public void removeHighlight(){
         if(highlighted){
-            backgroundImage.setDrawable(new SpriteDrawable(new Sprite(standardTexture)));
+            currentImage.setDrawable(new SpriteDrawable(new Sprite(this.standardTexture)));
             highlighted = false;
         }
-    }
-
-    public void setActive(boolean active){
-        //TODO: change to "active" texture to better show the active cell
-
-        /*if(active){
-            backgroundImage.setColor(selectedTriangleColor);
-        }
-        else{
-            backgroundImage.setColor(standardTriangleColor);
-            System.out.println(standardTriangleColor.r + " " + standardTriangleColor.g + " " + standardTriangleColor.b);
-        }*/
     }
 
     public boolean getHighlighted(){
