@@ -434,10 +434,11 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
             if(selectedTriangleIndex == -1){
                 //only accept clicks if triangle is highlighted
                 if(boardCells.get(clickedTriangleIndex).getHighlighted()){
+                    boardCells.get(clickedTriangleIndex).removeHighlight();
                     for(Move move : availableMoves){
                         //remove startposition highlights
                         boardCells.get(move.startPosition).removeHighlight();
-
+                        boardCells.get(move.startPosition).removeHighlight();
                         if(move.startPosition == clickedTriangleIndex){
                             //no triangle selected: select this triangle and highlight possible end positions
                             selectedTriangleIndex = clickedTriangleIndex;
@@ -457,13 +458,10 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
             else{
                 //check for matching move
                 for(Move move : availableMoves){
+                    //remove all highlights
+                    boardCells.get(move.startPosition).removeHighlight();
+                    boardCells.get(move.endPosition).removeHighlight();
                     if(move.startPosition == selectedTriangleIndex){
-                        if(move.endPosition < 1 || move.endPosition > gameBoardController.getBoardSize()){
-                            System.out.println(String.format("Move from %d to %d", move.startPosition, move.endPosition));
-                        }
-                        //remove all highlights
-                        boardCells.get(move.startPosition).removeHighlight();
-                        boardCells.get(move.endPosition).removeHighlight();
                         if(move.endPosition == clickedTriangleIndex){
                             //do move
                             gameBoardController.doMove(move);
