@@ -60,7 +60,6 @@ public class Cell extends Stack {
         this.add(emojiGroup);
         updateEmojiGroup();
 
-
         //add clicklistener
         addListener(new ClickListener() {
             @Override
