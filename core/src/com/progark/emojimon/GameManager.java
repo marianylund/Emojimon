@@ -15,6 +15,7 @@ public class GameManager implements SubscriberToFirebase {
     private LastTurnData lastTurnData;
     private GameData gameData;
     private GameBoardController gameBoardController;
+    private EmojimonPreferences preferences;
 
     private boolean currentPlayer = false; // The creator is the first one to go
 
@@ -93,7 +94,7 @@ public class GameManager implements SubscriberToFirebase {
     }
 
     public String getLocalPlayerEmoji() {
-        return localPlayerEmoji;
+        return  localPlayerEmoji;
     }
 
     public void setLocalPlayerEmoji(String localPlayerEmoji) {
@@ -106,5 +107,13 @@ public class GameManager implements SubscriberToFirebase {
 
     public void setOtherPlayerEmoji(String otherPlayerEmoji){
         this.otherPlayerEmoji = otherPlayerEmoji;
+    }
+
+    public void createPreference(){
+        preferences = new EmojimonPreferences();
+    }
+
+    public EmojimonPreferences getPreferences(){
+        return preferences;
     }
 }

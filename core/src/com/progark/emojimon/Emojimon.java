@@ -22,6 +22,8 @@ public class Emojimon extends Game {
     Texture img;
     GameBoardController gameBoardController;
 
+
+
     public Emojimon(FirebaseControllerInterface firebaseControllerInterface) {
         FBC.I().setFirebase(firebaseControllerInterface);
     }
@@ -35,6 +37,12 @@ public class Emojimon extends Game {
         //Test creation of gameboard
         gameBoardController = new GameBoardController();
         gameBoardController.createStandardGameBoard();
+
+        GameManager.GetInstance().createPreference();
+        if(!GameManager.GetInstance().getPreferences().isEmoji().isEmpty()){
+            GameManager.GetInstance().setLocalPlayerEmoji(GameManager.GetInstance().getPreferences().isEmoji());
+        }
+        
 
 
     }
