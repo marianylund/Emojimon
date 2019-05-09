@@ -458,9 +458,6 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
             else{
                 //check for matching move
                 for(Move move : availableMoves){
-                    //remove all highlights
-                    boardCells.get(move.startPosition).removeHighlight();
-                    boardCells.get(move.endPosition).removeHighlight();
                     if(move.startPosition == selectedTriangleIndex){
                         if(move.endPosition == clickedTriangleIndex){
                             //do move
@@ -473,7 +470,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                 //deselect triangle
 
                 selectedTriangleIndex = -1;
-
+                clearHighlights();
                 highlightStartPositions();
             }
 
@@ -492,6 +489,12 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
             boardCells.get(move.startPosition).highlight(false);
             highlightedPositions.add(move.startPosition);
+        }
+    }
+
+    private void clearHighlights(){
+        for(Cell cell : boardCells){
+            cell.removeHighlight();
         }
     }
 
