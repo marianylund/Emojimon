@@ -42,7 +42,8 @@ public class GameBoard {
     private CanClearStrategy canClearStrategy;
     private StartPiecePlacementStrategy startPiecePlacementStrategy;
 
-    private static Settings standardSettings = new Settings(24, 15, 2, 6, 2, MoveSetStrat.BASIC.BASIC, MoveValStrat.BASIC, CanClearStrat.BASIC, StartPiecePlacementStrategyFactory.PiecePlacementStrat.BASIC);
+    //TODO: switch back to use basic canclear strategy as standard
+    private static Settings standardSettings = new Settings(24, 15, 2, 6, 2, MoveSetStrat.BASIC.BASIC, MoveValStrat.BASIC, CanClearStrat.ALWAYS, StartPiecePlacementStrategyFactory.PiecePlacementStrat.BASIC);
     //constructors
     //creates standard gameboard
     public GameBoard(){
@@ -120,13 +121,21 @@ public class GameBoard {
             //move piece to goal
             if(move.endPosition == getPlayerGoal(0).getPositionIndex()){
                 //move to goal 0
-                boardPositions.get(move.startPosition).removePieces(1);
+                Position startPosition = boardPositions.get(move.startPosition);
+                startPosition.removePieces(1);
+                if(startPosition.getPieceCount() <= 0){
+                    startPosition.setOwner(null);
+                }
                 getPlayerGoal(0).addPieces(1);
                 return true;
             }
             else if(move.endPosition == getPlayerGoal(1).getPositionIndex()){
                 //move to goal 1
-                boardPositions.get(move.startPosition).removePieces(1);
+                Position startPosition = boardPositions.get(move.startPosition);
+                startPosition.removePieces(1);
+                if(startPosition.getPieceCount() <= 0){
+                    startPosition.setOwner(null);
+                }
                 getPlayerGoal(1).addPieces(1);
                 return true;
             }
