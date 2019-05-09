@@ -45,7 +45,6 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     private Skin skin;
     private SpriteBatch batch; // ubrukt, må finne ut av textureatlas
     private TextureRegion triangle;
-    private Image cells;
 
     private TextureAtlas boardAtlas;
     private TextureAtlas emojiAtlas;
@@ -59,13 +58,20 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     private TextureRegion highDownWhite;
     private TextureRegion highUpRed;
     private TextureRegion highDownRed;
+    private TextureRegion greenHighUpWhite;
+    private TextureRegion greenHighDownWhite;
+    private TextureRegion greenHighUpRed;
+    private TextureRegion greenHighDownRed;
+    // Board, goal textures
+    private TextureRegion squareBoard;
+    private TextureRegion squareBoardHighlighted;
+    private TextureRegion squareBoardGreenHighlighted;
+    private TextureRegion line;
     //Emoji textures
     private TextureRegion localPlayerEmoji;
     private TextureRegion otherPlayerEmoji;
 
-    private TextureRegion squareBoard;
-    private TextureRegion squareBoardHighlighted;
-    private TextureRegion line;
+
 
     private Label debugLabel;
 
@@ -107,33 +113,37 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         boardAtlas = new TextureAtlas(Gdx.files.internal("Board/Output/board.atlas"));
 
         //Find triangle regions
-        highUpWhite = boardAtlas.findRegion("Triangle-white-up-highlighted");
-        highDownWhite = boardAtlas.findRegion("Triangle-white-down-highlighted");
-        highUpRed = boardAtlas.findRegion("Triangle-red-up-highlighted");
-        highDownRed = boardAtlas.findRegion("Triangle-red-down-highlighted");
-
         triUpWhite = boardAtlas.findRegion("Triangle-white-up");
         triDownWhite = boardAtlas.findRegion("Triangle-white-down");
         triUpRed = boardAtlas.findRegion("Triangle-red-up");
         triDownRed = boardAtlas.findRegion("Triangle-red-down");
 
+        highUpWhite = boardAtlas.findRegion("Triangle-white-up-highlighted");
+        highDownWhite = boardAtlas.findRegion("Triangle-white-down-highlighted");
+        highUpRed = boardAtlas.findRegion("Triangle-red-up-highlighted");
+        highDownRed = boardAtlas.findRegion("Triangle-red-down-highlighted");
+
+        greenHighUpWhite = boardAtlas.findRegion("Triangle-white-up-chosen");
+        greenHighDownWhite = boardAtlas.findRegion("Triangle-white-down-chosen");
+        greenHighUpRed = boardAtlas.findRegion("Triangle-red-up-chosen");
+        greenHighDownRed = boardAtlas.findRegion("Triangle-red-down-chosen");
+
+        //Find board regions
+        squareBoard = boardAtlas.findRegion("board");
+        squareBoardHighlighted = boardAtlas.findRegion("board-highlighted");
+        squareBoardGreenHighlighted = boardAtlas.findRegion("board-chosen");
+        line = boardAtlas.findRegion("line");
+
         //Find emoji regions
         localPlayerEmoji = emojiAtlas.findRegion(GameManager.GetInstance().getLocalPlayerEmoji());
         otherPlayerEmoji = emojiAtlas.findRegion(GameManager.GetInstance().getOtherPlayerEmoji());
-
-        squareBoard = boardAtlas.findRegion("board");
-        squareBoardHighlighted = boardAtlas.findRegion("board-highlighted");
-        line = boardAtlas.findRegion("line");
-
-        cells = new Image(new Texture(Gdx.files.internal("blacktri3.png")));
-        //triangle.setDrawable(new SpriteDrawable(new Sprite(emojiRegion)));
 
 
     }
 
     @Override
     public void create() {
-        //triangle = new TextureRegion(new Texture(Gdx.files.internal("blacktri3.png")));
+
     }
 
     private Container createGameBoard() {
@@ -328,6 +338,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     private void addCells(Table t, int numberOfCells, boolean rotationUp, int startTriangle) {
         TextureRegion chosenTriangle = null;
         TextureRegion chosenHighlightedTriangle = null;
+        TextureRegion chosenGreenHighlightImage = null;
 
         final List<Position> positions = gameBoardController.getBoardPositions();
 
@@ -341,22 +352,26 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                 if (i % 2 == 0) {
                     chosenTriangle = triUpWhite;
                     chosenHighlightedTriangle = highUpWhite;
+                    chosenGreenHighlightImage = greenHighUpWhite;
                 } else {
                     chosenTriangle = triUpRed;
                     chosenHighlightedTriangle = highUpRed;
+                    chosenGreenHighlightImage = greenHighUpRed;
                 }
             } else {
                 cellPositionIndex = startTriangle + i;
                 if (i % 2 == 0) {
                     chosenTriangle = triDownWhite;
                     chosenHighlightedTriangle = highDownWhite;
+                    chosenGreenHighlightImage = greenHighDownWhite;
                 } else {
                     chosenTriangle = triDownRed;
                     chosenHighlightedTriangle = highDownRed;
+                    chosenGreenHighlightImage = greenHighDownRed;
                 }
             }
 
-            boardCell = new Cell(chosenTriangle, chosenHighlightedTriangle, localPlayerEmoji, otherPlayerEmoji, cellPositionIndex, positions.get(cellPositionIndex), rotationUp);
+            boardCell = new Cell(chosenTriangle, chosenHighlightedTriangle, chosenGreenHighlightImage, localPlayerEmoji, otherPlayerEmoji, cellPositionIndex, positions.get(cellPositionIndex), rotationUp);
 
             boardCells.set(cellPositionIndex-1, boardCell);
             t.add(boardCell).pad(10).size(120,400);
@@ -419,13 +434,13 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                         if(move.startPosition == clickedTriangleIndex){
                             //no triangle selected: select this triangle and highlight possible end positions
                             selectedTriangleIndex = clickedTriangleIndex;
-                            boardCells.get(clickedTriangleIndex-1).setActive(true);
+                            boardCells.get(clickedTriangleIndex-1).highlight(true);
 
                             //highlight any endpositions on board
                             if(move.endPosition >= 1 && move.endPosition < boardCells.size()){
                                 //System.out.println("Endposition: " + move.endPosition);
                                 //System.out.println("Highlighting: " + boardCells.get(move.endPosition-1).getPositionIndex());
-                                boardCells.get(move.endPosition-1).highlight();
+                                boardCells.get(move.endPosition-1).highlight(false);
                             }
                         }
                     }
@@ -447,7 +462,6 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                     }
                 }
                 //deselect triangle
-                boardCells.get(selectedTriangleIndex-1).setActive(false);
                 selectedTriangleIndex = -1;
 
                 highlightStartPositions();
@@ -465,7 +479,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
             if(highlightedPositions.contains(move.startPosition)){
                 continue;
             }
-            boardCells.get(move.startPosition-1).highlight();
+            boardCells.get(move.startPosition-1).highlight(false);
             highlightedPositions.add(move.startPosition);
         }
     }

@@ -15,16 +15,17 @@ import com.progark.emojimon.model.Position;
 
 /*
 Custom cell class extending Stack (libgdx UI group)
-Maintains a triangle Image and a VerticalGroup of emojis
+Maintains a currentImage Image and a VerticalGroup of emojis
 
 TODO: add texture for highlighting cell as currently selected
 TODO: way of displaying emojis when position count exceeds emojiNumber
  */
 public class Cell extends Stack {
 
-    private Image triangle;
-    private TextureRegion standardTriangle;
-    private TextureRegion highlightedTriangle;
+    private Image currentImage;
+    private TextureRegion standardImage;
+    private TextureRegion highlightedImage;
+    private TextureRegion greenHighlightImage;
     private TextureRegion localPlayerEmoji;
     private TextureRegion otherPlayerEmoji;
     private final int positionIndex;
@@ -38,19 +39,20 @@ public class Cell extends Stack {
 
     private int emojiDrawLimit = 3;
 
-    public Cell(TextureRegion standardTriangle, TextureRegion highlightedTriangle, TextureRegion localPlayerEmoji, TextureRegion otherPlayerEmoji, final int positionIndex, Position position, boolean rotationUp){
-        this.standardTriangle = standardTriangle;
-        this.highlightedTriangle = highlightedTriangle;
+    public Cell(TextureRegion standardImage, TextureRegion highlightedImage, TextureRegion greenHighlightImage, TextureRegion localPlayerEmoji, TextureRegion otherPlayerEmoji, final int positionIndex, Position position, boolean rotationUp){
+        this.standardImage = standardImage;
+        this.highlightedImage = highlightedImage;
+        this.greenHighlightImage = greenHighlightImage;
         this.localPlayerEmoji = localPlayerEmoji;
         this.otherPlayerEmoji = otherPlayerEmoji;
         this.positionIndex = positionIndex;
         this.position = position;
 
-        //create triangle image
-        this.triangle = new Image(standardTriangle);
+        //create currentImage image
+        this.currentImage = new Image(standardImage);
 
         //add actors to stack
-        this.addActor(this.triangle);
+        this.addActor(this.currentImage);
 
         //add emoji group
         emojiGroup = new VerticalGroup();
@@ -99,16 +101,20 @@ public class Cell extends Stack {
         }
     }
 
-    public void highlight(){
+    public void highlight(boolean chosen){
         if(!highlighted){
-            triangle.setDrawable(new SpriteDrawable(new Sprite(highlightedTriangle)));
+            if(!chosen){
+                currentImage.setDrawable(new SpriteDrawable(new Sprite(highlightedImage)));
+            } else {
+                currentImage.setDrawable(new SpriteDrawable(new Sprite(greenHighlightImage)));
+            }
             highlighted = true;
         }
     }
 
     public void removeHighlight(){
         if(highlighted){
-            triangle.setDrawable(new SpriteDrawable(new Sprite(standardTriangle)));
+            currentImage.setDrawable(new SpriteDrawable(new Sprite(standardImage)));
             highlighted = false;
         }
     }
@@ -117,10 +123,10 @@ public class Cell extends Stack {
         //TODO: change to "active" texture to better show the active cell
 
         /*if(active){
-            triangle.setColor(selectedTriangleColor);
+            currentImage.setColor(selectedTriangleColor);
         }
         else{
-            triangle.setColor(standardTriangleColor);
+            currentImage.setColor(standardTriangleColor);
             System.out.println(standardTriangleColor.r + " " + standardTriangleColor.g + " " + standardTriangleColor.b);
         }*/
     }
