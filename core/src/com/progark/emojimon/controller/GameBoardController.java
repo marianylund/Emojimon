@@ -76,6 +76,9 @@ public class GameBoardController {
     // methods
     public void doMove(Move move, boolean isItLastTurnMove) {
         gameBoard.movePiece(move, isItLastTurnMove);
+        if(getMoves(GameManager.GetInstance().getLocalPlayerIndex()).size()==0){
+            //endTurn(GameManager.GetInstance().getLocalPlayer()); //this funtion requires that the game is created with a game id from firebase, do not uncomment before that is in place
+        }
     }
 
     // move to PlayerController?
@@ -145,6 +148,5 @@ public class GameBoardController {
     public void emptyLastTurnMoves () {
         gameBoard.emptyCurrentTurnMoves();
     }
-
 }
 

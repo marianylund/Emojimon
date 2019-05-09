@@ -33,6 +33,10 @@ public class Emojimon extends Game {
         setScreen(new MainMenuScreen(this));
         batch = new SpriteBatch();
         img = new Texture("badlogic.jpg");
+        GameManager.GetInstance().createPreference();
+        if(!GameManager.GetInstance().getPreferences().isEmoji().isEmpty()){
+            GameManager.GetInstance().setLocalPlayerEmoji(GameManager.GetInstance().getPreferences().isEmoji());
+        }
     }
 
     //debugging

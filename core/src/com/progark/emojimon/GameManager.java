@@ -1,7 +1,5 @@
 package com.progark.emojimon;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.progark.emojimon.controller.FBC;
 import com.progark.emojimon.controller.GameBoardController;
 import com.progark.emojimon.gameScreens.CreateRulesetScreen;
@@ -27,12 +25,13 @@ public class GameManager implements SubscriberToFirebase {
     private GameBoardController gameBoardController;
     Emojimon game;
     public boolean gameOver = false;
+    private EmojimonPreferences preferences;
 
     public enum GameStatus {
         WAITING,
         STARTET,
         ENDED
-    }
+        }
 
     private boolean currentPlayer = false; // The creator is the first one to go
 
@@ -173,5 +172,13 @@ public class GameManager implements SubscriberToFirebase {
 
     public GameData getGameData() {
         return gameData;
+    }
+
+    public void createPreference(){
+        preferences = new EmojimonPreferences();
+    }
+
+    public EmojimonPreferences getPreferences(){
+        return preferences;
     }
 }

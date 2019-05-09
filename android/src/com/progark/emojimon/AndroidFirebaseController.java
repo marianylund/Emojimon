@@ -62,6 +62,7 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
         addSubscriber(gameManager);
 
         addGameDataChangeListener(gameID); // Listen to changes of that game
+        addLastTurnDataChangeListener(gameID);
     }
 
     public void addGameDataChangeListener(final String gameID){
@@ -95,9 +96,6 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
         LastTurnData ltd = new LastTurnData(player, dices, moves);
         System.out.println(ltd.toString());
         LastTurns.child(gameID).setValue(ltd);
-        //gameManager.setLastTurnData(ltd);
-        //GameManager.GetInstance().setLastTurnData(ltd);
-        addLastTurnDataChangeListener(gameID);
     }
 
     public void addLastTurnDataChangeListener(final String gameID){
@@ -142,6 +140,7 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
                 for (DataSnapshot snap : dataSnapshot.getChildren()){
                     try {
                         if(GameStatus.valueOf((String) snap.child("status").getValue()) == (GameStatus.WAITING)) {
+                            Games.child(snap.getKey()).child("status").setValue(GameStatus.STARTET);
                             addPlayerToGame(snap.getKey());
                             System.out.println(snap.getKey());
                             addGameDataChangeListener(snap.getKey());

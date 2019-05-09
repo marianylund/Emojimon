@@ -23,11 +23,6 @@ public class DesktopFirebaseController implements FirebaseControllerInterface {
     }
 
     @Override
-    public void addNewGame(String creatorPlayer, Settings strategies) {
-
-    }
-
-    @Override
     public void addGameDataChangeListener(String gameID) {
 
     }
@@ -50,11 +45,6 @@ public class DesktopFirebaseController implements FirebaseControllerInterface {
     @Override
     public void joinGame() {
 
-    }
-
-    @Override
-    public Object[] getGameIDs() {
-        return new Object[0];
     }
 
     @Override

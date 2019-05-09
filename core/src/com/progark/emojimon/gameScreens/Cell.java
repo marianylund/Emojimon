@@ -1,11 +1,16 @@
 package com.progark.emojimon.gameScreens;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -15,16 +20,16 @@ import com.progark.emojimon.model.Position;
 
 /*
 Custom cell class extending Stack (libgdx UI group)
-Maintains a triangle Image and a VerticalGroup of emojis
-
-TODO: add texture for highlighting cell as currently selected
+Maintains a currentImage Image and a VerticalGroup of emojis
 TODO: way of displaying emojis when position count exceeds emojiNumber
  */
 public class Cell extends Stack {
 
-    private Image triangle;
-    private TextureRegion standardTriangle;
-    private TextureRegion highlightedTriangle;
+
+    private Image currentImage;
+    private TextureRegion standardTexture;
+    private TextureRegion highlightedTexture;
+    private TextureRegion greenHighlightTexture;
     private TextureRegion localPlayerEmoji;
     private TextureRegion otherPlayerEmoji;
     private final int positionIndex;
@@ -36,98 +41,120 @@ public class Cell extends Stack {
 
     private boolean highlighted;
 
-    private int emojiDrawLimit = 3;
+    private int emojiDrawLimit = 1;
+    private Skin skin;
+    private TextureAtlas atlas;
 
-    public Cell(TextureRegion standardTriangle, TextureRegion highlightedTriangle, TextureRegion localPlayerEmoji, TextureRegion otherPlayerEmoji, final int positionIndex, Position position, boolean rotationUp){
-        this.standardTriangle = standardTriangle;
-        this.highlightedTriangle = highlightedTriangle;
-        this.localPlayerEmoji = localPlayerEmoji;
-        this.otherPlayerEmoji = otherPlayerEmoji;
-        this.positionIndex = positionIndex;
-        this.position = position;
+    private Label pieceCountLabel;
+    private int currentPieceCount = -1;
+    private boolean rotationUp;
 
-        //create triangle image
-        this.triangle = new Image(standardTriangle);
+    public Cell(TextureRegion standardTexture, TextureRegion highlightedTexture, TextureRegion greenHighlightTexture, TextureRegion localPlayerEmoji, TextureRegion otherPlayerEmoji, final int positionIndex, Position position, boolean rotationUp){
+            this.standardTexture = standardTexture;
+            this.highlightedTexture = highlightedTexture;
+            this.greenHighlightTexture = greenHighlightTexture;
+            this.localPlayerEmoji = localPlayerEmoji;
+            this.otherPlayerEmoji = otherPlayerEmoji;
+            this.positionIndex = positionIndex;
+            this.position = position;
+            this.rotationUp = rotationUp;
 
-        //add actors to stack
-        this.addActor(this.triangle);
+            atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
+            skin = new Skin(Gdx.files.internal("skin/uiskin.json"), atlas);
+            skin.getFont("font").getData().setScale(3f,3f);
 
-        //add emoji group
-        emojiGroup = new VerticalGroup();
-        if(rotationUp){
-            emojiGroup.bottom();
-        }
-        this.add(emojiGroup);
-        updateEmojiGroup();
+            this.pieceCountLabel = new Label("", skin);
 
+            //create currentImage image
+            this.currentImage = new Image(this.standardTexture);
 
-        //add clicklistener
-        addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                fire(new CellClickEvent(positionIndex));
+            //add actors to stack
+            this.addActor(this.currentImage);
+
+            //add emoji group
+            emojiGroup = new VerticalGroup();
+            if(rotationUp){
+                emojiGroup.bottom();
             }
-        });
-    }
+            this.add(emojiGroup);
+            updateEmojiGroup();
 
-    @Override
-    public void draw(Batch batch, float parentAlpha) {
-        super.draw(batch, parentAlpha);
-    }
+            //add clicklistener
+            addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    fire(new CellClickEvent(positionIndex));
+                }
+            });
+        }
 
-    public int getPositionIndex(){
-        return positionIndex;
-    }
+        @Override
+        public void draw(Batch batch, float parentAlpha) {
+            super.draw(batch, parentAlpha);
+        }
 
-    //update emojigroup based on position data
-    public void updateEmojiGroup(){
-        if(emojiGroup.getChildren().size != position.getPieceCount()){
-            emojiGroup.clearChildren();
-            for(int i = 0; i < position.getPieceCount(); i++){
-                if(i >= emojiDrawLimit) break;
-                Image image;
+        public int getPositionIndex(){
+            return positionIndex;
+        }
 
-                //use local or other player's emoji?
-                if(position.getOwner() == GameManager.GetInstance().getLocalPlayer()){
-                    image = new Image(localPlayerEmoji);
+        public void updateEmojiGroup() {
+            //Make sure only positions that have changed are updated
+            if(currentPieceCount != position.getPieceCount()){
+                currentPieceCount = position.getPieceCount();
+                if(position.getPieceCount() == 0){
+                    emojiGroup.clear();
+                }
+                else if(position.getPieceCount() == 1){
+                    emojiGroup.clear();
+                    addPlayerEmoji();
                 }
                 else{
+                    emojiGroup.clear();
+                    addPlayerEmoji();
+                    if(rotationUp){
+                        emojiGroup.addActorAt(0, pieceCountLabel);
+                    }
+                    else{
+                        emojiGroup.addActorAt(1, pieceCountLabel);
+                    }
+                    pieceCountLabel.setText(position.getPieceCount());
+                }
+
+            }
+        }
+
+        public void addPlayerEmoji(){
+            Image image;
+            if(position.getPieceCount() > 0) {
+                if (position.getOwner() == GameManager.GetInstance().getLocalPlayer()) {
+                    image = new Image(localPlayerEmoji);
+                } else {
                     image = new Image(otherPlayerEmoji);
                 }
-                //image.setScale(0.7f);
                 emojiGroup.addActor(image);
             }
         }
-    }
 
-    public void highlight(){
-        if(!highlighted){
-            triangle.setDrawable(new SpriteDrawable(new Sprite(highlightedTriangle)));
-            highlighted = true;
+        public void highlight(boolean chosen){
+            if(!highlighted){
+                if(!chosen){
+                    currentImage.setDrawable(new SpriteDrawable(new Sprite(this.highlightedTexture)));
+                } else {
+                    currentImage.setDrawable(new SpriteDrawable(new Sprite(greenHighlightTexture)));
+                }
+                highlighted = true;
+            }
         }
-    }
 
-    public void removeHighlight(){
-        if(highlighted){
-            triangle.setDrawable(new SpriteDrawable(new Sprite(standardTriangle)));
-            highlighted = false;
+        public void removeHighlight(){
+            if(highlighted){
+                currentImage.setDrawable(new SpriteDrawable(new Sprite(this.standardTexture)));
+                highlighted = false;
+            }
         }
-    }
 
-    public void setActive(boolean active){
-        //TODO: change to "active" texture to better show the active cell
-
-        /*if(active){
-            triangle.setColor(selectedTriangleColor);
+        public boolean getHighlighted(){
+            return highlighted;
         }
-        else{
-            triangle.setColor(standardTriangleColor);
-            System.out.println(standardTriangleColor.r + " " + standardTriangleColor.g + " " + standardTriangleColor.b);
-        }*/
-    }
 
-    public boolean getHighlighted(){
-        return highlighted;
     }
-
-}
