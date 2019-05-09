@@ -108,12 +108,12 @@ public class Player {
                         //moving off the board is valid
                         //if player moves anticlockwise, off the board = position 0
                         //if player moves clockwise, off the board = boardPositions.size
-                        if (moveClockwise && endPositionIndex == 0 || !moveClockwise && endPositionIndex == positions.size()) {
+                        if (!moveClockwise && endPositionIndex == 0 || moveClockwise && endPositionIndex == positions.size()) {
                             endPosition = goal;
                         }
                         else{
                             //ignore move if endposition index is bar or out of bounds
-                            if(endPositionIndex < 0 || endPositionIndex > positions.size()){
+                            if(endPositionIndex < 1 || endPositionIndex > positions.size()){
                                 continue;
                             }
                             endPosition = positions.get(endPositionIndex);
@@ -129,7 +129,7 @@ public class Player {
 
                     //apply move validation strategy to check if move is valid
                     if(moveValidationStrategy.isAvailableMove(startPosition, endPosition)){
-                        moves.add(new Move(positionIndex, endPositionIndex, die));
+                        moves.add(new Move(startPosition.getPositionIndex(), endPosition.getPositionIndex(), die));
                     }
                 }
             }
