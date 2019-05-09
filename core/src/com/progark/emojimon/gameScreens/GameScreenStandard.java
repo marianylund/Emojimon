@@ -78,6 +78,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     private Label debugLabel;
     private TextButton throwDiceBtn;
     private Table diceTable;
+    private Table sideMenu;
 
     float sw = Gdx.graphics.getWidth();
     float sh = Gdx.graphics.getHeight();
@@ -225,7 +226,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         sideMenuContainer.setPosition(0, 0);
         sideMenuContainer.fillY(); sideMenuContainer.fillX();
 
-        Table sideMenu = new Table();
+        sideMenu = new Table();
         Table throwDiceBtnTable = new Table();
         diceTable = new Table();
 
@@ -235,7 +236,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new MainMenuScreen(game));
             }
-        })).expand().uniform(); sideMenu.row();
+        })); sideMenu.row();
 
         // Add Turn emoji
 
@@ -268,19 +269,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                     highlightStartPositions();
 
                     // add dices to screen
-                    int diceNum = gameBoardController.getDieList().size(); // get dices from controller
-                    TextureAtlas.AtlasRegion dieRegion = boardAtlas.findRegion("dice"); // get dice background
-                    for (int i = diceNum-1; i >= 0; i--){
-                        Stack stackDiceImg = new Stack();
-                        Image diceImg = new Image(dieRegion);
-                        Label diceLabel = new Label(Integer.toString(gameBoardController.getDieList().get(i).getValue()), skin); // add dice number
-                        diceLabel.setAlignment(Align.center);
-                        diceLabel.setFontScale(2);
-                        stackDiceImg.add(diceImg);
-                        stackDiceImg.add(diceLabel);
-                        diceTable.add(stackDiceImg).size(150);
-                        diceTable.row();
-                    }
+                    addDiceTable();
                 }
                 return;
             }
@@ -288,8 +277,8 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
         throwDiceBtnTable.add(throwDiceBtn);
 
-        sideMenu.add(diceTable);
-        sideMenu.row().pad(10);
+//        sideMenu.add(diceTable);
+//        sideMenu.row().pad(10);
 
         sideMenu.add(throwDiceBtnTable);
 
@@ -341,10 +330,29 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         return button;
     }
 
+    private void addDiceTable(){
+        int diceNum = gameBoardController.getDieList().size(); // get dices from controller
+        TextureAtlas.AtlasRegion dieRegion = boardAtlas.findRegion("dice"); // get dice background
+        for (int i = diceNum-1; i >= 0; i--){
+            Stack stackDiceImg = new Stack();
+            Image diceImg = new Image(dieRegion);
+            Label diceLabel = new Label(Integer.toString(gameBoardController.getDieList().get(i).getValue()), skin); // add dice number
+            diceLabel.setAlignment(Align.center);
+            diceLabel.setFontScale(2);
+            stackDiceImg.add(diceImg);
+            stackDiceImg.add(diceLabel);
+            diceTable.add(stackDiceImg).size(150);
+            diceTable.row();
+        }
+        sideMenu.row();
+//        sideMenu.swapActor(throwDiceBtn, diceTable);
+        sideMenu.add(diceTable);
+    }
+
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-        //stage.setDebugAll(true);
+        stage.setDebugAll(true);
         stage.addActor(createSideMenu());
         stage.addActor(createGameBoard());
         stage.addActor(createPlayerGoals());
@@ -495,6 +503,8 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                             // graphic: if all dice are used, show 'throw dice' button
                             if (diceTable.getChildren().size == 0) {
                                 throwDiceBtn.setVisible(true);
+
+                                diceTable.remove();
                             }
                             break;
                         }
