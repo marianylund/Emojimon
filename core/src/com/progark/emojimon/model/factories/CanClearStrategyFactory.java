@@ -1,5 +1,6 @@
 package com.progark.emojimon.model.factories;
 
+import com.progark.emojimon.model.AlwaysClearStrategy;
 import com.progark.emojimon.model.BasicCanClearStrategy;
 import com.progark.emojimon.model.strategyPattern.CanClearStrategy;
 
@@ -7,7 +8,8 @@ import com.progark.emojimon.model.strategyPattern.CanClearStrategy;
 public class CanClearStrategyFactory {
 
     public enum CanClearStrat {
-        BASIC
+        BASIC,
+        ALWAYS
     }
 
     // Create a concrete strategy for bearing off (clearing pieces)
@@ -17,6 +19,9 @@ public class CanClearStrategyFactory {
         }
         if (canClear == CanClearStrat.BASIC){
             return new BasicCanClearStrategy();
+        }
+        else if(canClear == CanClearStrat.ALWAYS){
+            return new AlwaysClearStrategy();
         }
         return null;
     }
