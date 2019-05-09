@@ -17,10 +17,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.progark.emojimon.Emojimon;
@@ -68,6 +70,8 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     private TextureRegion line;
 
     private Label debugLabel;
+    private TextButton throwDiceBtn;
+    private Table diceTable;
 
     float sw = Gdx.graphics.getWidth();
     float sh = Gdx.graphics.getHeight();
@@ -212,13 +216,14 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
     private Container createSideMenu() {
         // Side Menu contains back button, emojiturn and throw dice button
-
         Container sideMenuContainer = new Container();
         sideMenuContainer.setSize(sw * 0.1f, sh);
         sideMenuContainer.setPosition(0, 0);
         sideMenuContainer.fillY(); sideMenuContainer.fillX();
 
         Table sideMenu = new Table();
+        Table throwDiceBtnTable = new Table();
+        diceTable = new Table();
 
         // Add leave button
         sideMenu.add(createButton("Back", new ClickListener() {
@@ -228,28 +233,49 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
             }
         })).expand().uniform(); sideMenu.row();
 
-
         // Add Turn emoji
         TextureAtlas.AtlasRegion emojiRegion = emojiAtlas.findRegion(GameManager.GetInstance().getLocalPlayerEmoji());
-        sideMenu.add(new Image(emojiRegion)).size(100);
+        sideMenu.add(new Image(emojiRegion)).size(100).expand().uniform();
         sideMenu.row().pad(10);
 
-        // Add timer label wannabe, is used for debug for now
+/*       // Add timer label wannabe, is used for debug for now
         debugLabel = new Label("Debug:", skin);
         sideMenu.add(debugLabel); sideMenu.row().pad(10);
+*/
 
         // Add throw dice button
-        sideMenu.add(createButton("Throw\nDice", new ClickListener() {
+        throwDiceBtn =  createButton("Throw\nDice", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 gameBoardController.rollDice();
                 diceThrown = true;
+                throwDiceBtn.setVisible(false); // hide button, when dice is thrown
+//                sideMenu.removeActor(throwDiceBtnTable); // remove button
                 highlightStartPositions();
-                //gameBoardController.getDieList().get(0);
-                debugLabel.setText(gameBoardController.getDieList().get(0).getValue() + " " + gameBoardController.getDieList().get(1).getValue());
-                // TODO begrenes hvor mange ganger man kaster terning
+
+                // add dices to screen
+                int diceNum = gameBoardController.getDieList().size(); // get dices from controller
+                TextureAtlas.AtlasRegion dieRegion = boardAtlas.findRegion("dice"); // get dice background
+                for (int i = diceNum-1; i >= 0; i--){
+                    Stack stackDiceImg = new Stack();
+                    Image diceImg = new Image(dieRegion);
+                    Label diceLabel = new Label(Integer.toString(gameBoardController.getDieList().get(i).getValue()), skin); // add dice number
+                    diceLabel.setAlignment(Align.center);
+                    diceLabel.setFontScale(2);
+                    stackDiceImg.add(diceImg);
+                    stackDiceImg.add(diceLabel);
+                    diceTable.add(stackDiceImg).size(150);
+                    diceTable.row();
+                }
             }
-        })).expand().uniform();
+        });
+
+        throwDiceBtnTable.add(throwDiceBtn);
+
+        sideMenu.add(diceTable);
+        sideMenu.row().pad(10);
+
+        sideMenu.add(throwDiceBtnTable);
 
         sideMenuContainer.setActor(sideMenu);
         return sideMenuContainer;
@@ -310,8 +336,6 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         stage.addActor(createSideMenu());
         stage.addActor(createGameBoard());
         stage.addActor(createPlayerGoals());
-
-
 
         //add listener for cell clicks
         stage.addListener(new CellClickEventListener() {
@@ -442,6 +466,15 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                             //do move
                             gameBoardController.doMove(move);
                             UpdatePiecesOnBoardCells();
+
+                            // TODO: upon removal, dice should remove cell in table?
+                            // graphic: removes dice when used
+                            diceTable.removeActor(diceTable.getChildren().get(0));
+
+                            // graphic: if all dice are used, show 'throw dice' button
+                            if (diceTable.getChildren().size == 0) {
+                                throwDiceBtn.setVisible(true);
+                            }
                             break;
                         }
                     }
