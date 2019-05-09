@@ -225,6 +225,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         sideMenu.add(createButton("Back", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                GameManager.GetInstance().clearGameData();
                 game.setScreen(new MainMenuScreen(game));
             }
         })).expand().uniform(); sideMenu.row();
@@ -465,7 +466,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                         boardCells.get(move.endPosition-1).removeHighlight();
                         if(move.endPosition == clickedTriangleIndex){
                             //do move
-                            gameBoardController.doMove(move);
+                            gameBoardController.doMove(move, false);
                             UpdatePiecesOnBoardCells();
                             break;
                         }

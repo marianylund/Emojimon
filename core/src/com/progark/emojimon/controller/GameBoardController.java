@@ -74,8 +74,8 @@ public class GameBoardController {
     }
 
     // methods
-    public void doMove(Move move) {
-        gameBoard.movePiece(move);
+    public void doMove(Move move, boolean isItLastTurnMove) {
+        gameBoard.movePiece(move, isItLastTurnMove);
     }
 
     // move to PlayerController?
@@ -95,8 +95,9 @@ public class GameBoardController {
 
         //Update gameboard with moves
         List<Move> moves = Converter.fromListToMoves(lastTurn.getActions());
+        boolean isItLastTurnMove = true;
         for (Move move : moves) {
-            doMove(move);
+            doMove(move, isItLastTurnMove);
             try {
                 TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
@@ -139,6 +140,10 @@ public class GameBoardController {
         else{
             throw new IllegalArgumentException("Invalid player index: " + index);
         }
+    }
+
+    public void emptyLastTurnMoves () {
+        gameBoard.emptyCurrentTurnMoves();
     }
 
 }

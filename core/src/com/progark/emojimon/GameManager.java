@@ -1,11 +1,13 @@
 package com.progark.emojimon;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.progark.emojimon.controller.FBC;
 import com.progark.emojimon.controller.GameBoardController;
 import com.progark.emojimon.gameScreens.CreateRulesetScreen;
 import com.progark.emojimon.gameScreens.GameOverScreen;
 import com.progark.emojimon.gameScreens.GameScreen;
+import com.progark.emojimon.gameScreens.GameScreenStandard;
 import com.progark.emojimon.gameScreens.MainMenuScreen;
 import com.progark.emojimon.gameScreens.SelectEmojiScreen;
 import com.progark.emojimon.model.Player;
@@ -21,7 +23,7 @@ public class GameManager implements SubscriberToFirebase {
     private String otherPlayerEmoji = "face-screaming-in-fear_1f631";
     private String gameID;
     public  LastTurnData lastTurnData;
-    private GameData gameData;
+    private GameData gameData = null;
     private GameBoardController gameBoardController;
     Emojimon game;
     public boolean gameOver = false;
@@ -59,6 +61,10 @@ public class GameManager implements SubscriberToFirebase {
         this.gameData = gameData;
     }
 
+    public void clearGameData () {
+        this.gameData = null;
+    }
+
     public void setLastTurnData(LastTurnData lastTurnData) {
         this.lastTurnData = lastTurnData;
     }
@@ -67,6 +73,7 @@ public class GameManager implements SubscriberToFirebase {
     public void notifyOfNewLastTurn(String gameID, LastTurnData lastTurn) {
         System.out.println("NEW LAST TURN");
         if (lastTurn != null) {
+            gameBoardController.emptyLastTurnMoves();
             lastTurnData = lastTurn;
             currentPlayer = !lastTurnData.getPlayer();
             if(isItLocalPlayerTurn()){
@@ -153,5 +160,18 @@ public class GameManager implements SubscriberToFirebase {
         FBC.I().get().addNewGame("TEST", settings); // Push GameData to Firebase
         gameBoardController = new GameBoardController();
         gameBoardController.createDynamicGameBoard(settings);
+    }
+
+    public void joinGame () {
+        FBC.I().get().joinGame();
+    }
+
+    public void createGameFromFirebaseData (GameData gameData) {
+        gameBoardController = new GameBoardController();
+        gameBoardController.createDynamicGameBoard(gameData.getSettings());
+    }
+
+    public GameData getGameData() {
+        return gameData;
     }
 }

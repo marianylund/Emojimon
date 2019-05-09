@@ -1,5 +1,6 @@
 package com.progark.emojimon.model;
 
+import com.progark.emojimon.GameManager;
 import com.progark.emojimon.model.factories.CanClearStrategyFactory;
 import com.progark.emojimon.model.factories.MoveSetStrategyFactory;
 import com.progark.emojimon.model.factories.StartPiecePlacementStrategyFactory;
@@ -109,11 +110,13 @@ public class GameBoard {
     }
 
 
-    public boolean movePiece(Move move){
+    public boolean movePiece(Move move, boolean isItLastTurnMove){
         if(move.die != null){
             move.die.setUsed(true);
         }
-        currentTurnMoves.add(move);
+        if (!isItLastTurnMove) {
+            currentTurnMoves.add(move);
+        }
 
         //check if move is to either player's goal (outside of boardpositions)
         if(move.endPosition >= boardPositions.size()){
@@ -200,7 +203,7 @@ public class GameBoard {
     }
 
     public void emptyCurrentTurnMoves(){
-        currentTurnMoves.clear();
+        currentTurnMoves = new ArrayList<Move>();
     }
 
     //endregion

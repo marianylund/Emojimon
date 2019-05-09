@@ -69,7 +69,11 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 GameData sm = dataSnapshot.getValue(GameData.class);
-                //gameManager.setGameData(sm);
+
+                // Creates a new GameBoardController and GameBoard if joining game
+                if (GameManager.GetInstance().getGameData() ==  null) {
+                    GameManager.GetInstance().createGameFromFirebaseData(sm);
+                }
                 GameManager.GetInstance().setGameData(sm); //Update that gameData class
                 System.out.println(sm.getSettings().toString());
                 notifyGameDataSubs(gameID, sm);
@@ -89,9 +93,10 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
         //TODO Better error handling on gameID
 
         LastTurnData ltd = new LastTurnData(player, dices, moves);
+        System.out.println(ltd.toString());
         LastTurns.child(gameID).setValue(ltd);
         //gameManager.setLastTurnData(ltd);
-        GameManager.GetInstance().setLastTurnData(ltd);
+        //GameManager.GetInstance().setLastTurnData(ltd);
         addLastTurnDataChangeListener(gameID);
     }
 
