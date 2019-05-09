@@ -31,7 +31,7 @@ public class BasicMoveSetStrategy implements MoveSetStrategy {
                     endPosition.removePieces(blot);
 
                     // set bar owner
-                    if (!bar.getOwner().equals(endPosition.getOwner())){
+                    if (bar.getOwner() != null && bar.getOwner() != (endPosition.getOwner())){
                         bar.setOwner(endPosition.getOwner());
                     }
                 }
@@ -52,7 +52,6 @@ public class BasicMoveSetStrategy implements MoveSetStrategy {
                     bar.setOwner(null);
                 }
             }
-
 
             return true;
         }
