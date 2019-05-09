@@ -185,16 +185,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
         // Add bar
         Table barField = new Table();
-        /*
-        Image barFieldImage = new Image(squareBoard);
-        barFieldImage.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
 
-                debugLabel.setText("barField");
-
-            }
-        });*/
         Cell barCell = new Cell(squareBoard, squareBoardHighlighted, squareBoardGreenHighlighted, localPlayerEmoji, otherPlayerEmoji, 0, gameBoardController.getBoardPositions().get(0), true);
         barField.add(barCell).size(sw * 0.05f, sw * 0.05f);
         boardCells.set(0, barCell);
@@ -285,14 +276,6 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         Cell player1GoalCell = new Cell(squareBoard, squareBoardHighlighted, squareBoardGreenHighlighted, localPlayerEmoji, otherPlayerEmoji, player1Goal.getPositionIndex(), player1Goal, true);
         sideBoard.add(player1GoalCell).size(sw * 0.1f, sh/2).expand().center();
         boardCells.set(player1Goal.getPositionIndex(), player1GoalCell);
-        /*
-        sideBoard.add(createGoal(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                debugLabel.setText("player1goal");
-            }
-        }));*/
-
 
         sideBoard.row();
 
@@ -301,13 +284,6 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         Cell player0GoalCell = new Cell(squareBoard, squareBoardHighlighted, squareBoardGreenHighlighted, localPlayerEmoji, otherPlayerEmoji, player0Goal.getPositionIndex(), player0Goal, true);
         sideBoard.add(player0GoalCell).size(sw * 0.1f, sh/2).expand().center();
         boardCells.set(player0Goal.getPositionIndex(), player0GoalCell);
-        /*
-        sideBoard.add(createGoal(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                debugLabel.setText("player0goal");
-            }
-        }));*/
 
         sideBoardContainer.setActor(sideBoard);
 
