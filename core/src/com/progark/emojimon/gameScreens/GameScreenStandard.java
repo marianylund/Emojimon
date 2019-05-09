@@ -1,6 +1,7 @@
 package com.progark.emojimon.gameScreens;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -80,16 +81,14 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     private boolean diceThrown = false; //has dice been thrown?
     private int selectedTriangleIndex = -1; //index of currently selected triangle
 
+    private Label waitingForTurnLabel;
+
 
     public GameScreenStandard(final Emojimon game) {
         Gdx.graphics.setContinuousRendering(true);
         this.game = game;
         GameManager.GetInstance().createApp(game);
-        this.gameBoardController = new GameBoardController();//need to be changed to the singelton reference
-        this.gameBoardController.createStandardGameBoard();
-
-        //TODO: organize creation of gamemanager and gameboardcontroller properly
-        GameManager.GetInstance().setGameBoardController(gameBoardController);
+        this.gameBoardController = GameManager.GetInstance().getGameBoardController();
 
         // Get UI skin
         atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
@@ -253,6 +252,19 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
             }
         })).expand().uniform();
 
+        sideMenu.row();
+        // Add throw dice button
+        sideMenu.add(createButton("End\nTurn", new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gameBoardController.endTurn(GameManager.GetInstance().getLocalPlayer());
+            }
+        })).expand().uniform();
+
+        sideMenu.row();
+        waitingForTurnLabel = new Label("WAITING", skin);
+        sideMenu.add(waitingForTurnLabel);
+
         sideMenuContainer.setActor(sideMenu);
         return sideMenuContainer;
     }
@@ -373,6 +385,13 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         stage.draw();
         if (GameManager.GetInstance().gameOver) {
             game.setScreen(new GameOverScreen(game, GameManager.GetInstance().getWinningPlayer() ));
+        }
+
+        // Check if player if WAITING should be displayed.
+        if (GameManager.GetInstance().isItLocalPlayerTurn()) {
+            waitingForTurnLabel.setVisible(false);
+        } else if (!GameManager.GetInstance().isItLocalPlayerTurn()) {
+            waitingForTurnLabel.setVisible(true);
         }
 
 //        batch.begin();

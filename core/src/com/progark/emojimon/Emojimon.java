@@ -33,12 +33,6 @@ public class Emojimon extends Game {
         setScreen(new MainMenuScreen(this));
         batch = new SpriteBatch();
         img = new Texture("badlogic.jpg");
-
-        //Test creation of gameboard
-        gameBoardController = new GameBoardController();
-        gameBoardController.createStandardGameBoard();
-
-
     }
 
     //debugging

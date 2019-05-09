@@ -11,6 +11,7 @@ import com.progark.emojimon.gameScreens.SelectEmojiScreen;
 import com.progark.emojimon.model.Player;
 import com.progark.emojimon.model.fireBaseData.GameData;
 import com.progark.emojimon.model.fireBaseData.LastTurnData;
+import com.progark.emojimon.model.fireBaseData.Settings;
 import com.progark.emojimon.model.interfaces.SubscriberToFirebase;
 
 public class GameManager implements SubscriberToFirebase {
@@ -19,7 +20,7 @@ public class GameManager implements SubscriberToFirebase {
     private String localPlayerEmoji = "face-with-tears-of-joy_1f602"; // default localPlayerEmoji
     private String otherPlayerEmoji = "face-screaming-in-fear_1f631";
     private String gameID;
-    private LastTurnData lastTurnData;
+    public  LastTurnData lastTurnData;
     private GameData gameData;
     private GameBoardController gameBoardController;
     Emojimon game;
@@ -147,4 +148,10 @@ public class GameManager implements SubscriberToFirebase {
     }
 
     public int getWinningPlayer () {return gameData.getWinningPlayer();}
+
+    public void createNewGame (Settings settings) {
+        FBC.I().get().addNewGame("TEST", settings); // Push GameData to Firebase
+        gameBoardController = new GameBoardController();
+        gameBoardController.createDynamicGameBoard(settings);
+    }
 }

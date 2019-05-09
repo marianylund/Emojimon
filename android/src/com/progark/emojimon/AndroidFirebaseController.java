@@ -36,9 +36,6 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     private GameData gd;
-
-    private HashMap<String, GameData> gamesData = new HashMap<>();
-    private HashMap<String, LastTurnData> lastTurnData = new HashMap<>(); // the same key as the games id
     private List<SubscriberToFirebase> subscribers = new ArrayList<>();
 
     private GameManager gameManager = GameManager.GetInstance();
@@ -58,7 +55,7 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
         gd.setGameId(gameID);
         Games.child(gameID).setValue(gd);
         //gameManager.setGameData(gd);
-        gamesData.put(gameID, gd);
+        GameManager.GetInstance().setGameData(gd);
 
         gameManager.setLocalPlayer(false); // Player 0 if created the game
         gameManager.setGameID(gameID);
@@ -73,7 +70,7 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 GameData sm = dataSnapshot.getValue(GameData.class);
                 //gameManager.setGameData(sm);
-                gamesData.put(gameID, sm); //Update that gameData class
+                GameManager.GetInstance().setGameData(sm); //Update that gameData class
                 System.out.println(sm.getSettings().toString());
                 notifyGameDataSubs(gameID, sm);
             }
@@ -94,7 +91,7 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
         LastTurnData ltd = new LastTurnData(player, dices, moves);
         LastTurns.child(gameID).setValue(ltd);
         //gameManager.setLastTurnData(ltd);
-        lastTurnData.put(gameID, ltd);
+        GameManager.GetInstance().setLastTurnData(ltd);
         addLastTurnDataChangeListener(gameID);
     }
 
@@ -104,7 +101,7 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 LastTurnData sm = dataSnapshot.getValue(LastTurnData.class);
                 //gameManager.setLastTurnData(sm); //Update that LastTurnData class
-                lastTurnData.put(gameID, sm); //Update that LastTurnData class
+                GameManager.GetInstance().setLastTurnData(sm); //Update that LastTurnData class
 
                 notifyLastTurnSubs(gameID,sm);
             }
@@ -197,9 +194,5 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
         for (SubscriberToFirebase sub:subscribers) {
             sub.notifyOfGameData(gameID, gd);
         }
-    }
-
-    public Object[] getGameIDs(){
-        return gamesData.keySet().toArray();
     }
 }
