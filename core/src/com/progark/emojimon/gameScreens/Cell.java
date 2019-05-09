@@ -1,11 +1,16 @@
 package com.progark.emojimon.gameScreens;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -38,6 +43,13 @@ public class Cell extends Stack {
 
     private int emojiDrawLimit = 3;
 
+    private Skin skin;
+    private TextureAtlas atlas;
+
+    private Label pieceCountLabel;
+    private int currentPieceCount = -1;
+    private boolean rotationUp;
+
     public Cell(TextureRegion standardTriangle, TextureRegion highlightedTriangle, TextureRegion localPlayerEmoji, TextureRegion otherPlayerEmoji, final int positionIndex, Position position, boolean rotationUp){
         this.standardTriangle = standardTriangle;
         this.highlightedTriangle = highlightedTriangle;
@@ -45,6 +57,13 @@ public class Cell extends Stack {
         this.otherPlayerEmoji = otherPlayerEmoji;
         this.positionIndex = positionIndex;
         this.position = position;
+        this.rotationUp = rotationUp;
+
+        atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
+        skin = new Skin(Gdx.files.internal("skin/uiskin.json"), atlas);
+        skin.getFont("font").getData().setScale(3f,3f);
+
+        this.pieceCountLabel = new Label("", skin);
 
         //create triangle image
         this.triangle = new Image(standardTriangle);
@@ -59,7 +78,6 @@ public class Cell extends Stack {
         }
         this.add(emojiGroup);
         updateEmojiGroup();
-
 
         //add clicklistener
         addListener(new ClickListener() {
@@ -79,24 +97,41 @@ public class Cell extends Stack {
         return positionIndex;
     }
 
-    //update emojigroup based on position data
-    public void updateEmojiGroup(){
-        if(emojiGroup.getChildren().size != position.getPieceCount()){
-            emojiGroup.clearChildren();
-            for(int i = 0; i < position.getPieceCount(); i++){
-                if(i >= emojiDrawLimit) break;
-                Image image;
-
-                //use local or other player's emoji?
-                if(position.getOwner() == GameManager.GetInstance().getLocalPlayer()){
-                    image = new Image(localPlayerEmoji);
+    public void updateEmojiGroup() {
+        //Make sure only positions that have changed are updated
+        if(currentPieceCount != position.getPieceCount()){
+            currentPieceCount = position.getPieceCount();
+            if(position.getPieceCount() == 0){
+                emojiGroup.clear();
+            }
+            else if(position.getPieceCount() == 1){
+                emojiGroup.clear();
+                addPlayerEmoji();
+            }
+            else{
+                emojiGroup.clear();
+                addPlayerEmoji();
+                if(rotationUp){
+                    emojiGroup.addActorAt(0, pieceCountLabel);
                 }
                 else{
-                    image = new Image(otherPlayerEmoji);
+                    emojiGroup.addActorAt(1, pieceCountLabel);
                 }
-                //image.setScale(0.7f);
-                emojiGroup.addActor(image);
+                pieceCountLabel.setText(position.getPieceCount());
             }
+
+        }
+    }
+
+    public void addPlayerEmoji(){
+        Image image;
+        if(position.getPieceCount() > 0) {
+            if (position.getOwner() == GameManager.GetInstance().getLocalPlayer()) {
+                image = new Image(localPlayerEmoji);
+            } else {
+                image = new Image(otherPlayerEmoji);
+            }
+            emojiGroup.addActor(image);
         }
     }
 
