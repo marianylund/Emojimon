@@ -93,8 +93,8 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         this.gameBoardController = GameManager.GetInstance().getGameBoardController();
 
         // Get UI skin
-        atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
-        skin = new Skin(Gdx.files.internal("skin/uiskin.json"), atlas);
+        atlas = new GameSkin().getAtlas();
+        skin = new GameSkin().getSkin();
         skin.getFont("font").getData().setScale(1.5f,1.5f);
 
         // Fix Camera and viewport

@@ -59,8 +59,8 @@ public class Cell extends Stack {
             this.position = position;
             this.rotationUp = rotationUp;
 
-            atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
-            skin = new Skin(Gdx.files.internal("skin/uiskin.json"), atlas);
+            atlas = new GameSkin().getAtlas();
+            skin = new GameSkin().getSkin();
             skin.getFont("font").getData().setScale(3f,3f);
 
             this.pieceCountLabel = new Label("", skin);

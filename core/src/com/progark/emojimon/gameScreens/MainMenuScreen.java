@@ -41,9 +41,9 @@ public class MainMenuScreen implements Screen {
         this.game = game;
 
         //import skin to be used for GUI elements
-        atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
-        skin = new Skin(Gdx.files.internal("skin/uiskin.json"), atlas);
-        skin.getFont("font").getData().setScale(3f,3f);
+        atlas = new GameSkin().getAtlas();
+        skin = new GameSkin().getSkin();
+        //skin.getFont("font").getData().setScale(3f,3f);
 
 //        //Generate font
 //        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("Fonts/Roboto-Regular.ttf"));

@@ -40,8 +40,8 @@ public class CreateRulesetScreen implements Screen {
 
     public CreateRulesetScreen(final Emojimon game) {
         this.game = game;
-        atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
-        skin = new Skin(Gdx.files.internal("skin/uiskin.json"), atlas);
+        atlas = new GameSkin().getAtlas();
+        skin = new GameSkin().getSkin();
         skin.getFont("font").getData().setScale(3f,3f);
         camera = new OrthographicCamera();
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
