@@ -93,3 +93,5 @@ android/libs/armeabi/libgdx-freetype\.so
 android/libs/x86_64/libgdx-freetype\.so
 
 android/libs/x86/libgdx-freetype\.so
+
+\.idea/codeStyles/

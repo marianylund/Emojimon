@@ -29,6 +29,7 @@ import com.progark.emojimon.Emojimon;
 import com.progark.emojimon.GameManager;
 import com.progark.emojimon.controller.GameBoardController;
 import com.progark.emojimon.model.Move;
+import com.progark.emojimon.model.Player;
 import com.progark.emojimon.model.Position;
 
 
@@ -91,16 +92,13 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
     private boolean diceThrown = false; //has dice been thrown?
     private int selectedTriangleIndex = -1; //index of currently selected triangle
-
+    private Label waitingForTurnLabel;
 
     public GameScreenStandard(final Emojimon game) {
         Gdx.graphics.setContinuousRendering(true);
         this.game = game;
-        this.gameBoardController = new GameBoardController();//need to be changed to the singelton reference
-        this.gameBoardController.createStandardGameBoard();
-
-        //TODO: organize creation of gamemanager and gameboardcontroller properly
-        GameManager.GetInstance().setGameBoardController(gameBoardController);
+        GameManager.GetInstance().createApp(game);
+        this.gameBoardController = GameManager.GetInstance().getGameBoardController();
 
         // Get UI skin
         atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
@@ -238,6 +236,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         sideMenu.add(createButton("Back", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                GameManager.GetInstance().clearGameData();
                 game.setScreen(new MainMenuScreen(game));
             }
         }));
@@ -256,11 +255,16 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
             sideMenu.row().pad(10);
         }
 
+
+/*        // Add timer label wannabe, is used for debug for now
+        debugLabel = new Label("Debug:", skin);
+        sideMenu.add(debugLabel); sideMenu.row().pad(10);*/
+
         // Add throw dice button
         throwDiceBtn =  createButton("Throw\nDice", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (GameManager.GetInstance().isItLocalPlayerTurn()){
+                if(GameManager.GetInstance().isItLocalPlayerTurn()){
                     gameBoardController.rollDice();
                     diceThrown = true;
                     throwDiceBtn.setVisible(false); //hide button, when dice is thrown
@@ -279,10 +283,23 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
             }
         });
 
+        sideMenu.row();
+        // Add throw dice button
+        sideMenu.add(createButton("End\nTurn", new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gameBoardController.endTurn(GameManager.GetInstance().getLocalPlayer());
+            }
+        }));
+
+        sideMenu.row();
+        waitingForTurnLabel = new Label("WAITING", skin);
+        sideMenu.add(waitingForTurnLabel);
+        sideMenu.row();
         throwDiceBtnTable.add(throwDiceBtn);
         sideMenu.add(throwDiceBtnTable);
-        sideMenuContainer.setActor(sideMenu);
 
+        sideMenuContainer.setActor(sideMenu);
         return sideMenuContainer;
     }
 
@@ -424,6 +441,17 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
+        if (GameManager.GetInstance().gameOver) {
+            game.setScreen(new GameOverScreen(game, GameManager.GetInstance().getWinningPlayer() ));
+        }
+
+        // Check if player if WAITING should be displayed.
+        if (GameManager.GetInstance().isItLocalPlayerTurn()) {
+            waitingForTurnLabel.setVisible(false);
+        } else if (!GameManager.GetInstance().isItLocalPlayerTurn()) {
+            waitingForTurnLabel.setVisible(true);
+        }
+
 //        batch.begin();
 //        batch.draw(spritesheet, 0, 0);
 //        batch.end();
@@ -467,10 +495,11 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
             if(selectedTriangleIndex == -1){
                 //only accept clicks if triangle is highlighted
                 if(boardCells.get(clickedTriangleIndex).getHighlighted()){
+                    boardCells.get(clickedTriangleIndex).removeHighlight();
                     for(Move move : availableMoves){
                         //remove startposition highlights
                         boardCells.get(move.startPosition).removeHighlight();
-
+                        boardCells.get(move.startPosition).removeHighlight();
                         if(move.startPosition == clickedTriangleIndex){
                             //no triangle selected: select this triangle and highlight possible end positions
                             selectedTriangleIndex = clickedTriangleIndex;
@@ -491,15 +520,9 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                 //check for matching move
                 for(Move move : availableMoves){
                     if(move.startPosition == selectedTriangleIndex){
-                        if(move.endPosition < 1 || move.endPosition > gameBoardController.getBoardSize()){
-                            System.out.println(String.format("Move from %d to %d", move.startPosition, move.endPosition));
-                        }
-                        //remove all highlights
-                        boardCells.get(move.startPosition).removeHighlight();
-                        boardCells.get(move.endPosition).removeHighlight();
                         if(move.endPosition == clickedTriangleIndex){
                             //do move
-                            gameBoardController.doMove(move);
+                            gameBoardController.doMove(move, false);
                             UpdatePiecesOnBoardCells();
 
                             // graphic: removes dice when used in dice pane
@@ -519,7 +542,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                 //deselect triangle
 
                 selectedTriangleIndex = -1;
-
+                clearHighlights();
                 highlightStartPositions();
             }
 
@@ -541,12 +564,16 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         }
     }
 
+    private void clearHighlights(){
+        for(Cell cell : boardCells){
+            cell.removeHighlight();
+        }
+    }
+
     private void UpdatePiecesOnBoardCells(){
         for(Cell cell : boardCells){
             cell.updateEmojiGroup();
         }
     }
-
-
 
 }

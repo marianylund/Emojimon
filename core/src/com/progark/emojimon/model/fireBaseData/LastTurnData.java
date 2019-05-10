@@ -41,4 +41,17 @@ public class LastTurnData {
     public void setActions(List<List<Integer>> actions) {
         this.actions = actions;
     }
+
+    @Override
+    public String toString() {
+        String s = "";
+        for (int i = 0; i < actions.size(); i++) {
+            for (int j = 0; j < actions.get(i).size(); j++) {
+                s += i + ":" + actions.get(i).get(j);
+            }
+        }
+        return s;
+    }
 }
+
+

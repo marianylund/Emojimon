@@ -74,8 +74,8 @@ public class GameBoardController {
     }
 
     // methods
-    public void doMove(Move move) {
-        gameBoard.movePiece(move);
+    public void doMove(Move move, boolean isItLastTurnMove) {
+        gameBoard.movePiece(move, isItLastTurnMove);
         if(getMoves(GameManager.GetInstance().getLocalPlayerIndex()).size()==0){
             //endTurn(GameManager.GetInstance().getLocalPlayer()); //this funtion requires that the game is created with a game id from firebase, do not uncomment before that is in place
         }
@@ -98,8 +98,9 @@ public class GameBoardController {
 
         //Update gameboard with moves
         List<Move> moves = Converter.fromListToMoves(lastTurn.getActions());
+        boolean isItLastTurnMove = true;
         for (Move move : moves) {
-            doMove(move);
+            doMove(move, isItLastTurnMove);
             try {
                 TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
@@ -117,16 +118,15 @@ public class GameBoardController {
         }
     }
 
-    public void endTurn(Player player) {
-        if (player.isDone()) {
-            // TODO End Game
-        } else {
-            // Push Last turn data
-            FBC.I().get().addLastTurnByGameID(GameManager.GetInstance().getGameID(), !player.isCreator(),
-                    Converter.fromDiceToList(gameBoard.getDice().getDieList()),
-                    Converter.fromMovesToList(gameBoard.getCurrentTurnMoves()));
-            gameBoard.emptyCurrentTurnMoves();
+    public void endTurn(Player player){
+        if(player.isDone()){
+            GameManager.GetInstance().gameWon(player.isCreator());
         }
+        // Push Last turn data
+        FBC.I().get().addLastTurnByGameID(GameManager.GetInstance().getGameID(), !player.isCreator(),
+                Converter.fromDiceToList(gameBoard.getDice().getDieList()),
+                Converter.fromMovesToList(gameBoard.getCurrentTurnMoves()));
+        gameBoard.emptyCurrentTurnMoves();
     }
 
     public Position getPlayerGoal(int index){
@@ -145,5 +145,8 @@ public class GameBoardController {
         }
     }
 
+    public void emptyLastTurnMoves () {
+        gameBoard.emptyCurrentTurnMoves();
+    }
 }
 

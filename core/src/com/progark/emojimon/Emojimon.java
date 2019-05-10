@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.progark.emojimon.controller.FBC;
+import com.progark.emojimon.gameScreens.GameOverScreen;
 import com.progark.emojimon.gameScreens.MainMenuScreen;
 import com.progark.emojimon.controller.GameBoardController;
 import com.progark.emojimon.model.fireBaseData.Converter;
@@ -22,29 +23,20 @@ public class Emojimon extends Game {
     Texture img;
     GameBoardController gameBoardController;
 
-
-
     public Emojimon(FirebaseControllerInterface firebaseControllerInterface) {
         FBC.I().setFirebase(firebaseControllerInterface);
     }
-
-    @Override
-    public void create() {
+	
+	@Override
+	public void create () {
+        GameManager.GetInstance().createApp(this);
         setScreen(new MainMenuScreen(this));
         batch = new SpriteBatch();
         img = new Texture("badlogic.jpg");
-
-        //Test creation of gameboard
-        gameBoardController = new GameBoardController();
-        gameBoardController.createStandardGameBoard();
-
         GameManager.GetInstance().createPreference();
         if(!GameManager.GetInstance().getPreferences().isEmoji().isEmpty()){
             GameManager.GetInstance().setLocalPlayerEmoji(GameManager.GetInstance().getPreferences().isEmoji());
         }
-        
-
-
     }
 
     //debugging
