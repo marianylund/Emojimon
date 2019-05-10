@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -80,7 +79,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
     private Label debugLabel;
     private TextButton throwDiceBtn;
-    private Table diceTable;
+    private Table diceTable, diceTablePane;
     private Table sideMenu;
 
     float sw = Gdx.graphics.getWidth();
@@ -230,6 +229,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         sideMenuContainer.fillY(); sideMenuContainer.fillX();
 
         sideMenu = new Table();
+        sideMenu.setSize(sw * 0.1f, sh);
         Table throwDiceBtnTable = new Table();
 
         sideMenu.align(Align.top).padTop(50);
@@ -256,11 +256,6 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
             sideMenu.row().pad(10);
         }
 
-
-/*        // Add timer label wannabe, is used for debug for now
-        debugLabel = new Label("Debug:", skin);
-        sideMenu.add(debugLabel); sideMenu.row().pad(10);*/
-
         // Add throw dice button
         throwDiceBtn =  createButton("Throw\nDice", new ClickListener() {
             @Override
@@ -268,25 +263,26 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                 if (GameManager.GetInstance().isItLocalPlayerTurn()){
                     gameBoardController.rollDice();
                     diceThrown = true;
-                    throwDiceBtn.setVisible(false); // hide button, when dice is thrown
+                    throwDiceBtn.setVisible(false); //hide button, when dice is thrown
 //                sideMenu.removeActor(throwDiceBtnTable); // remove button
                     highlightStartPositions();
 
-                    // add dices to screen
-                    addDiceTable();
+                    // add dices pane to screen
+                    ScrollPane diceSp = createDiceScrollPane();
+                    diceTablePane = new Table();
+                    float sph  = sh*0.5f; // scrollpane size = six dice
+                    diceTablePane.add(diceSp).pad(10).size(150,sph);
+                    sideMenu.row();
+                    sideMenu.add(diceTablePane);
                 }
                 return;
             }
         });
 
         throwDiceBtnTable.add(throwDiceBtn);
-
-//        sideMenu.add(diceTable);
-//        sideMenu.row().pad(10);
-
         sideMenu.add(throwDiceBtnTable);
-
         sideMenuContainer.setActor(sideMenu);
+
         return sideMenuContainer;
     }
 
@@ -333,28 +329,30 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         return button;
     }
 
-    private void addDiceTable(){
-        // font
+    private ScrollPane createDiceScrollPane(){
         BitmapFont font = new BitmapFont();
-        Label.LabelStyle style = new Label.LabelStyle(font, BLACK);
+        Label.LabelStyle style = new Label.LabelStyle(font, BLACK); // font colour
 
         diceTable = new Table();
         int diceNum = gameBoardController.getDieList().size(); // get dices from controller
         TextureAtlas.AtlasRegion dieRegion = boardAtlas.findRegion("dice"); // get dice background
+        // add dice bcg with drawn number
         for (int i = diceNum-1; i >= 0; i--){
             Stack stackDiceImg = new Stack();
             Image diceImg = new Image(dieRegion);
-            // TODO: change font on dice
+
             Label diceLabel = new Label(Integer.toString(gameBoardController.getDieList().get(i).getValue()), style); // add dice number
             diceLabel.setAlignment(Align.center);
             diceLabel.setFontScale(2);
+
             stackDiceImg.add(diceImg);
             stackDiceImg.add(diceLabel);
+
             diceTable.add(stackDiceImg).size(150);
             diceTable.row();
         }
-        sideMenu.row();
-        sideMenu.add(diceTable);
+
+        return new ScrollPane(diceTable);
     }
 
     @Override
@@ -504,15 +502,15 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                             gameBoardController.doMove(move);
                             UpdatePiecesOnBoardCells();
 
-                            // TODO: update diceTable, so the next dice is on top
-                            // graphic: removes dice when used
+                            // graphic: removes dice when used in dice pane
                             diceTable.removeActor(diceTable.getChildren().get(0));
 
                             // graphic: if all dice are used, show 'throw dice' button
                             if (diceTable.getChildren().size == 0) {
                                 throwDiceBtn.setVisible(true);
-
-                                diceTable.remove();
+                                // clears actor & cells
+                                diceTablePane.clearChildren();
+                                diceTable.clearChildren();
                             }
                             break;
                         }
