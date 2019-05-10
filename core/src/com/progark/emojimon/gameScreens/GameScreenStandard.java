@@ -223,7 +223,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     }
 
     private Container createSideMenu() {
-        // Side Menu contains back button, emojiturn and throw dice button
+        // Side Menu contains back button, emojiturn, throw dice button, and dice
         Container sideMenuContainer = new Container();
         sideMenuContainer.setSize(sw * 0.1f, sh);
         sideMenuContainer.setPosition(0, 0);
@@ -231,7 +231,8 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
         sideMenu = new Table();
         Table throwDiceBtnTable = new Table();
-        diceTable = new Table();
+
+        sideMenu.align(Align.top).padTop(50);
 
         // Add leave button
         sideMenu.add(createButton("Back", new ClickListener() {
@@ -243,7 +244,6 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         sideMenu.row();
 
         // Add Turn emoji
-
         if(GameManager.GetInstance().isItLocalPlayerTurn()){
             TextureAtlas.AtlasRegion emojiRegion = emojiAtlas.findRegion(GameManager.GetInstance().getLocalPlayerEmoji());
             sideMenu.add(new Image(emojiRegion)).size(100);
@@ -337,7 +337,8 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         // font
         BitmapFont font = new BitmapFont();
         Label.LabelStyle style = new Label.LabelStyle(font, BLACK);
-        
+
+        diceTable = new Table();
         int diceNum = gameBoardController.getDieList().size(); // get dices from controller
         TextureAtlas.AtlasRegion dieRegion = boardAtlas.findRegion("dice"); // get dice background
         for (int i = diceNum-1; i >= 0; i--){
@@ -353,7 +354,6 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
             diceTable.row();
         }
         sideMenu.row();
-//        sideMenu.swapActor(throwDiceBtn, diceTable);
         sideMenu.add(diceTable);
     }
 
@@ -504,7 +504,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                             gameBoardController.doMove(move);
                             UpdatePiecesOnBoardCells();
 
-                            // TODO: upon removal, dice should remove cell in table?
+                            // TODO: update diceTable, so the next dice is on top
                             // graphic: removes dice when used
                             diceTable.removeActor(diceTable.getChildren().get(0));
 
