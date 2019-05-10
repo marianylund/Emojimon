@@ -18,12 +18,17 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.progark.emojimon.GameManager;
 import com.progark.emojimon.model.Position;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Observable;
+import java.util.Observer;
+
 /*
 Custom cell class extending Stack (libgdx UI group)
 Maintains a currentImage Image and a VerticalGroup of emojis
 TODO: way of displaying emojis when position count exceeds emojiNumber
  */
-public class Cell extends Stack {
+public class Cell extends Stack implements Observer {
 
 
     private Image currentImage;
@@ -34,7 +39,6 @@ public class Cell extends Stack {
     private TextureRegion otherPlayerEmoji;
     private final int positionIndex;
     private VerticalGroup emojiGroup;
-    private final Position position;
 
     private BitmapFont bitmapFont;
     private int emojiNumber;
@@ -51,14 +55,13 @@ public class Cell extends Stack {
     private boolean rotationUp;
 
 
-    public Cell(TextureRegion standardTexture, TextureRegion highlightedTexture, TextureRegion greenHighlightTexture, TextureRegion localPlayerEmoji, TextureRegion otherPlayerEmoji, final int positionIndex, Position position, boolean rotationUp){
+    public Cell(TextureRegion standardTexture, TextureRegion highlightedTexture, TextureRegion greenHighlightTexture, TextureRegion localPlayerEmoji, TextureRegion otherPlayerEmoji, final int positionIndex, boolean rotationUp){
         this.standardTexture = standardTexture;
         this.highlightedTexture = highlightedTexture;
         this.greenHighlightTexture = greenHighlightTexture;
         this.localPlayerEmoji = localPlayerEmoji;
         this.otherPlayerEmoji = otherPlayerEmoji;
         this.positionIndex = positionIndex;
-        this.position = position;
         this.rotationUp = rotationUp;
 
         atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
@@ -79,7 +82,6 @@ public class Cell extends Stack {
             emojiGroup.bottom();
         }
         this.add(emojiGroup);
-        updateEmojiGroup();
 
         //add clicklistener
         addListener(new ClickListener() {
@@ -99,15 +101,15 @@ public class Cell extends Stack {
         return positionIndex;
     }
 
-    public void updateEmojiGroup() {
+    public void updateEmojiGroup(Position position) {
         if (position.getPieceCount() == 0) {
             emojiGroup.clear();
         } else if (position.getPieceCount() == 1) {
             emojiGroup.clear();
-            addPlayerEmoji();
+            addPlayerEmoji(position);
         } else {
             emojiGroup.clear();
-            addPlayerEmoji();
+            addPlayerEmoji(position);
             if (rotationUp) {
                 emojiGroup.addActorAt(0, pieceCountLabel);
             } else {
@@ -118,7 +120,7 @@ public class Cell extends Stack {
         }
     }
 
-    public void addPlayerEmoji(){
+    public void addPlayerEmoji(Position position){
         Image image;
         if(position.getPieceCount() > 0) {
             if (position.getOwner() == GameManager.GetInstance().getLocalPlayer()) {
@@ -152,4 +154,8 @@ public class Cell extends Stack {
         return highlighted;
     }
 
+    @Override
+    public void update(Observable observable, Object o) {
+        this.updateEmojiGroup((Position)o);
     }
+}
