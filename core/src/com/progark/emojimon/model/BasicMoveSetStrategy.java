@@ -21,7 +21,7 @@ public class BasicMoveSetStrategy implements MoveSetStrategy {
 
 
         // check if players piece can be moved
-        System.out.print("STARTPOSITION: " + startPosition.getPositionIndex());
+        //System.out.print("STARTPOSITION: " + startPosition.getPositionIndex());
         if (startPosition.getOwner().isAvailableMove(startPosition, endPosition)){
 
             // throw opposite players piece
@@ -32,7 +32,7 @@ public class BasicMoveSetStrategy implements MoveSetStrategy {
                     endPosition.removePieces(blot);
 
                     // set bar owner
-                    if (bar.getOwner() != null && bar.getOwner() != (endPosition.getOwner())){
+                    if (bar.getOwner() == null || bar.getOwner() != (endPosition.getOwner())){
                         bar.setOwner(endPosition.getOwner());
                     }
                 }
