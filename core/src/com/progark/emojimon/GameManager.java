@@ -65,7 +65,7 @@ public class GameManager implements SubscriberToFirebase {
 
     @Override
     public void notifyOfNewLastTurn(String gameID, LastTurnData lastTurn) {
-        System.out.println("NEW LAST TURN");
+        //System.out.println("NEW LAST TURN");
         if (lastTurn != null) {
             gameBoardController.emptyLastTurnMoves();
             lastTurnData = lastTurn;
@@ -86,7 +86,7 @@ public class GameManager implements SubscriberToFirebase {
 
     @Override
     public void notifyOfGameData(String gameID, GameData gameData) {
-        System.out.println("NEW GAMEDATA");
+        //System.out.println("NEW GAMEDATA");
         this.gameData = gameData;
         switch (getLocalPlayerIndex()) {
             case 0:

@@ -283,13 +283,15 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         });
 
         sideMenu.row();
-        // Add throw dice button
+        // Add end turn button
+        /*
         sideMenu.add(createButton("End\nTurn", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 gameBoardController.endTurn();
             }
         }));
+        */
 
         sideMenu.row();
         waitingForTurnLabel = new Label("WAITING", skin);

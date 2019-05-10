@@ -78,7 +78,7 @@ public class GameBoardController {
     public void doMove(Move move, boolean isItLastTurnMove) {
         gameBoard.movePiece(move, isItLastTurnMove);
         if(getMoves(GameManager.GetInstance().getLocalPlayerIndex()).size()==0){
-            //endTurn(GameManager.GetInstance().getLocalPlayer()); //this funtion requires that the game is created with a game id from firebase, do not uncomment before that is in place
+            endTurn();
         }
     }
 
@@ -89,23 +89,25 @@ public class GameBoardController {
 
 
     public void showLastTurn(LastTurnData lastTurn) {
-        //Set dices
-        for (int i = 0; i < 2; i++) {
-            Die die = getDieList().get(i);
-            int dieValue = lastTurn.getDices().get(i);
-            System.out.println("DieValue: " + dieValue);
-            die.setValue(dieValue);
-        }
+        if(lastTurn.getActions() != null){
+            //Set dices
+            for (int i = 0; i < 2; i++) {
+                Die die = getDieList().get(i);
+                int dieValue = lastTurn.getDices().get(i);
+                System.out.println("DieValue: " + dieValue);
+                die.setValue(dieValue);
+            }
 
-        //Update gameboard with moves
-        List<Move> moves = Converter.fromListToMoves(lastTurn.getActions());
-        boolean isItLastTurnMove = true;
-        for (Move move : moves) {
-            doMove(move, isItLastTurnMove);
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();  // set interrupt flag
+            //Update gameboard with moves
+            List<Move> moves = Converter.fromListToMoves(lastTurn.getActions());
+            boolean isItLastTurnMove = true;
+            for (Move move : moves) {
+                doMove(move, isItLastTurnMove);
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();  // set interrupt flag
+                }
             }
         }
     }
