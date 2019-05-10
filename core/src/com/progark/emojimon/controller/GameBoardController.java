@@ -1,5 +1,6 @@
 package com.progark.emojimon.controller;
 
+import com.badlogic.gdx.Game;
 import com.progark.emojimon.GameManager;
 import com.progark.emojimon.model.GameBoard;
 import com.progark.emojimon.model.Move;
@@ -118,15 +119,8 @@ public class GameBoardController {
         }
     }
 
-    public void endTurn(Player player){
-        if(player.isDone()){
-            GameManager.GetInstance().gameWon(player.isCreator());
-        }
-        // Push Last turn data
-        FBC.I().get().addLastTurnByGameID(GameManager.GetInstance().getGameID(), !player.isCreator(),
-                Converter.fromDiceToList(gameBoard.getDice().getDieList()),
-                Converter.fromMovesToList(gameBoard.getCurrentTurnMoves()));
-        gameBoard.emptyCurrentTurnMoves();
+    public void endTurn(){
+        GameManager.GetInstance().endTurn();
     }
 
     public Position getPlayerGoal(int index){
@@ -147,6 +141,10 @@ public class GameBoardController {
 
     public void emptyLastTurnMoves () {
         gameBoard.emptyCurrentTurnMoves();
+    }
+
+    public GameBoard getGameBoard() {
+        return gameBoard;
     }
 }
 

@@ -56,7 +56,7 @@ public class Emojimon extends Game {
         dices.add(5);
         dices.add(3);
 
-        //FBC.I().get().addLastTurnByGameID("GameID00", false, "12:35", dices, createTempDoubleArrayList());
+        //FBC.I().get().updateLastTurn("GameID00", false, "12:35", dices, createTempDoubleArrayList());
     }
 
 
