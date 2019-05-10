@@ -13,9 +13,9 @@ import java.util.Set;
 public interface FirebaseControllerInterface {
     void testWrite(String testMessage);
     // Add new
-    void addNewGame(String creatorPlayer, Settings strategies);
+    void createNewGame(String creatorPlayer, Settings strategies);
     void addGameDataChangeListener(String gameID); // TODO Do we need it here?
-    void addLastTurnByGameID(String gameID, boolean player, List<Integer> dices, List<List<Integer>> actions);
+    void updateLastTurn(String gameID, boolean player, List<Integer> dices, List<List<Integer>> actions);
 
     // Setters
     void setGameBoardByGameID(String gameID, List<List<Integer>> gameBoard);
@@ -24,6 +24,7 @@ public interface FirebaseControllerInterface {
     void joinGame();
     void addSubscriber(SubscriberToFirebase subscriber);
     void endGame(String gameId, boolean isCreator);
+    void updateGameData (String gameId, GameData gameData);
 
     ArrayList getGameStateByGameID(String id);
 

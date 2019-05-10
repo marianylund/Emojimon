@@ -1,5 +1,8 @@
 package com.progark.emojimon.client;
 
+import com.progark.emojimon.GameManager;
+import com.progark.emojimon.model.fireBaseData.GameData;
+import com.progark.emojimon.model.fireBaseData.Settings;
 import com.progark.emojimon.model.interfaces.FirebaseControllerInterface;
 import com.progark.emojimon.model.Player;
 import com.progark.emojimon.model.interfaces.SubscriberToFirebase;
@@ -8,8 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HtmlFirebaseController implements FirebaseControllerInterface {
+
     @Override
-    public void addNewGame(String creatorPlayer, List<String> strategies) {
+    public void testWrite(String testMessage) {
+
+    }
+
+    @Override
+    public void createNewGame(String creatorPlayer, Settings strategies) {
 
     }
 
@@ -19,7 +28,7 @@ public class HtmlFirebaseController implements FirebaseControllerInterface {
     }
 
     @Override
-    public void addLastTurnByGameID(String gameID, boolean player, List<Integer> dices, List<List<Integer>> actions) {
+    public void updateLastTurn(String gameID, boolean player, List<Integer> dices, List<List<Integer>> actions) {
 
     }
 
@@ -29,7 +38,7 @@ public class HtmlFirebaseController implements FirebaseControllerInterface {
     }
 
     @Override
-    public void setGameStatusByGameID(String gameID, String newStatus) {
+    public void setGameStatusByGameID(String gameID, GameManager.GameStatus newStatus) {
 
     }
 
@@ -39,12 +48,17 @@ public class HtmlFirebaseController implements FirebaseControllerInterface {
     }
 
     @Override
-    public Object[] getGameIDs() {
-        return new Object[0];
+    public void addSubscriber(SubscriberToFirebase subscriber) {
+
     }
 
     @Override
-    public void addSubscriber(SubscriberToFirebase subscriber) {
+    public void endGame(String gameId, boolean isCreator) {
+
+    }
+
+    @Override
+    public void updateGameData(String gameId, GameData gameData) {
 
     }
 

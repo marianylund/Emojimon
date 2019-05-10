@@ -271,7 +271,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         sideMenu.add(createButton("End\nTurn", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gameBoardController.endTurn(GameManager.GetInstance().getLocalPlayer());
+                gameBoardController.endTurn();
             }
         })).expand().uniform();
 
@@ -402,7 +402,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
             game.setScreen(new GameOverScreen(game, GameManager.GetInstance().getWinningPlayer() ));
         }
 
-        // Check if player if WAITING should be displayed.
+        // Check if player WAITING should be displayed.
         if (GameManager.GetInstance().isItLocalPlayerTurn()) {
             waitingForTurnLabel.setVisible(false);
         } else if (!GameManager.GetInstance().isItLocalPlayerTurn()) {
