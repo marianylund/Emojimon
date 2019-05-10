@@ -105,11 +105,17 @@ public class GameBoardController {
             boolean isItLastTurnMove = true;
             for (Move move : moves) {
                 doMove(move, isItLastTurnMove);
-                try {
-                    TimeUnit.SECONDS.sleep(1);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();  // set interrupt flag
+
+
+                //TODO: REMOVE if-statement on line 111
+                if(!GameManager.GetInstance().simulateGame){
+                    try {
+                        TimeUnit.SECONDS.sleep(1);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();  // set interrupt flag
+                    }
                 }
+
             }
         }
     }
