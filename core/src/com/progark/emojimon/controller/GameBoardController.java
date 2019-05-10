@@ -87,6 +87,9 @@ public class GameBoardController {
     // move to PlayerController?
     public void rollDice() {
         gameBoard.rollDice();
+        if (getMoves(GameManager.GetInstance().getLocalPlayerIndex()).size() == 0) {
+            endTurn();
+        }
     }
 
 

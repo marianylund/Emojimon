@@ -54,8 +54,10 @@ public class Cell extends Stack implements Observer {
     //private int currentPieceCount = -1;
     private boolean rotationUp;
 
+    private Position position;
 
-    public Cell(TextureRegion standardTexture, TextureRegion highlightedTexture, TextureRegion greenHighlightTexture, TextureRegion localPlayerEmoji, TextureRegion otherPlayerEmoji, final int positionIndex, boolean rotationUp){
+
+    public Cell(TextureRegion standardTexture, TextureRegion highlightedTexture, TextureRegion greenHighlightTexture, TextureRegion localPlayerEmoji, TextureRegion otherPlayerEmoji, final int positionIndex, boolean rotationUp, Position position){
         this.standardTexture = standardTexture;
         this.highlightedTexture = highlightedTexture;
         this.greenHighlightTexture = greenHighlightTexture;
@@ -63,6 +65,7 @@ public class Cell extends Stack implements Observer {
         this.otherPlayerEmoji = otherPlayerEmoji;
         this.positionIndex = positionIndex;
         this.rotationUp = rotationUp;
+        this.position = position;
 
         atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"), atlas);
@@ -94,6 +97,7 @@ public class Cell extends Stack implements Observer {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
+        updateEmojiGroup(position);
         super.draw(batch, parentAlpha);
     }
 
@@ -158,4 +162,6 @@ public class Cell extends Stack implements Observer {
     public void update(Observable observable, Object o) {
         this.updateEmojiGroup((Position)o);
     }
+
+
 }

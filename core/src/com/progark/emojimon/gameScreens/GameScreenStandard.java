@@ -188,7 +188,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         // Add bar
         Table barField = new Table();
 
-        Cell barCell = new Cell(squareBoard, squareBoardHighlighted, squareBoardGreenHighlighted, localPlayerEmoji, otherPlayerEmoji, 0, true);
+        Cell barCell = new Cell(squareBoard, squareBoardHighlighted, squareBoardGreenHighlighted, localPlayerEmoji, otherPlayerEmoji, 0, true, gameBoardController.getBoardPositions().get(0));
         barField.add(barCell).size(sw * 0.05f, sw * 0.05f);
         boardCells.set(0, barCell);
 
@@ -315,7 +315,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
         // Add player1's goal
         Position player1Goal = gameBoardController.getPlayerGoal(1);
-        Cell player1GoalCell = new Cell(squareBoard, squareBoardHighlighted, squareBoardGreenHighlighted, localPlayerEmoji, otherPlayerEmoji, player1Goal.getPositionIndex(), true);
+        Cell player1GoalCell = new Cell(squareBoard, squareBoardHighlighted, squareBoardGreenHighlighted, localPlayerEmoji, otherPlayerEmoji, player1Goal.getPositionIndex(), true, player1Goal);
         sideBoard.add(player1GoalCell).size(sw * 0.1f, sh/2).expand().center();
         boardCells.set(player1Goal.getPositionIndex(), player1GoalCell);
 
@@ -323,7 +323,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
         // Add player0's goal
         Position player0Goal = gameBoardController.getPlayerGoal(0);
-        Cell player0GoalCell = new Cell(squareBoard, squareBoardHighlighted, squareBoardGreenHighlighted, localPlayerEmoji, otherPlayerEmoji, player0Goal.getPositionIndex(), true);
+        Cell player0GoalCell = new Cell(squareBoard, squareBoardHighlighted, squareBoardGreenHighlighted, localPlayerEmoji, otherPlayerEmoji, player0Goal.getPositionIndex(), true, player0Goal);
         sideBoard.add(player0GoalCell).size(sw * 0.1f, sh/2).expand().center();
         boardCells.set(player0Goal.getPositionIndex(), player0GoalCell);
 
@@ -432,7 +432,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                 }
             }
 
-            boardCell = new Cell(chosenTriangle, chosenHighlightedTriangle, chosenGreenHighlightImage, localPlayerEmoji, otherPlayerEmoji, cellPositionIndex, rotationUp);
+            boardCell = new Cell(chosenTriangle, chosenHighlightedTriangle, chosenGreenHighlightImage, localPlayerEmoji, otherPlayerEmoji, cellPositionIndex, rotationUp, gameBoardController.getBoardPositions().get(cellPositionIndex));
 
             boardCells.set(cellPositionIndex, boardCell);
             t.add(boardCell).pad(10).size(120,400);
@@ -573,6 +573,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     }
 
     private void addObserversToBoardPositions(){
+        /*
         List<Position> positions = gameBoardController.getBoardPositions();
         for(int i = 0; i < positions.size(); i++){
             positions.get(i).addNewObserver(boardCells.get(i));
@@ -581,6 +582,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         Position player1Goal = gameBoardController.getPlayerGoal(1);
         player0Goal.addNewObserver(boardCells.get(player0Goal.getPositionIndex()));
         player1Goal.addNewObserver(boardCells.get(player1Goal.getPositionIndex()));
+        */
     }
 
 }

@@ -55,8 +55,8 @@ public class Position extends Observable {
 
 
     public void onChanges(){
-        setChanged();
-        notifyObservers(this);
+        //setChanged();
+        //notifyObservers(this);
     }
 
     //adds observer and notifies of changes
