@@ -7,7 +7,7 @@ import com.progark.emojimon.model.factories.StartPiecePlacementStrategyFactory.P
 
 public class Settings {
     int boardSize;
-    int pieces;
+    int piecesPerPlayer;
     int baseNumberOfDice;
     int dieSides;
     int diceMultiplier;
@@ -20,7 +20,7 @@ public class Settings {
 
     public Settings(int boardSize, int piecesPerPlayer, int baseNumberOfDice, int dieSides, int diceMultiplier, MoveSetStrat moveSetStrat, MoveValStrat moveValStrat, CanClearStrat canClearStrat, PiecePlacementStrat piecePlacementStrat) {
         this.boardSize = boardSize;
-        this.pieces = piecesPerPlayer;
+        this.piecesPerPlayer = piecesPerPlayer;
         this.baseNumberOfDice = baseNumberOfDice;
         this.dieSides = dieSides;
         this.diceMultiplier = diceMultiplier;
@@ -35,7 +35,7 @@ public class Settings {
     }
 
     public int getPiecesPerPlayer() {
-        return pieces;
+        return piecesPerPlayer;
     }
 
     public int getBaseNumberOfDice() {
@@ -64,5 +64,20 @@ public class Settings {
 
     public PiecePlacementStrat getPiecePlacementStrat() {
         return piecePlacementStrat;
+    }
+
+    @Override
+    public String toString() {
+        return "Settings{" +
+                "boardSize=" + boardSize +
+                ", piecesPerPlayer=" + piecesPerPlayer +
+                ", baseNumberOfDice=" + baseNumberOfDice +
+                ", dieSides=" + dieSides +
+                ", diceMultiplier=" + diceMultiplier +
+                ", moveSetStrat=" + moveSetStrat +
+                ", moveValStrat=" + moveValStrat +
+                ", canClearStrat=" + canClearStrat +
+                ", piecePlacementStrat=" + piecePlacementStrat +
+                '}';
     }
 }

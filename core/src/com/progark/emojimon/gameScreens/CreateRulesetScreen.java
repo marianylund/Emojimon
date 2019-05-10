@@ -89,19 +89,19 @@ public class CreateRulesetScreen implements Screen {
         canClearStrategiesBox.setItems(CanClearStrat.BASIC);
 
         final SelectBox<String> boardSizeBox = new SelectBox<String>(skin);
-        boardSizeBox.setItems("20","24","30");
+        boardSizeBox.setItems("24","30");
 
         final SelectBox<String> numOfPiecesBox = new SelectBox<String>(skin);
-        numOfPiecesBox.setItems("11","15","19");
+        numOfPiecesBox.setItems("15","19");
 
         final SelectBox<String> diceMultiplierBox = new SelectBox<String>(skin);
-        diceMultiplierBox.setItems("1","2","3", "4");
+        diceMultiplierBox.setItems("2","3", "4");
 
         final SelectBox<String> diceAmountBox = new SelectBox<String>(skin);
-        diceAmountBox.setItems("1","2","3","4","5");
+        diceAmountBox.setItems("2","3","4","5");
 
         final SelectBox<String> diceSizeBox = new SelectBox<String>(skin);
-        diceSizeBox.setItems("4","6","10","20");
+        diceSizeBox.setItems("6","10","20");
 
         final SelectBox<String> startPositionBox = new SelectBox<String>(skin);
         startPositionBox.setItems("Top right","Top left","Bottom right","Bottom left");
@@ -132,8 +132,8 @@ public class CreateRulesetScreen implements Screen {
                         canClearStrategiesBox.getSelected(),
                         PiecePlacementStrat.BASIC
                 );
-                FBC.I().get().addNewGame("TEST", settings);
-                game.setScreen(new LobbyScreen(game));
+                GameManager.GetInstance().createNewGame(settings);
+                game.setScreen(new GameScreenStandard(game));
             }
         });
 

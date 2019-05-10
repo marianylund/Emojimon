@@ -21,7 +21,6 @@ import com.progark.emojimon.model.Position;
 /*
 Custom cell class extending Stack (libgdx UI group)
 Maintains a currentImage Image and a VerticalGroup of emojis
-
 TODO: way of displaying emojis when position count exceeds emojiNumber
  */
 public class Cell extends Stack {
@@ -101,23 +100,21 @@ public class Cell extends Stack {
     }
 
     public void updateEmojiGroup() {
-        if(position.getPieceCount() == 0){
+        if (position.getPieceCount() == 0) {
             emojiGroup.clear();
-        }
-        else if(position.getPieceCount() == 1){
-            emojiGroup.clear();
-            addPlayerEmoji();
-        }
-        else{
+        } else if (position.getPieceCount() == 1) {
             emojiGroup.clear();
             addPlayerEmoji();
-            if(rotationUp){
+        } else {
+            emojiGroup.clear();
+            addPlayerEmoji();
+            if (rotationUp) {
                 emojiGroup.addActorAt(0, pieceCountLabel);
-            }
-            else{
+            } else {
                 emojiGroup.addActorAt(1, pieceCountLabel);
             }
             pieceCountLabel.setText(position.getPieceCount());
+
         }
     }
 
@@ -155,4 +152,4 @@ public class Cell extends Stack {
         return highlighted;
     }
 
-}
+    }

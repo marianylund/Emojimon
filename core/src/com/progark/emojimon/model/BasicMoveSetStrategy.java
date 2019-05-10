@@ -21,6 +21,7 @@ public class BasicMoveSetStrategy implements MoveSetStrategy {
 
 
         // check if players piece can be moved
+        System.out.print("STARTPOSITION: " + startPosition.getPositionIndex());
         if (startPosition.getOwner().isAvailableMove(startPosition, endPosition)){
 
             // throw opposite players piece

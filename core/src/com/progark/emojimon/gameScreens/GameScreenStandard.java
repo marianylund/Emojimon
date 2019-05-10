@@ -27,6 +27,7 @@ import com.progark.emojimon.Emojimon;
 import com.progark.emojimon.GameManager;
 import com.progark.emojimon.controller.GameBoardController;
 import com.progark.emojimon.model.Move;
+import com.progark.emojimon.model.Player;
 import com.progark.emojimon.model.Position;
 
 
@@ -72,7 +73,6 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     private TextureRegion otherPlayerEmoji;
 
 
-
     private Label debugLabel;
 
     float sw = Gdx.graphics.getWidth();
@@ -84,16 +84,13 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
     private boolean diceThrown = false; //has dice been thrown?
     private int selectedTriangleIndex = -1; //index of currently selected triangle
-
+    private Label waitingForTurnLabel;
 
     public GameScreenStandard(final Emojimon game) {
         Gdx.graphics.setContinuousRendering(true);
         this.game = game;
-        this.gameBoardController = new GameBoardController();//need to be changed to the singelton reference
-        this.gameBoardController.createStandardGameBoard();
-
-        //TODO: organize creation of gamemanager and gameboardcontroller properly
-        GameManager.GetInstance().setGameBoardController(gameBoardController);
+        GameManager.GetInstance().createApp(game);
+        this.gameBoardController = GameManager.GetInstance().getGameBoardController();
 
         // Get UI skin
         atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
@@ -176,8 +173,6 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         int boardSize = gameBoardController.getBoardSize();
         int trianglesPerZone = boardSize / 4;
 
-
-
         addCells(home0, trianglesPerZone, true, 1);
         addCells(out0, trianglesPerZone, true, 1 + trianglesPerZone);
         addCells(out1, trianglesPerZone, false, 1 + trianglesPerZone * 2);
@@ -230,13 +225,13 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         sideMenu.add(createButton("Back", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                GameManager.GetInstance().clearGameData();
                 game.setScreen(new MainMenuScreen(game));
             }
         })).expand().uniform(); sideMenu.row();
 
 
         // Add Turn emoji
-
         if(GameManager.GetInstance().isItLocalPlayerTurn()){
             TextureAtlas.AtlasRegion emojiRegion = emojiAtlas.findRegion(GameManager.GetInstance().getLocalPlayerEmoji());
             sideMenu.add(new Image(emojiRegion)).size(100);
@@ -249,7 +244,6 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
             sideMenu.row().pad(10);
         }
 
-
         // Add timer label wannabe, is used for debug for now
         debugLabel = new Label("Debug:", skin);
         sideMenu.add(debugLabel); sideMenu.row().pad(10);
@@ -258,6 +252,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         sideMenu.add(createButton("Throw\nDice", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+
                 if(GameManager.GetInstance().isItLocalPlayerTurn()){
                     gameBoardController.rollDice();
                     diceThrown = true;
@@ -270,6 +265,19 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                 // TODO begrenes hvor mange ganger man kaster terning
             }
         })).expand().uniform();
+
+        sideMenu.row();
+        // Add throw dice button
+        sideMenu.add(createButton("End\nTurn", new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gameBoardController.endTurn(GameManager.GetInstance().getLocalPlayer());
+            }
+        })).expand().uniform();
+
+        sideMenu.row();
+        waitingForTurnLabel = new Label("WAITING", skin);
+        sideMenu.add(waitingForTurnLabel);
 
         sideMenuContainer.setActor(sideMenu);
         return sideMenuContainer;
@@ -300,7 +308,6 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         boardCells.set(player0Goal.getPositionIndex(), player0GoalCell);
 
         sideBoardContainer.setActor(sideBoard);
-
 
         return sideBoardContainer;
     }
@@ -391,6 +398,17 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
+        if (GameManager.GetInstance().gameOver) {
+            game.setScreen(new GameOverScreen(game, GameManager.GetInstance().getWinningPlayer() ));
+        }
+
+        // Check if player if WAITING should be displayed.
+        if (GameManager.GetInstance().isItLocalPlayerTurn()) {
+            waitingForTurnLabel.setVisible(false);
+        } else if (!GameManager.GetInstance().isItLocalPlayerTurn()) {
+            waitingForTurnLabel.setVisible(true);
+        }
+
 //        batch.begin();
 //        batch.draw(spritesheet, 0, 0);
 //        batch.end();
@@ -461,7 +479,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                     if(move.startPosition == selectedTriangleIndex){
                         if(move.endPosition == clickedTriangleIndex){
                             //do move
-                            gameBoardController.doMove(move);
+                            gameBoardController.doMove(move, false);
                             UpdatePiecesOnBoardCells();
                             break;
                         }
@@ -503,6 +521,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
             cell.updateEmojiGroup();
         }
     }
+
 
 
 

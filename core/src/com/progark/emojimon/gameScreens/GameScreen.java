@@ -32,6 +32,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.progark.emojimon.Emojimon;
+import com.progark.emojimon.GameManager;
 import com.progark.emojimon.controller.GameBoardController;
 import com.progark.emojimon.mapTiles.Hud;
 import com.progark.emojimon.mapTiles.TiledMapStage;
@@ -79,6 +80,7 @@ public class GameScreen implements Screen {
         guiviewport = new FitViewport(Gdx.graphics.getWidth(), (float)Gdx.graphics.getHeight()/8, guicamera);
         guiviewport.apply();
         this.buttonstage = new Stage(guiviewport);
+
 
     }
 
@@ -186,6 +188,7 @@ public class GameScreen implements Screen {
 
         renderer.setView(gamecamera);
         renderer.render();
+
 
         //prepare for the drawing of buttons on the far side
         //Gdx.gl.glViewport( 0,(Gdx.graphics.getHeight()*8)*7,Gdx.graphics.getWidth(),Gdx.graphics.getHeight() / 8 );
