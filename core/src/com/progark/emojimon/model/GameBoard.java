@@ -44,7 +44,7 @@ public class GameBoard {
     private StartPiecePlacementStrategy startPiecePlacementStrategy;
 
     //TODO: switch back to use basic canclear strategy as standard
-    private static Settings standardSettings = new Settings(24, 15, 2, 6, 2, MoveSetStrat.BASIC.BASIC, MoveValStrat.BASIC, CanClearStrat.ALWAYS, StartPiecePlacementStrategyFactory.PiecePlacementStrat.BASIC);
+    private static Settings standardSettings = new Settings("TESTLOBBY", 24, 15, 2, 6, 2, MoveSetStrat.BASIC.BASIC, MoveValStrat.BASIC, CanClearStrat.ALWAYS, StartPiecePlacementStrategyFactory.PiecePlacementStrat.BASIC);
     //constructors
     //creates standard gameboard
     public GameBoard(){

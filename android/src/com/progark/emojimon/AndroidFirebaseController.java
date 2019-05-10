@@ -1,11 +1,14 @@
 package com.progark.emojimon;
 
 import android.support.annotation.NonNull;
+
+import com.badlogic.gdx.Gdx;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.progark.emojimon.gameScreens.GamesListScreen;
 import com.progark.emojimon.model.fireBaseData.Converter;
 import com.progark.emojimon.model.fireBaseData.Settings;
 import com.progark.emojimon.model.interfaces.FirebaseControllerInterface;
@@ -15,6 +18,7 @@ import com.progark.emojimon.model.interfaces.SubscriberToFirebase;
 import com.progark.emojimon.GameManager.GameStatus;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -63,34 +67,31 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
         addLastTurnDataChangeListener(gameID);
     }
 
-    // Finds the first game with status == WAITING.
-    // Sets player 1 to true and subscribes to the gamedata
-    public void joinGame() {
-        Games.addListenerForSingleValueEvent(new ValueEventListener() {
+    public void joinGameById (String gameId) {
+        Games.child(gameId).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snap : dataSnapshot.getChildren()){
-                    try {
-                        if(GameStatus.valueOf((String) snap.child("status").getValue()) == (GameStatus.WAITING)) {
-                            Games.child(snap.getKey()).child("status").setValue(GameStatus.STARTET);
-                            Games.child(snap.getKey() + "/player1").setValue(true);
-                            Games.child(snap.getKey() + "/player1emoji").setValue(gameManager.getLocalPlayerEmoji());
-                            gameManager.setGameID(snap.getKey());
-                            gameManager.setLocalPlayer(true); // Player 1 if joined game
-                            addSubscriber(gameManager);
+                try {
+                    if(GameStatus.valueOf((String) dataSnapshot.child("status").getValue()) == (GameStatus.WAITING)) {
+                        Games.child(dataSnapshot.getKey()).child("status").setValue(GameStatus.STARTET);
+                        Games.child(dataSnapshot.getKey() + "/player1").setValue(true);
+                        Games.child(dataSnapshot.getKey() + "/player1emoji").setValue(gameManager.getLocalPlayerEmoji());
+                        gameManager.setGameID(dataSnapshot.getKey());
+                        gameManager.setLocalPlayer(true); // Player 1 if joined game
+                        addSubscriber(gameManager);
 
-                            System.out.println(snap.getKey());
-                            addGameDataChangeListener(snap.getKey());
-                            addLastTurnDataChangeListener(snap.getKey());
-                            break;
-                        }
-                    } catch (IllegalArgumentException e) {}
-                }
+                        System.out.println(dataSnapshot.getKey());
+                        addGameDataChangeListener(dataSnapshot.getKey());
+                        addLastTurnDataChangeListener(dataSnapshot.getKey());
+                    }
+                } catch (IllegalArgumentException e) {}
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
+
     }
 
     public void addGameDataChangeListener(final String gameID){
@@ -190,5 +191,26 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
         for (SubscriberToFirebase sub:subscribers) {
             sub.notifyOfGameData(gameID, gd);
         }
+    }
+
+    public void getAllWaitingGames() {
+        Games.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                HashMap<String, String> gamesList = new HashMap<>();
+                for (DataSnapshot snap : dataSnapshot.getChildren()){
+                    try {
+                        if(GameStatus.valueOf((String) snap.child("status").getValue()) == (GameStatus.WAITING)) {
+                            gamesList.put(snap.getKey(), snap.child("settings").child("lobbyName").getValue().toString());
+                        }
+                    } catch (IllegalArgumentException e) {}
+                }
+                GameManager.GetInstance().setAllWaitingGamesList(gamesList);
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        });
     }
 }
