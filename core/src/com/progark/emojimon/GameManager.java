@@ -2,12 +2,15 @@ package com.progark.emojimon;
 
 import com.progark.emojimon.controller.FBC;
 import com.progark.emojimon.controller.GameBoardController;
+import com.progark.emojimon.model.Move;
 import com.progark.emojimon.model.Player;
 import com.progark.emojimon.model.fireBaseData.Converter;
 import com.progark.emojimon.model.fireBaseData.GameData;
 import com.progark.emojimon.model.fireBaseData.LastTurnData;
 import com.progark.emojimon.model.fireBaseData.Settings;
 import com.progark.emojimon.model.interfaces.SubscriberToFirebase;
+
+import java.util.List;
 
 public class GameManager implements SubscriberToFirebase {
     //Implements Singleton pattern with lazy initialization
@@ -21,6 +24,10 @@ public class GameManager implements SubscriberToFirebase {
     Emojimon game;
     public boolean gameOver = false;
     private EmojimonPreferences preferences;
+
+
+    //Set to true to play the game automatically  (TODO: Remove)
+    private boolean simulateGame = true;
 
     public enum GameStatus {
         WAITING,
@@ -79,9 +86,23 @@ public class GameManager implements SubscriberToFirebase {
                     }
                     // TODO: GUI: Start turn by enabling roll dice button for player
 
+                    //TODO: Remove (plays game automatically)
+                    if(simulateGame){
+                        gameBoardController.rollDice();
+                        while(true){
+                            List<Move> availableMoves = gameBoardController.getMoves(getLocalPlayerIndex());
+                            if(availableMoves.size() == 0){
+                                break;
+                            }
+                            gameBoardController.doMove(availableMoves.get(0), false);
+                        }
+                    }
+
                 }
             }
         }
+
+
     }
 
     @Override

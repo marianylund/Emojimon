@@ -77,7 +77,9 @@ public class GameBoardController {
     // methods
     public void doMove(Move move, boolean isItLastTurnMove) {
         gameBoard.movePiece(move, isItLastTurnMove);
-        if(getMoves(GameManager.GetInstance().getLocalPlayerIndex()).size()==0){
+
+        //end turn if not simulating move and no more moves available
+        if(!isItLastTurnMove && getMoves(GameManager.GetInstance().getLocalPlayerIndex()).size()==0){
             endTurn();
         }
     }
