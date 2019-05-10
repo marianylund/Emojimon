@@ -133,7 +133,7 @@ public class CreateRulesetScreen implements Screen {
                         PiecePlacementStrat.BASIC
                 );
                 GameManager.GetInstance().createNewGame(settings);
-                game.setScreen(new GameScreenStandard(game));
+                game.setScreen(new LobbyScreen(game));
             }
         });
 
