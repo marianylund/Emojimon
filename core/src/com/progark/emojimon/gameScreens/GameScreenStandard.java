@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -35,6 +36,8 @@ import com.progark.emojimon.model.Position;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+
+import static com.badlogic.gdx.graphics.Color.BLACK;
 
 public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
@@ -236,7 +239,8 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new MainMenuScreen(game));
             }
-        })); sideMenu.row();
+        }));
+        sideMenu.row();
 
         // Add Turn emoji
 
@@ -286,7 +290,6 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         return sideMenuContainer;
     }
 
-
     private Container createPlayerGoals(){
         Container sideBoardContainer = new Container();
 
@@ -331,12 +334,17 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     }
 
     private void addDiceTable(){
+        // font
+        BitmapFont font = new BitmapFont();
+        Label.LabelStyle style = new Label.LabelStyle(font, BLACK);
+        
         int diceNum = gameBoardController.getDieList().size(); // get dices from controller
         TextureAtlas.AtlasRegion dieRegion = boardAtlas.findRegion("dice"); // get dice background
         for (int i = diceNum-1; i >= 0; i--){
             Stack stackDiceImg = new Stack();
             Image diceImg = new Image(dieRegion);
-            Label diceLabel = new Label(Integer.toString(gameBoardController.getDieList().get(i).getValue()), skin); // add dice number
+            // TODO: change font on dice
+            Label diceLabel = new Label(Integer.toString(gameBoardController.getDieList().get(i).getValue()), style); // add dice number
             diceLabel.setAlignment(Align.center);
             diceLabel.setFontScale(2);
             stackDiceImg.add(diceImg);
