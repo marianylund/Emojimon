@@ -64,6 +64,7 @@ public class CreateRulesetScreen implements Screen {
         TextButton backButton = new TextButton("Back", skin);
         TextButton createLobbyButton = new TextButton("Create Lobby!", skin);
 
+
         Label screenLabel = new Label("Create Ruleset", skin);
         Label moveValidationLabel = new Label("Moves allowed", skin);
         Label moveSetLabel = new Label("Move logic", skin);
@@ -78,6 +79,9 @@ public class CreateRulesetScreen implements Screen {
         diceAmountField.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
         TextField diceSizeField = new TextField("", skin);
         diceSizeField.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
+
+        final TextField lobbyName = new TextField("Lobbyname", skin);
+
 
         final SelectBox<MoveValStrat> moveValidationStrategiesBox = new SelectBox<MoveValStrat>(skin);
         moveValidationStrategiesBox.setItems(MoveValStrat.values());
@@ -122,6 +126,7 @@ public class CreateRulesetScreen implements Screen {
                 // Initiate GameBoardController
                 GameManager.GetInstance().setGameBoardController(new GameBoardController());
                 Settings settings = new Settings(
+                        lobbyName.getText(),
                         Integer.parseInt(boardSizeBox.getSelected()),
                         Integer.parseInt(numOfPiecesBox.getSelected()),
                         Integer.parseInt(diceAmountBox.getSelected()),
@@ -142,7 +147,7 @@ public class CreateRulesetScreen implements Screen {
         mainTable.defaults().expandY();
 
         mainTable.add(backButton);
-        mainTable.add(screenLabel).colspan(5);
+        mainTable.add(lobbyName).colspan(5);
 
         mainTable.row();
         mainTable.add(moveValidationLabel);

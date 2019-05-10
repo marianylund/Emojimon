@@ -9,6 +9,10 @@ import com.progark.emojimon.model.fireBaseData.LastTurnData;
 import com.progark.emojimon.model.fireBaseData.Settings;
 import com.progark.emojimon.model.interfaces.SubscriberToFirebase;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class GameManager implements SubscriberToFirebase {
     //Implements Singleton pattern with lazy initialization
     private static GameManager INSTANCE;
@@ -21,6 +25,7 @@ public class GameManager implements SubscriberToFirebase {
     Emojimon game;
     public boolean gameOver = false;
     private EmojimonPreferences preferences;
+    private HashMap<String, String> allWaitingGamesList;
 
     public enum GameStatus {
         WAITING,
@@ -166,8 +171,8 @@ public class GameManager implements SubscriberToFirebase {
         FBC.I().get().createNewGame("TEST", settings); // Push GameData to Firebase
     }
 
-    public void joinGame () {
-        FBC.I().get().joinGame();
+    public void findWaitingGames() {
+        FBC.I().get().getAllWaitingGames();
     }
 
     public void createGameFromFirebaseData (GameData gameData) {
@@ -199,5 +204,13 @@ public class GameManager implements SubscriberToFirebase {
         gameBoardController.getGameBoard().emptyCurrentTurnMoves();
         // Push new Game data
         FBC.I().get().updateGameData(gameID, gameData);
+    }
+
+    public HashMap<String, String> getAllWaitingGamesList() {
+        return allWaitingGamesList;
+    }
+
+    public void setAllWaitingGamesList(HashMap setAllWaitingGamesList) {
+        this.allWaitingGamesList = setAllWaitingGamesList;
     }
 }
