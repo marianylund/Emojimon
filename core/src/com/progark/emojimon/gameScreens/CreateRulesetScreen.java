@@ -80,13 +80,13 @@ public class CreateRulesetScreen implements Screen {
         diceSizeField.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
 
         final SelectBox<MoveValStrat> moveValidationStrategiesBox = new SelectBox<MoveValStrat>(skin);
-        moveValidationStrategiesBox.setItems(MoveValStrat.BASIC, MoveValStrat.MOVEBACKWARDS);
+        moveValidationStrategiesBox.setItems(MoveValStrat.values());
 
         final SelectBox<MoveSetStrat> moveSetStrategiesBox = new SelectBox<MoveSetStrat>(skin);
-        moveSetStrategiesBox.setItems(MoveSetStrat.BASIC);
+        moveSetStrategiesBox.setItems(MoveSetStrat.values());
 
         final SelectBox<CanClearStrat> canClearStrategiesBox = new SelectBox<CanClearStrat>(skin);
-        canClearStrategiesBox.setItems(CanClearStrat.BASIC);
+        canClearStrategiesBox.setItems(CanClearStrat.values());
 
         final SelectBox<String> boardSizeBox = new SelectBox<String>(skin);
         boardSizeBox.setItems("24","30");
