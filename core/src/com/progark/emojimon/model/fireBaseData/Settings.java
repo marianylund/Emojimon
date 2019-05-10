@@ -6,6 +6,7 @@ import com.progark.emojimon.model.factories.CanClearStrategyFactory.CanClearStra
 import com.progark.emojimon.model.factories.StartPiecePlacementStrategyFactory.PiecePlacementStrat;
 
 public class Settings {
+    String lobbyName;
     int boardSize;
     int piecesPerPlayer;
     int baseNumberOfDice;
@@ -18,7 +19,8 @@ public class Settings {
 
     public Settings(){} // Required for Firebase
 
-    public Settings(int boardSize, int piecesPerPlayer, int baseNumberOfDice, int dieSides, int diceMultiplier, MoveSetStrat moveSetStrat, MoveValStrat moveValStrat, CanClearStrat canClearStrat, PiecePlacementStrat piecePlacementStrat) {
+    public Settings(String lobbyName, int boardSize, int piecesPerPlayer, int baseNumberOfDice, int dieSides, int diceMultiplier, MoveSetStrat moveSetStrat, MoveValStrat moveValStrat, CanClearStrat canClearStrat, PiecePlacementStrat piecePlacementStrat) {
+        this.lobbyName = lobbyName;
         this.boardSize = boardSize;
         this.piecesPerPlayer = piecesPerPlayer;
         this.baseNumberOfDice = baseNumberOfDice;
@@ -28,6 +30,10 @@ public class Settings {
         this.moveValStrat = moveValStrat;
         this.canClearStrat = canClearStrat;
         this.piecePlacementStrat = piecePlacementStrat;
+    }
+
+    public String getLobbyName() {
+        return lobbyName;
     }
 
     public int getBoardSize() {
@@ -69,7 +75,8 @@ public class Settings {
     @Override
     public String toString() {
         return "Settings{" +
-                "boardSize=" + boardSize +
+                "lobbyName='" + lobbyName + '\'' +
+                ", boardSize=" + boardSize +
                 ", piecesPerPlayer=" + piecesPerPlayer +
                 ", baseNumberOfDice=" + baseNumberOfDice +
                 ", dieSides=" + dieSides +

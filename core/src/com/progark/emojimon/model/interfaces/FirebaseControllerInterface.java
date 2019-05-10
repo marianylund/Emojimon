@@ -21,10 +21,11 @@ public interface FirebaseControllerInterface {
     void setGameBoardByGameID(String gameID, List<List<Integer>> gameBoard);
     void setGameStatusByGameID(String gameID, GameStatus newStatus);
 
-    void joinGame();
+    void joinGameById(String gamId);
     void addSubscriber(SubscriberToFirebase subscriber);
     void endGame(String gameId, boolean isCreator);
     void updateGameData (String gameId, GameData gameData);
+    void getAllWaitingGames ();
 
     ArrayList getGameStateByGameID(String id);
 
