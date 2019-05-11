@@ -2,8 +2,10 @@ package com.progark.emojimon.gameScreens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -35,6 +37,10 @@ public class CreateRulesetScreen implements Screen {
     private Viewport viewport;
     private TextureAtlas atlas;
     private Skin skin;
+    private BitmapFont font;
+    private BitmapFont titleFont;
+    private Label.LabelStyle style;
+    private Label.LabelStyle titleStyle;
 
     private String diceAmount, startPosition, diceSize;
 
@@ -42,6 +48,10 @@ public class CreateRulesetScreen implements Screen {
         this.game = game;
         atlas = new GameSkin().getAtlas();
         skin = new GameSkin().getSkin();
+        font = new GameSkin().generateFont(40);
+        titleFont = new GameSkin().generateFont(80);
+        style = new Label.LabelStyle(font, Color.ORANGE);
+        titleStyle = new Label.LabelStyle(titleFont, Color.ORANGE);
         skin.getFont("font").getData().setScale(3f,3f);
         camera = new OrthographicCamera();
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
@@ -62,17 +72,17 @@ public class CreateRulesetScreen implements Screen {
         container.setFillParent(true);
 
         TextButton backButton = new TextButton("Back", skin);
-        TextButton createLobbyButton = new TextButton("Create Lobby!", skin);
+        TextButton createLobbyButton = new TextButton("Play!", skin);
 
-        Label screenLabel = new Label("Create Ruleset", skin);
-        Label moveValidationLabel = new Label("Moves allowed", skin);
-        Label moveSetLabel = new Label("Move logic", skin);
-        Label canClearLabel = new Label("Bear off", skin);
-        Label boardSizeLabel = new Label("Board size", skin);
-        Label numOfPiecesLabel = new Label("Pieces", skin);
-        Label diceAmountLabel = new Label("Amount of dice", skin);
-        Label diceSizeLabel = new Label("Dice size", skin);
-        Label diceMultiplierLabel = new Label("Dice Multiplier", skin);
+        Label screenLabel = new Label("Create Game Rules", titleStyle);
+        Label moveValidationLabel = new Label("Moves allowed", style);
+        Label moveSetLabel = new Label("Move logic", style);
+        Label canClearLabel = new Label("Bear off", style);
+        Label boardSizeLabel = new Label("Board size", style);
+        Label numOfPiecesLabel = new Label("Pieces", style);
+        Label diceAmountLabel = new Label("Amount of dice", style);
+        Label diceSizeLabel = new Label("Dice size", style);
+        Label diceMultiplierLabel = new Label("Dice Multiplier", style);
 
         TextField diceAmountField = new TextField("", skin);
         diceAmountField.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
@@ -141,7 +151,7 @@ public class CreateRulesetScreen implements Screen {
         mainTable.columnDefaults(2).spaceLeft(Gdx.graphics.getWidth() / 6);
         mainTable.defaults().expandY();
 
-        mainTable.add(backButton);
+        mainTable.add(backButton).height(Gdx.graphics.getHeight()*0.12f);
         mainTable.add(screenLabel).colspan(5);
 
         mainTable.row();
@@ -187,7 +197,6 @@ public class CreateRulesetScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
-        stage.setDebugAll(true);
     }
 
     @Override

@@ -4,8 +4,10 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -37,6 +39,8 @@ public class SelectEmojiScreen extends ApplicationAdapter implements Screen {
     private SpriteBatch batch; // ubrukt, må finne ut av textureatlas
     private Image chosenEmoji;
     private EmojimonPreferences preferences;
+    private BitmapFont font;
+    private Label.LabelStyle style;
 
     float sw = Gdx.graphics.getWidth();
     float sh = Gdx.graphics.getHeight();
@@ -49,6 +53,9 @@ public class SelectEmojiScreen extends ApplicationAdapter implements Screen {
 
         atlas = new GameSkin().getAtlas();
         skin = new GameSkin().getSkin();
+        font = new GameSkin().generateFont(40);
+        style = new Label.LabelStyle(font, Color.ORANGE);
+        skin.getFont("font").getData().setScale(1.5f,1.5f);
 
 
         camera = new OrthographicCamera();
@@ -101,7 +108,7 @@ public class SelectEmojiScreen extends ApplicationAdapter implements Screen {
         Container container = new Container();
         // Chosen emoji
         Table chosenEmojiTable = new Table();
-        Label chosenEmojiLabel = new Label("Chosen emoji: ", skin);
+        Label chosenEmojiLabel = new Label("Chosen emoji: ", style);
 
         chosenEmojiTable.add(chosenEmojiLabel).pad(20).center();
         chosenEmojiTable.add(chosenEmoji).size(100).center();

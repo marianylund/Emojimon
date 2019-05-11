@@ -36,7 +36,6 @@ public class Cell extends Stack {
     private VerticalGroup emojiGroup;
     private final Position position;
 
-    private BitmapFont bitmapFont;
     private int emojiNumber;
 
     private boolean highlighted;
@@ -44,6 +43,8 @@ public class Cell extends Stack {
     private int emojiDrawLimit = 1;
     private Skin skin;
     private TextureAtlas atlas;
+    private BitmapFont font;
+    private Label.LabelStyle style;
 
     private Label pieceCountLabel;
     private int currentPieceCount = -1;
@@ -61,9 +62,11 @@ public class Cell extends Stack {
 
             atlas = new GameSkin().getAtlas();
             skin = new GameSkin().getSkin();
-            skin.getFont("font").getData().setScale(3f,3f);
+//            skin.getFont("font").getData().setScale(3f,3f);
+            font = new GameSkin().generateFont(50);
+            style = new Label.LabelStyle(font, Color.ORANGE);
 
-            this.pieceCountLabel = new Label("", skin);
+            this.pieceCountLabel = new Label("", style);
 
             //create currentImage image
             this.currentImage = new Image(this.standardTexture);

@@ -1,6 +1,8 @@
 package com.progark.emojimon;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -22,6 +24,7 @@ public class Emojimon extends Game {
     SpriteBatch batch;
     Texture img;
     GameBoardController gameBoardController;
+    private Music music;
 
     public Emojimon(FirebaseControllerInterface firebaseControllerInterface) {
         FBC.I().setFirebase(firebaseControllerInterface);
@@ -37,6 +40,10 @@ public class Emojimon extends Game {
         if(!GameManager.GetInstance().getPreferences().isEmoji().isEmpty()){
             GameManager.GetInstance().setLocalPlayerEmoji(GameManager.GetInstance().getPreferences().isEmoji());
         }
+        //music credit: patrickdearteaga.com
+        music = Gdx.audio.newMusic(Gdx.files.internal("Music/Humble Match.ogg"));
+        music.setLooping(true);
+        music.play();
     }
 
     //debugging
