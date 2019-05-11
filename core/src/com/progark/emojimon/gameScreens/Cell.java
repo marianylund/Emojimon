@@ -40,7 +40,6 @@ public class Cell extends Stack implements Observer {
     private final int positionIndex;
     private VerticalGroup emojiGroup;
 
-    private BitmapFont bitmapFont;
     private int emojiNumber;
 
     private boolean highlighted;
@@ -49,6 +48,8 @@ public class Cell extends Stack implements Observer {
 
     private Skin skin;
     private TextureAtlas atlas;
+    private BitmapFont font;
+    private Label.LabelStyle style;
 
     private Label pieceCountLabel;
     //private int currentPieceCount = -1;
@@ -67,11 +68,13 @@ public class Cell extends Stack implements Observer {
         this.positionIndex = positionIndex;
         this.rotationUp = rotationUp;
 
-        atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
-        skin = new Skin(Gdx.files.internal("skin/uiskin.json"), atlas);
-        skin.getFont("font").getData().setScale(3f,3f);
+            atlas = new GameSkin().getAtlas();
+            skin = new GameSkin().getSkin();
+//            skin.getFont("font").getData().setScale(3f,3f);
+            font = new GameSkin().generateFont(50);
+            style = new Label.LabelStyle(font, Color.ORANGE);
 
-        this.pieceCountLabel = new Label("", skin);
+            this.pieceCountLabel = new Label("", style);
 
         //create currentImage image
         this.currentImage = new Image(this.standardTexture);

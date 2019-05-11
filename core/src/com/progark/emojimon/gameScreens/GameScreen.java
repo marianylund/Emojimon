@@ -69,8 +69,8 @@ public class GameScreen implements Screen {
         this.assetManager = assetManager;
 
         //import skin to be used for GUI elements
-        atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
-        skin = new Skin(Gdx.files.internal("skin/uiskin.json"), atlas);
+        atlas = new GameSkin().getAtlas();
+        skin = new GameSkin().getSkin();
 
 
         batch = new SpriteBatch();

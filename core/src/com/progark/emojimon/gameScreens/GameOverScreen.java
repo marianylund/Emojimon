@@ -43,8 +43,8 @@ public class GameOverScreen implements Screen {
         this.gameWon = gameWon;
 
         //import skin to be used for GUI elements
-        atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
-        skin = new Skin(Gdx.files.internal("skin/uiskin.json"), atlas);
+        atlas = new GameSkin().getAtlas();
+        skin = new GameSkin().getSkin();
         camera = new OrthographicCamera();
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         viewport.apply();
