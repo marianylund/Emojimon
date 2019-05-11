@@ -1,7 +1,6 @@
 package com.progark.emojimon.gameScreens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -18,8 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.progark.emojimon.GameManager;
 import com.progark.emojimon.model.Position;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -31,12 +28,15 @@ TODO: way of displaying emojis when position count exceeds emojiNumber
 public class Cell extends Stack implements Observer {
 
 
+
+
     private Image currentImage;
     private TextureRegion standardTexture;
     private TextureRegion highlightedTexture;
     private TextureRegion greenHighlightTexture;
     private TextureRegion localPlayerEmoji;
     private TextureRegion otherPlayerEmoji;
+    private Image emojiImage;
     private final int positionIndex;
     private VerticalGroup emojiGroup;
 
@@ -55,9 +55,10 @@ public class Cell extends Stack implements Observer {
     private boolean rotationUp;
 
     private Position position;
+    private boolean dirtyPositionData;
 
 
-    public Cell(TextureRegion standardTexture, TextureRegion highlightedTexture, TextureRegion greenHighlightTexture, TextureRegion localPlayerEmoji, TextureRegion otherPlayerEmoji, final int positionIndex, boolean rotationUp, Position position){
+    public Cell(TextureRegion standardTexture, TextureRegion highlightedTexture, TextureRegion greenHighlightTexture, TextureRegion localPlayerEmoji, TextureRegion otherPlayerEmoji, final int positionIndex, boolean rotationUp){
         this.standardTexture = standardTexture;
         this.highlightedTexture = highlightedTexture;
         this.greenHighlightTexture = greenHighlightTexture;
@@ -65,7 +66,6 @@ public class Cell extends Stack implements Observer {
         this.otherPlayerEmoji = otherPlayerEmoji;
         this.positionIndex = positionIndex;
         this.rotationUp = rotationUp;
-        this.position = position;
 
         atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"), atlas);
@@ -81,9 +81,16 @@ public class Cell extends Stack implements Observer {
 
         //add emoji group
         emojiGroup = new VerticalGroup();
+        emojiImage = new Image();
         if(rotationUp){
             emojiGroup.bottom();
+            emojiGroup.addActor(pieceCountLabel);
+            emojiGroup.addActor(emojiImage);
+        }else{
+            emojiGroup.addActor(emojiImage);
+            emojiGroup.addActor(pieceCountLabel);
         }
+
         this.add(emojiGroup);
 
         //add clicklistener
@@ -96,8 +103,16 @@ public class Cell extends Stack implements Observer {
     }
 
     @Override
+    public void act(float delta) {
+        if(dirtyPositionData){
+            updateEmojiGroup(position);
+            dirtyPositionData = false;
+        }
+        super.act(delta);
+    }
+
+    @Override
     public void draw(Batch batch, float parentAlpha) {
-        updateEmojiGroup(position);
         super.draw(batch, parentAlpha);
     }
 
@@ -105,22 +120,28 @@ public class Cell extends Stack implements Observer {
         return positionIndex;
     }
 
-    public void updateEmojiGroup(Position position) {
-        if (position.getPieceCount() == 0) {
-            emojiGroup.clear();
-        } else if (position.getPieceCount() == 1) {
-            emojiGroup.clear();
-            addPlayerEmoji(position);
-        } else {
-            emojiGroup.clear();
-            addPlayerEmoji(position);
-            if (rotationUp) {
-                emojiGroup.addActorAt(0, pieceCountLabel);
+    public void updateEmojiGroup(final Position position) {
+        if(position != null){
+            if (position.getPieceCount() == 0) {
+                emojiImage.setVisible(false);
+                pieceCountLabel.setVisible(false);
+            } else if (position.getPieceCount() == 1) {
+                emojiImage.setVisible(true);
+                if (position.getOwner() == GameManager.GetInstance().getLocalPlayer()) {
+                    emojiImage.setDrawable(new SpriteDrawable(new Sprite(localPlayerEmoji)));
+                } else {
+                    emojiImage.setDrawable(new SpriteDrawable(new Sprite(otherPlayerEmoji)));
+                }
             } else {
-                emojiGroup.addActorAt(1, pieceCountLabel);
+                emojiImage.setVisible(true);
+                if (position.getOwner() == GameManager.GetInstance().getLocalPlayer()) {
+                    emojiImage.setDrawable(new SpriteDrawable(new Sprite(localPlayerEmoji)));
+                } else {
+                    emojiImage.setDrawable(new SpriteDrawable(new Sprite(otherPlayerEmoji)));
+                }
+                pieceCountLabel.setVisible(true);
+                pieceCountLabel.setText(position.getPieceCount());
             }
-            pieceCountLabel.setText(position.getPieceCount());
-
         }
     }
 
@@ -158,10 +179,17 @@ public class Cell extends Stack implements Observer {
         return highlighted;
     }
 
+    /*
     @Override
     public void update(Observable observable, Object o) {
         this.updateEmojiGroup((Position)o);
+    }*/
+
+    @Override
+    public void update(Observable observable, Object o) {
+        position = (Position)o;
+        dirtyPositionData = true;
+
+        //updateEmojiGroup(position);
     }
-
-
 }

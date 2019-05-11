@@ -1,16 +1,20 @@
 package com.progark.emojimon.model;
 
 
+import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
+
 
 //Represents board position
 //Keeps track of number of pieces and owner
 //Notifies observers of changes to state
-public class Position extends Observable {
+public class Position extends Observable{
     private int pieceCount;
     private int positionIndex;
     private Player owner;
+
 
     public Position(){
         this(0);
@@ -55,8 +59,8 @@ public class Position extends Observable {
 
 
     public void onChanges(){
-        //setChanged();
-        //notifyObservers(this);
+        setChanged();
+        notifyObservers(this);
     }
 
     //adds observer and notifies of changes
@@ -64,4 +68,5 @@ public class Position extends Observable {
         addObserver(observer);
         onChanges();
     }
+
 }

@@ -97,15 +97,16 @@ public class GameManager implements SubscriberToFirebase {
                             if(availableMoves.size() == 0){
                                 break;
                             }
-                            gameBoardController.doMove(availableMoves.get(0), false);
+                            int moveIndex = (int)(Math.random() * availableMoves.size());
+                            gameBoardController.doMove(availableMoves.get(moveIndex), false);
                         }
                     }
 
                 }
+
+                gameBoardController.onNewTurn();
             }
         }
-
-
     }
 
     @Override

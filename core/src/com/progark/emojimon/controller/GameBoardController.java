@@ -2,6 +2,8 @@ package com.progark.emojimon.controller;
 
 import com.badlogic.gdx.Game;
 import com.progark.emojimon.GameManager;
+import com.progark.emojimon.gameScreens.GameScreen;
+import com.progark.emojimon.gameScreens.GameScreenStandard;
 import com.progark.emojimon.model.GameBoard;
 import com.progark.emojimon.model.Move;
 import com.progark.emojimon.model.Player;
@@ -17,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 public class GameBoardController {
     private GameBoard gameBoard;
+    private GameScreenStandard view;
 
     // boardSize = 25, incl. bar position 0
     public GameBoardController() {
@@ -134,6 +137,7 @@ public class GameBoardController {
 
     public void endTurn(){
         GameManager.GetInstance().endTurn();
+        view.setDiceButtonVisible(false);
     }
 
     public Position getPlayerGoal(int index){
@@ -158,6 +162,14 @@ public class GameBoardController {
 
     public GameBoard getGameBoard() {
         return gameBoard;
+    }
+
+    public void setView(GameScreenStandard view){
+        this.view = view;
+    }
+
+    public void onNewTurn(){
+        view.setDiceButtonVisible(true);
     }
 }
 
