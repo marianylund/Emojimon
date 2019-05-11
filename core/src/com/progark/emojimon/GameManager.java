@@ -10,7 +10,6 @@ import com.progark.emojimon.model.fireBaseData.LastTurnData;
 import com.progark.emojimon.model.fireBaseData.Settings;
 import com.progark.emojimon.model.interfaces.SubscriberToFirebase;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,6 +30,7 @@ public class GameManager implements SubscriberToFirebase {
 
     //Set to true to play the game automatically  (TODO: Remove)
     public boolean simulateGame = true;
+    public boolean simulateCurrentGame;
 
     public enum GameStatus {
         WAITING,
@@ -44,6 +44,7 @@ public class GameManager implements SubscriberToFirebase {
     private boolean localPlayer;
 
     public GameManager(){
+        simulateCurrentGame = simulateGame;
     }
 
     public static GameManager GetInstance() {
@@ -88,12 +89,12 @@ public class GameManager implements SubscriberToFirebase {
                     if(getWinningPlayer() == 0 || getWinningPlayer() == 1) {
                         gameOver = true;
                         //TODO: Remove 90
-                        simulateGame = false;
+                        simulateCurrentGame = false;
                     }
                     // TODO: GUI: Start turn by enabling roll dice button for player
 
                     //TODO: Remove (plays game automatically)
-                    if(simulateGame){
+                    if(simulateCurrentGame){
                         gameBoardController.rollDice();
                         while(true){
                             List<Move> availableMoves = gameBoardController.getMoves(getLocalPlayerIndex());
@@ -180,7 +181,8 @@ public class GameManager implements SubscriberToFirebase {
 
     public void gameWon(boolean isCreator) {
         //TODO: Remove 181
-        simulateGame = false;
+        simulateCurrentGame = false;
+        gameData.setWinningPlayer(getLocalPlayerIndex());
         gameOver = true;
         FBC.I().get().endGame(gameData.getGameId(), isCreator);
     }
@@ -195,6 +197,8 @@ public class GameManager implements SubscriberToFirebase {
         gameBoardController = new GameBoardController();
         gameBoardController.createDynamicGameBoard(settings);
         FBC.I().get().createNewGame("TEST", settings); // Push GameData to Firebase
+
+        simulateCurrentGame = simulateGame;
     }
 
     public void findWaitingGames() {
@@ -238,5 +242,10 @@ public class GameManager implements SubscriberToFirebase {
 
     public void setAllWaitingGamesList(HashMap setAllWaitingGamesList) {
         this.allWaitingGamesList = setAllWaitingGamesList;
+    }
+
+    public void joinGame(String key){
+        simulateCurrentGame = simulateGame;
+        FBC.I().get().joinGameById(key);
     }
 }
