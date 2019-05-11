@@ -86,6 +86,8 @@ public class GameManager implements SubscriberToFirebase {
                     // Check if game is over
                     if(getWinningPlayer() == 0 || getWinningPlayer() == 1) {
                         gameOver = true;
+                        //TODO: Remove 90
+                        simulateGame = false;
                     }
                     // TODO: GUI: Start turn by enabling roll dice button for player
 
@@ -176,6 +178,8 @@ public class GameManager implements SubscriberToFirebase {
     }
 
     public void gameWon(boolean isCreator) {
+        //TODO: Remove 181
+        simulateGame = false;
         FBC.I().get().endGame(gameData.getGameId(), isCreator);
     }
 
