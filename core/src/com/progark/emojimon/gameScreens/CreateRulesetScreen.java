@@ -21,6 +21,7 @@ import com.progark.emojimon.Emojimon;
 import com.progark.emojimon.GameManager;
 import com.progark.emojimon.controller.FBC;
 import com.progark.emojimon.controller.GameBoardController;
+import com.progark.emojimon.model.factories.DieFactory;
 import com.progark.emojimon.model.factories.MoveValidationStrategyFactory.MoveValStrat;
 import com.progark.emojimon.model.factories.MoveSetStrategyFactory.MoveSetStrat;
 import com.progark.emojimon.model.factories.CanClearStrategyFactory.CanClearStrat;
@@ -104,8 +105,8 @@ public class CreateRulesetScreen implements Screen {
         final SelectBox<String> diceAmountBox = new SelectBox<String>(skin);
         diceAmountBox.setItems("2","3","4","5");
 
-        final SelectBox<String> diceSizeBox = new SelectBox<String>(skin);
-        diceSizeBox.setItems("6","10","20");
+        final SelectBox<DieFactory.DieType> diceSizeBox = new SelectBox<DieFactory.DieType>(skin);
+        diceSizeBox.setItems(DieFactory.DieType.values());
 
         final SelectBox<String> startPositionBox = new SelectBox<String>(skin);
         startPositionBox.setItems("Top right","Top left","Bottom right","Bottom left");
@@ -130,7 +131,7 @@ public class CreateRulesetScreen implements Screen {
                         Integer.parseInt(boardSizeBox.getSelected()),
                         Integer.parseInt(numOfPiecesBox.getSelected()),
                         Integer.parseInt(diceAmountBox.getSelected()),
-                        Integer.parseInt(diceSizeBox.getSelected()),
+                        diceSizeBox.getSelected(),
                         Integer.parseInt(diceMultiplierBox.getSelected()),
                         moveSetStrategiesBox.getSelected(),
                         moveValidationStrategiesBox.getSelected(),

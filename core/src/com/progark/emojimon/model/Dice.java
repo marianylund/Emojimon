@@ -10,9 +10,9 @@ public class Dice {
     private List<Die> dieList;
     private int baseNumberOfDice;
     private int diceMultiplier; //multiplier to be applied when throwing all equals
-    private int dieSides;
+    private DieFactory.DieType dieSides;
 
-    public Dice(int baseNumberOfDice, int diceMultiplier, int dieSides){
+    public Dice(int baseNumberOfDice, int diceMultiplier, DieFactory.DieType dieSides){
         this.baseNumberOfDice = baseNumberOfDice;
         this.diceMultiplier = diceMultiplier;
         this.dieSides = dieSides;
