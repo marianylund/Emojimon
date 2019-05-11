@@ -5,14 +5,18 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -41,15 +45,16 @@ public class MainMenuScreen implements Screen {
         this.game = game;
 
         //import skin to be used for GUI elements
-        atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
-        skin = new Skin(Gdx.files.internal("skin/uiskin.json"), atlas);
-        skin.getFont("font").getData().setScale(3f,3f);
+        atlas = new GameSkin().getAtlas();
+        skin = new GameSkin().getSkin();
+        //skin.getFont("font").getData().setScale(3f,3f);
 
-//        //Generate font
-//        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("Fonts/Roboto-Regular.ttf"));
-//        fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-//        fontParameter.size = 12;
-//        font = fontGenerator.generateFont(fontParameter);
+/*        //Generate font
+        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("Fonts/Roboto-Regular.ttf"));
+        fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        fontParameter.size = 12;
+        font = fontGenerator.generateFont(fontParameter);
+        fontGenerator.dispose();*/
 
 
         camera = new OrthographicCamera();
@@ -69,20 +74,31 @@ public class MainMenuScreen implements Screen {
         mainTable.setFillParent(true);
 
         //Create label and buttons to be displayed
+        Texture logo = new Texture("emojimonLogo.png");
+        Texture createGameTexture = new Texture("ButtonImages/createGameImage.png");
+        Texture joinGameTexture = new Texture("ButtonImages/joinGameImage.png");
+        Texture selectEmojiTexture = new Texture("ButtonImages/selectEmojiImage.png");
+
+        Image emojimonLogo = new Image(logo);
+        Image createGameImage = new Image(createGameTexture);
+        Image joinGameImage = new Image(joinGameTexture);
+        Image selectEmojiImage = new Image(selectEmojiTexture);
+
         Label emojimonLabel = new Label("Emojimon", skin);
+
         TextButton createGameButton = new TextButton("Create game", skin);
         TextButton joinGameButton = new TextButton("Join game", skin);
         TextButton exitButton = new TextButton("Exit", skin);
         TextButton selectEmojiButton = new TextButton("Select emoji", skin);
 
         //Add listeners to buttons to add functionality to them when clicked
-        createGameButton.addListener(new ClickListener(){
+        createGameImage.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new CreateRulesetScreen(game));
             }
         });
-        joinGameButton.addListener(new ClickListener(){
+        joinGameImage.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 GameManager.GetInstance().findWaitingGames();
@@ -90,7 +106,7 @@ public class MainMenuScreen implements Screen {
 
             }
         });
-        selectEmojiButton.addListener(new ClickListener(){
+        selectEmojiImage.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new SelectEmojiScreen(game));
@@ -104,14 +120,12 @@ public class MainMenuScreen implements Screen {
         });
 
         //Add labels and buttons to menu
-        mainTable.add(emojimonLabel).pad(10).colspan(2).height(Gdx.graphics.getHeight()*0.20f);
+        mainTable.add(emojimonLogo).colspan(3);
         mainTable.row();
-        mainTable.add(createGameButton).pad(0.1f).width(Gdx.graphics.getWidth()*0.40f).height(Gdx.graphics.getHeight()*0.50f);
-        mainTable.add(joinGameButton).pad(0.1f).width(Gdx.graphics.getWidth()*0.40f).height(Gdx.graphics.getHeight()*0.50f);
+        mainTable.add(createGameImage).width(Gdx.graphics.getWidth()*0.20f).height(Gdx.graphics.getWidth()*0.20f);
+        mainTable.add(joinGameImage).width(Gdx.graphics.getWidth()*0.20f).height(Gdx.graphics.getWidth()*0.20f);
+        mainTable.add(selectEmojiImage).width(Gdx.graphics.getWidth()*0.20f).height(Gdx.graphics.getWidth()*0.20f);
         mainTable.row();
-        mainTable.add(selectEmojiButton).pad(10).colspan(2).width(Gdx.graphics.getWidth()*0.8f).height(Gdx.graphics.getHeight()*0.20f);
-        mainTable.row();
-//        mainTable.add(exitButton).pad(10);
 
         //Add menu to stage as an actor
         stage.addActor(mainTable);

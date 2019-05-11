@@ -3,8 +3,10 @@ package com.progark.emojimon.gameScreens;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -47,6 +49,8 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     private Viewport viewport;
     private TextureAtlas atlas;
     private Skin skin;
+    private BitmapFont font;
+    private Label.LabelStyle style;
     private SpriteBatch batch; // ubrukt, må finne ut av textureatlas
     private TextureRegion triangle;
 
@@ -101,9 +105,11 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         this.gameBoardController = GameManager.GetInstance().getGameBoardController();
 
         // Get UI skin
-        atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
-        skin = new Skin(Gdx.files.internal("skin/uiskin.json"), atlas);
-        skin.getFont("font").getData().setScale(1.5f,1.5f);
+        atlas = new GameSkin().getAtlas();
+        skin = new GameSkin().getSkin();
+        font = new GameSkin().generateFont(40);
+        style = new Label.LabelStyle(font, Color.ORANGE);
+        skin.getFont("font").getData().setScale(3f,3f);
 
         // Fix Camera and viewport
         camera = new OrthographicCamera();
@@ -239,8 +245,9 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                 GameManager.GetInstance().clearGameData();
                 game.setScreen(new MainMenuScreen(game));
             }
-        }));
+        })).expand().uniform().width(sideMenuContainer.getWidth());
         sideMenu.row();
+
 
         // Add Turn emoji
         if(GameManager.GetInstance().isItLocalPlayerTurn()){
@@ -257,7 +264,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
 
 /*        // Add timer label wannabe, is used for debug for now
-        debugLabel = new Label("Debug:", skin);
+        debugLabel = new Label("Debug:", style);
         sideMenu.add(debugLabel); sideMenu.row().pad(10);*/
 
         // Add throw dice button
@@ -293,7 +300,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         }));
 
         sideMenu.row();
-        waitingForTurnLabel = new Label("WAITING", skin);
+        waitingForTurnLabel = new Label("WAITING", style);
         sideMenu.add(waitingForTurnLabel);
         sideMenu.row();
         throwDiceBtnTable.add(throwDiceBtn);
