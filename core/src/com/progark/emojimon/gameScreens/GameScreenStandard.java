@@ -350,8 +350,6 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     }
 
     private ScrollPane createDiceScrollPane(){
-        BitmapFont font = new BitmapFont();
-        Label.LabelStyle style = new Label.LabelStyle(font, BLACK); // font colour
 
         diceTable = new Table();
         int diceNum = gameBoardController.getDieList().size(); // get dices from controller

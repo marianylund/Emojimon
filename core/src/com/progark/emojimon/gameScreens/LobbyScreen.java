@@ -2,8 +2,10 @@ package com.progark.emojimon.gameScreens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -25,11 +27,16 @@ public class LobbyScreen implements Screen {
     private Viewport viewport;
     private TextureAtlas atlas;
     private Skin skin;
+    private BitmapFont font;
+    private Label.LabelStyle style;
 
     public LobbyScreen(final Emojimon game) {
         this.game = game;
         atlas = new GameSkin().getAtlas();
         skin = new GameSkin().getSkin();
+        font = new GameSkin().generateFont(40);
+        style = new Label.LabelStyle(font, Color.ORANGE);
+        skin.getFont("font").getData().setScale(3f,3f);
         camera = new OrthographicCamera();
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         viewport.apply();
@@ -46,7 +53,7 @@ public class LobbyScreen implements Screen {
         Table mainTable = new Table();
         mainTable.setFillParent(true);
 
-        Label waitingLabel = new Label("Waiting for opponent...", skin);
+        Label waitingLabel = new Label("Waiting for opponent...", style);
         TextButton backButton = new TextButton("Back", skin);
 
         backButton.addListener(new ClickListener(){
