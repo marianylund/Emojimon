@@ -29,6 +29,15 @@ public class BasicMoveValidationStrategy implements MoveValidationStrategy {
         else if(endPosition.getPieceCount() == this.blot){
             valid = true;
         }
+
+        //disallow moves from bar to slot occupied by other player
+        if(startPosition.getPositionIndex() == 0){
+            if(endPosition.getPieceCount() > 0){
+                if(startPosition.getOwner() != endPosition.getOwner()){
+                    valid = false;
+                }
+            }
+        }
         return valid;
     }
 }

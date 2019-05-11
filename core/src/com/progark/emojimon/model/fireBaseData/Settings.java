@@ -1,5 +1,6 @@
 package com.progark.emojimon.model.fireBaseData;
 
+import com.progark.emojimon.model.factories.DieFactory;
 import com.progark.emojimon.model.factories.MoveValidationStrategyFactory.MoveValStrat;
 import com.progark.emojimon.model.factories.MoveSetStrategyFactory.MoveSetStrat;
 import com.progark.emojimon.model.factories.CanClearStrategyFactory.CanClearStrat;
@@ -10,7 +11,7 @@ public class Settings {
     int boardSize;
     int piecesPerPlayer;
     int baseNumberOfDice;
-    int dieSides;
+    DieFactory.DieType dieSides;
     int diceMultiplier;
     MoveSetStrat moveSetStrat;
     MoveValStrat moveValStrat;
@@ -19,7 +20,7 @@ public class Settings {
 
     public Settings(){} // Required for Firebase
 
-    public Settings(String lobbyName, int boardSize, int piecesPerPlayer, int baseNumberOfDice, int dieSides, int diceMultiplier, MoveSetStrat moveSetStrat, MoveValStrat moveValStrat, CanClearStrat canClearStrat, PiecePlacementStrat piecePlacementStrat) {
+    public Settings(String lobbyName, int boardSize, int piecesPerPlayer, int baseNumberOfDice, DieFactory.DieType dieSides, int diceMultiplier, MoveSetStrat moveSetStrat, MoveValStrat moveValStrat, CanClearStrat canClearStrat, PiecePlacementStrat piecePlacementStrat) {
         this.lobbyName = lobbyName;
         this.boardSize = boardSize;
         this.piecesPerPlayer = piecesPerPlayer;
@@ -48,7 +49,7 @@ public class Settings {
         return baseNumberOfDice;
     }
 
-    public int getDieSides() {
+    public DieFactory.DieType getDieSides() {
         return dieSides;
     }
 

@@ -2,6 +2,8 @@ package com.progark.emojimon.controller;
 
 import com.badlogic.gdx.Game;
 import com.progark.emojimon.GameManager;
+import com.progark.emojimon.gameScreens.GameScreen;
+import com.progark.emojimon.gameScreens.GameScreenStandard;
 import com.progark.emojimon.model.GameBoard;
 import com.progark.emojimon.model.Move;
 import com.progark.emojimon.model.Player;
@@ -17,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 public class GameBoardController {
     private GameBoard gameBoard;
+    private GameScreenStandard view;
 
     // boardSize = 25, incl. bar position 0
     public GameBoardController() {
@@ -77,35 +80,48 @@ public class GameBoardController {
     // methods
     public void doMove(Move move, boolean isItLastTurnMove) {
         gameBoard.movePiece(move, isItLastTurnMove);
-        if(getMoves(GameManager.GetInstance().getLocalPlayerIndex()).size()==0){
-            //endTurn(GameManager.GetInstance().getLocalPlayer()); //this funtion requires that the game is created with a game id from firebase, do not uncomment before that is in place
+
+        //end turn if not simulating move and no more moves available
+        if(!isItLastTurnMove && getMoves(GameManager.GetInstance().getLocalPlayerIndex()).size()==0){
+            endTurn();
         }
     }
 
     // move to PlayerController?
     public void rollDice() {
         gameBoard.rollDice();
+        if (getMoves(GameManager.GetInstance().getLocalPlayerIndex()).size() == 0) {
+            endTurn();
+        }
     }
 
 
     public void showLastTurn(LastTurnData lastTurn) {
-        //Set dices
-        for (int i = 0; i < 2; i++) {
-            Die die = getDieList().get(i);
-            int dieValue = lastTurn.getDices().get(i);
-            System.out.println("DieValue: " + dieValue);
-            die.setValue(dieValue);
-        }
+        if(lastTurn.getActions() != null){
+            //Set dices
+            for (int i = 0; i < 2; i++) {
+                Die die = getDieList().get(i);
+                int dieValue = lastTurn.getDices().get(i);
+                System.out.println("DieValue: " + dieValue);
+                die.setValue(dieValue);
+            }
 
-        //Update gameboard with moves
-        List<Move> moves = Converter.fromListToMoves(lastTurn.getActions());
-        boolean isItLastTurnMove = true;
-        for (Move move : moves) {
-            doMove(move, isItLastTurnMove);
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();  // set interrupt flag
+            //Update gameboard with moves
+            List<Move> moves = Converter.fromListToMoves(lastTurn.getActions());
+            boolean isItLastTurnMove = true;
+            for (Move move : moves) {
+                doMove(move, isItLastTurnMove);
+
+
+                //TODO: REMOVE if-statement on line 111
+                if(!GameManager.GetInstance().simulateGame){
+                    try {
+                        TimeUnit.SECONDS.sleep(1);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();  // set interrupt flag
+                    }
+                }
+
             }
         }
     }
@@ -121,6 +137,7 @@ public class GameBoardController {
 
     public void endTurn(){
         GameManager.GetInstance().endTurn();
+        view.setDiceButtonVisible(false);
     }
 
     public Position getPlayerGoal(int index){
@@ -145,6 +162,14 @@ public class GameBoardController {
 
     public GameBoard getGameBoard() {
         return gameBoard;
+    }
+
+    public void setView(GameScreenStandard view){
+        this.view = view;
+    }
+
+    public void onNewTurn(){
+        view.setDiceButtonVisible(true);
     }
 }
 
