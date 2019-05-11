@@ -85,7 +85,7 @@ public class CreateRulesetScreen implements Screen {
         Label diceAmountLabel = new Label("Amount of dice", style);
         Label diceSizeLabel = new Label("Dice size", style);
         Label diceMultiplierLabel = new Label("Dice Multiplier", style);
-        
+
         TextField diceAmountField = new TextField("", skin);
         diceAmountField.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
         TextField diceSizeField = new TextField("", skin);

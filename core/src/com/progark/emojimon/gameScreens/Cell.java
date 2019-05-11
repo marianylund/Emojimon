@@ -1,6 +1,7 @@
 package com.progark.emojimon.gameScreens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -26,9 +27,6 @@ Maintains a currentImage Image and a VerticalGroup of emojis
 TODO: way of displaying emojis when position count exceeds emojiNumber
  */
 public class Cell extends Stack implements Observer {
-
-
-
 
     private Image currentImage;
     private TextureRegion standardTexture;
