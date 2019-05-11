@@ -73,7 +73,7 @@ public class CreateRulesetScreen implements Screen {
         Label boardSizeLabel = new Label("Board size", skin);
         Label numOfPiecesLabel = new Label("Pieces", skin);
         Label diceAmountLabel = new Label("Amount of dice", skin);
-        Label diceSizeLabel = new Label("Dice size", skin);
+        Label diceSizeLabel = new Label("Dice type", skin);
         Label diceMultiplierLabel = new Label("Dice Multiplier", skin);
 
         TextField diceAmountField = new TextField("", skin);
@@ -185,6 +185,9 @@ public class CreateRulesetScreen implements Screen {
 
         stage.addActor(mainTable);
 
+        stage.setDebugAll(false);
+
+
     }
 
     @Override
@@ -193,7 +196,6 @@ public class CreateRulesetScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
-        stage.setDebugAll(true);
     }
 
     @Override
