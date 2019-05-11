@@ -2,6 +2,7 @@ package com.progark.emojimon.gameScreens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -42,14 +43,16 @@ public class GamesListScreen implements Screen {
     private ScrollPane scrollPane;
     private HashMap<String, String> gamesList = new HashMap<String, String>();
     private boolean listUpdated = false;
-
-    BitmapFont font = new BitmapFont();
-    Label.LabelStyle style = new Label.LabelStyle(font, BLACK); // font colour
+    private BitmapFont font;
+    private Label.LabelStyle style;
 
     public GamesListScreen(final Emojimon game) {
         this.game = game;
-        atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
-        skin = new Skin(Gdx.files.internal("skin/uiskin.json"), atlas);
+        atlas = new GameSkin().getAtlas();
+        skin = new GameSkin().getSkin();
+        font = new GameSkin().generateFont(40);
+        style = new Label.LabelStyle(font, Color.ORANGE);
+        skin.getFont("font").getData().setScale(3f,3f);
         camera = new OrthographicCamera();
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         viewport.apply();
