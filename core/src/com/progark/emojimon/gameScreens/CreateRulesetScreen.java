@@ -2,8 +2,10 @@ package com.progark.emojimon.gameScreens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -35,13 +37,21 @@ public class CreateRulesetScreen implements Screen {
     private Viewport viewport;
     private TextureAtlas atlas;
     private Skin skin;
+    private BitmapFont font;
+    private BitmapFont titleFont;
+    private Label.LabelStyle style;
+    private Label.LabelStyle titleStyle;
 
     private String diceAmount, startPosition, diceSize;
 
     public CreateRulesetScreen(final Emojimon game) {
         this.game = game;
-        atlas = new TextureAtlas(Gdx.files.internal("skin/uiskin.atlas"));
-        skin = new Skin(Gdx.files.internal("skin/uiskin.json"), atlas);
+        atlas = new GameSkin().getAtlas();
+        skin = new GameSkin().getSkin();
+        font = new GameSkin().generateFont(40);
+        titleFont = new GameSkin().generateFont(80);
+        style = new Label.LabelStyle(font, Color.ORANGE);
+        titleStyle = new Label.LabelStyle(titleFont, Color.ORANGE);
         skin.getFont("font").getData().setScale(3f,3f);
         camera = new OrthographicCamera();
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
@@ -62,46 +72,49 @@ public class CreateRulesetScreen implements Screen {
         container.setFillParent(true);
 
         TextButton backButton = new TextButton("Back", skin);
-        TextButton createLobbyButton = new TextButton("Create Lobby!", skin);
+        TextButton createLobbyButton = new TextButton("Play!", skin);
 
-        Label screenLabel = new Label("Create Ruleset", skin);
-        Label moveValidationLabel = new Label("Moves allowed", skin);
-        Label moveSetLabel = new Label("Move logic", skin);
-        Label canClearLabel = new Label("Bear off", skin);
-        Label boardSizeLabel = new Label("Board size", skin);
-        Label numOfPiecesLabel = new Label("Pieces", skin);
-        Label diceAmountLabel = new Label("Amount of dice", skin);
-        Label diceSizeLabel = new Label("Dice size", skin);
-        Label diceMultiplierLabel = new Label("Dice Multiplier", skin);
+        Label screenLabel = new Label("Create Game Rules", titleStyle);
+        Label moveValidationLabel = new Label("Moves allowed", style);
+        Label moveSetLabel = new Label("Move logic", style);
+        Label canClearLabel = new Label("Bear off", style);
+        Label boardSizeLabel = new Label("Board size", style);
+        Label numOfPiecesLabel = new Label("Pieces", style);
+        Label diceAmountLabel = new Label("Amount of dice", style);
+        Label diceSizeLabel = new Label("Dice size", style);
+        Label diceMultiplierLabel = new Label("Dice Multiplier", style);
 
         TextField diceAmountField = new TextField("", skin);
         diceAmountField.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
         TextField diceSizeField = new TextField("", skin);
         diceSizeField.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
 
+        final TextField lobbyName = new TextField("Lobbyname", skin);
+
+
         final SelectBox<MoveValStrat> moveValidationStrategiesBox = new SelectBox<MoveValStrat>(skin);
-        moveValidationStrategiesBox.setItems(MoveValStrat.BASIC, MoveValStrat.MOVEBACKWARDS);
+        moveValidationStrategiesBox.setItems(MoveValStrat.values());
 
         final SelectBox<MoveSetStrat> moveSetStrategiesBox = new SelectBox<MoveSetStrat>(skin);
-        moveSetStrategiesBox.setItems(MoveSetStrat.BASIC);
+        moveSetStrategiesBox.setItems(MoveSetStrat.values());
 
         final SelectBox<CanClearStrat> canClearStrategiesBox = new SelectBox<CanClearStrat>(skin);
-        canClearStrategiesBox.setItems(CanClearStrat.BASIC);
+        canClearStrategiesBox.setItems(CanClearStrat.values());
 
         final SelectBox<String> boardSizeBox = new SelectBox<String>(skin);
-        boardSizeBox.setItems("20","24","30");
+        boardSizeBox.setItems("24","30");
 
         final SelectBox<String> numOfPiecesBox = new SelectBox<String>(skin);
-        numOfPiecesBox.setItems("11","15","19");
+        numOfPiecesBox.setItems("15","19");
 
         final SelectBox<String> diceMultiplierBox = new SelectBox<String>(skin);
-        diceMultiplierBox.setItems("1","2","3", "4");
+        diceMultiplierBox.setItems("2","3", "4");
 
         final SelectBox<String> diceAmountBox = new SelectBox<String>(skin);
-        diceAmountBox.setItems("1","2","3","4","5");
+        diceAmountBox.setItems("2","3","4","5");
 
         final SelectBox<String> diceSizeBox = new SelectBox<String>(skin);
-        diceSizeBox.setItems("4","6","10","20");
+        diceSizeBox.setItems("6","10","20");
 
         final SelectBox<String> startPositionBox = new SelectBox<String>(skin);
         startPositionBox.setItems("Top right","Top left","Bottom right","Bottom left");
@@ -122,6 +135,7 @@ public class CreateRulesetScreen implements Screen {
                 // Initiate GameBoardController
                 GameManager.GetInstance().setGameBoardController(new GameBoardController());
                 Settings settings = new Settings(
+                        lobbyName.getText(),
                         Integer.parseInt(boardSizeBox.getSelected()),
                         Integer.parseInt(numOfPiecesBox.getSelected()),
                         Integer.parseInt(diceAmountBox.getSelected()),
@@ -132,7 +146,7 @@ public class CreateRulesetScreen implements Screen {
                         canClearStrategiesBox.getSelected(),
                         PiecePlacementStrat.BASIC
                 );
-                FBC.I().get().addNewGame("TEST", settings);
+                GameManager.GetInstance().createNewGame(settings);
                 game.setScreen(new LobbyScreen(game));
             }
         });
@@ -141,8 +155,8 @@ public class CreateRulesetScreen implements Screen {
         mainTable.columnDefaults(2).spaceLeft(Gdx.graphics.getWidth() / 6);
         mainTable.defaults().expandY();
 
-        mainTable.add(backButton);
-        mainTable.add(screenLabel).colspan(5);
+        mainTable.add(backButton).height(Gdx.graphics.getHeight()*0.12f);
+        mainTable.add(lobbyName).colspan(5);
 
         mainTable.row();
         mainTable.add(moveValidationLabel);
@@ -187,7 +201,6 @@ public class CreateRulesetScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
-        stage.setDebugAll(true);
     }
 
     @Override

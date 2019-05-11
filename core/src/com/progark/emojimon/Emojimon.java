@@ -1,10 +1,13 @@
 package com.progark.emojimon;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.progark.emojimon.controller.FBC;
+import com.progark.emojimon.gameScreens.GameOverScreen;
 import com.progark.emojimon.gameScreens.MainMenuScreen;
 import com.progark.emojimon.controller.GameBoardController;
 import com.progark.emojimon.model.fireBaseData.Converter;
@@ -21,30 +24,26 @@ public class Emojimon extends Game {
     SpriteBatch batch;
     Texture img;
     GameBoardController gameBoardController;
-
-
+    private Music music;
 
     public Emojimon(FirebaseControllerInterface firebaseControllerInterface) {
         FBC.I().setFirebase(firebaseControllerInterface);
     }
-
-    @Override
-    public void create() {
+	
+	@Override
+	public void create () {
+        GameManager.GetInstance().createApp(this);
         setScreen(new MainMenuScreen(this));
         batch = new SpriteBatch();
         img = new Texture("badlogic.jpg");
-
-        //Test creation of gameboard
-        gameBoardController = new GameBoardController();
-        gameBoardController.createStandardGameBoard();
-
         GameManager.GetInstance().createPreference();
         if(!GameManager.GetInstance().getPreferences().isEmoji().isEmpty()){
             GameManager.GetInstance().setLocalPlayerEmoji(GameManager.GetInstance().getPreferences().isEmoji());
         }
-        
-
-
+        //music credit: patrickdearteaga.com
+        music = Gdx.audio.newMusic(Gdx.files.internal("Music/Humble Match.ogg"));
+        music.setLooping(true);
+        music.play();
     }
 
     //debugging
@@ -64,7 +63,7 @@ public class Emojimon extends Game {
         dices.add(5);
         dices.add(3);
 
-        //FBC.I().get().addLastTurnByGameID("GameID00", false, "12:35", dices, createTempDoubleArrayList());
+        //FBC.I().get().updateLastTurn("GameID00", false, "12:35", dices, createTempDoubleArrayList());
     }
 
 

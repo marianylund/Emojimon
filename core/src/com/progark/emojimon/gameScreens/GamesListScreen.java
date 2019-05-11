@@ -9,17 +9,29 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.progark.emojimon.Emojimon;
 import com.progark.emojimon.GameManager;
+import com.progark.emojimon.controller.FBC;
 
-public class LobbyScreen implements Screen {
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import javax.xml.soap.Text;
+
+import static com.badlogic.gdx.graphics.Color.BLACK;
+
+public class GamesListScreen implements Screen {
 
     private Stage stage;
     final Emojimon game;
@@ -27,10 +39,14 @@ public class LobbyScreen implements Screen {
     private Viewport viewport;
     private TextureAtlas atlas;
     private Skin skin;
+    private Table gamesTable;
+    private ScrollPane scrollPane;
+    private HashMap<String, String> gamesList = new HashMap<String, String>();
+    private boolean listUpdated = false;
     private BitmapFont font;
     private Label.LabelStyle style;
 
-    public LobbyScreen(final Emojimon game) {
+    public GamesListScreen(final Emojimon game) {
         this.game = game;
         atlas = new GameSkin().getAtlas();
         skin = new GameSkin().getSkin();
@@ -49,38 +65,43 @@ public class LobbyScreen implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-
-        Table mainTable = new Table();
-        mainTable.setFillParent(true);
-
-        Label waitingLabel = new Label("Waiting for opponent...", style);
-        TextButton backButton = new TextButton("Back", skin);
-
-        backButton.addListener(new ClickListener(){
+        TextButton backBtn = new TextButton("Back", skin);
+        backBtn.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new CreateRulesetScreen(game));
+                game.setScreen(new MainMenuScreen(game));
             }
         });
 
-        mainTable.add(waitingLabel);
-        mainTable.row();
-        mainTable.add(backButton);
-
-        stage.addActor(mainTable);
+        gamesTable = new Table();
+        gamesTable.setFillParent(true);
+        gamesTable.add(backBtn);
+        gamesTable.row();
+        scrollPane = new ScrollPane(gamesTable);
+        scrollPane.setFillParent(true);
+        stage.addActor(scrollPane);
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.act();
-        stage.draw();
 
         if (GameManager.GetInstance().getGameData() != null &&
                 GameManager.GetInstance().getGameData().getStatus() == GameManager.GameStatus.STARTET) {
             game.setScreen(new GameScreenStandard(game));
         }
+
+        // Redraws list of games when finished downloading from Firebase
+        if (GameManager.GetInstance().getAllWaitingGamesList() != null && listUpdated == false) {
+            gamesList = GameManager.GetInstance().getAllWaitingGamesList();
+            reDrawTable();
+            listUpdated = true;
+            System.out.println("UPDATED");
+        }
+
+        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        stage.act();
+        stage.draw();
     }
 
     @Override
@@ -100,11 +121,35 @@ public class LobbyScreen implements Screen {
 
     @Override
     public void hide() {
-
+        listUpdated = false;
     }
 
     @Override
     public void dispose() {
 
+    }
+
+    public void reDrawTable () {
+        for (final String key : gamesList.keySet()){
+            System.out.println(key);
+
+            final Label gameName = new Label(gamesList.get(key), style);
+            gameName.setAlignment(Align.left);
+            gameName.setFontScale(2);
+
+            TextButton joinBtn = new TextButton("Join", skin);
+            joinBtn.addListener(new ClickListener(){
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    System.out.println("JOINED GAME");
+                    FBC.I().get().joinGameById(key);
+                    game.setScreen(new LobbyScreen(game));
+                }
+            });
+
+            gamesTable.add(gameName).size(150).width(500);
+            gamesTable.add(joinBtn);
+            gamesTable.row();
+        }
     }
 }

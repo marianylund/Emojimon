@@ -1,5 +1,6 @@
 package com.progark.emojimon.model;
 
+import com.progark.emojimon.GameManager;
 import com.progark.emojimon.model.factories.CanClearStrategyFactory;
 import com.progark.emojimon.model.factories.MoveSetStrategyFactory;
 import com.progark.emojimon.model.factories.StartPiecePlacementStrategyFactory;
@@ -43,7 +44,7 @@ public class GameBoard {
     private StartPiecePlacementStrategy startPiecePlacementStrategy;
 
     //TODO: switch back to use basic canclear strategy as standard
-    private static Settings standardSettings = new Settings(24, 15, 2, 6, 2, MoveSetStrat.BASIC.BASIC, MoveValStrat.BASIC, CanClearStrat.ALWAYS, StartPiecePlacementStrategyFactory.PiecePlacementStrat.BASIC);
+    private static Settings standardSettings = new Settings("TESTLOBBY", 24, 15, 2, 6, 2, MoveSetStrat.BASIC.BASIC, MoveValStrat.BASIC, CanClearStrat.ALWAYS, StartPiecePlacementStrategyFactory.PiecePlacementStrat.BASIC);
     //constructors
     //creates standard gameboard
     public GameBoard(){
@@ -110,11 +111,13 @@ public class GameBoard {
     }
 
 
-    public boolean movePiece(Move move){
+    public boolean movePiece(Move move, boolean isItLastTurnMove){
         if(move.die != null){
             move.die.setUsed(true);
         }
-        currentTurnMoves.add(move);
+        if (!isItLastTurnMove) {
+            currentTurnMoves.add(move);
+        }
 
         //check if move is to either player's goal (outside of boardpositions)
         if(move.endPosition >= boardPositions.size()){
@@ -209,7 +212,7 @@ public class GameBoard {
     }
 
     public void emptyCurrentTurnMoves(){
-        currentTurnMoves.clear();
+        currentTurnMoves = new ArrayList<Move>();
     }
 
     //endregion

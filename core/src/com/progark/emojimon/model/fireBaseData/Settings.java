@@ -6,8 +6,9 @@ import com.progark.emojimon.model.factories.CanClearStrategyFactory.CanClearStra
 import com.progark.emojimon.model.factories.StartPiecePlacementStrategyFactory.PiecePlacementStrat;
 
 public class Settings {
+    String lobbyName;
     int boardSize;
-    int pieces;
+    int piecesPerPlayer;
     int baseNumberOfDice;
     int dieSides;
     int diceMultiplier;
@@ -18,9 +19,10 @@ public class Settings {
 
     public Settings(){} // Required for Firebase
 
-    public Settings(int boardSize, int piecesPerPlayer, int baseNumberOfDice, int dieSides, int diceMultiplier, MoveSetStrat moveSetStrat, MoveValStrat moveValStrat, CanClearStrat canClearStrat, PiecePlacementStrat piecePlacementStrat) {
+    public Settings(String lobbyName, int boardSize, int piecesPerPlayer, int baseNumberOfDice, int dieSides, int diceMultiplier, MoveSetStrat moveSetStrat, MoveValStrat moveValStrat, CanClearStrat canClearStrat, PiecePlacementStrat piecePlacementStrat) {
+        this.lobbyName = lobbyName;
         this.boardSize = boardSize;
-        this.pieces = piecesPerPlayer;
+        this.piecesPerPlayer = piecesPerPlayer;
         this.baseNumberOfDice = baseNumberOfDice;
         this.dieSides = dieSides;
         this.diceMultiplier = diceMultiplier;
@@ -30,12 +32,16 @@ public class Settings {
         this.piecePlacementStrat = piecePlacementStrat;
     }
 
+    public String getLobbyName() {
+        return lobbyName;
+    }
+
     public int getBoardSize() {
         return boardSize;
     }
 
     public int getPiecesPerPlayer() {
-        return pieces;
+        return piecesPerPlayer;
     }
 
     public int getBaseNumberOfDice() {
@@ -64,5 +70,21 @@ public class Settings {
 
     public PiecePlacementStrat getPiecePlacementStrat() {
         return piecePlacementStrat;
+    }
+
+    @Override
+    public String toString() {
+        return "Settings{" +
+                "lobbyName='" + lobbyName + '\'' +
+                ", boardSize=" + boardSize +
+                ", piecesPerPlayer=" + piecesPerPlayer +
+                ", baseNumberOfDice=" + baseNumberOfDice +
+                ", dieSides=" + dieSides +
+                ", diceMultiplier=" + diceMultiplier +
+                ", moveSetStrat=" + moveSetStrat +
+                ", moveValStrat=" + moveValStrat +
+                ", canClearStrat=" + canClearStrat +
+                ", piecePlacementStrat=" + piecePlacementStrat +
+                '}';
     }
 }
