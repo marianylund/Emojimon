@@ -66,6 +66,7 @@ public class GameManager implements SubscriberToFirebase {
     }
 
     public void clearGameData () {
+        gameOver = false;
         this.gameData = null;
     }
 
@@ -180,6 +181,7 @@ public class GameManager implements SubscriberToFirebase {
     public void gameWon(boolean isCreator) {
         //TODO: Remove 181
         simulateGame = false;
+        gameOver = true;
         FBC.I().get().endGame(gameData.getGameId(), isCreator);
     }
 
