@@ -19,17 +19,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.progark.emojimon.Emojimon;
 import com.progark.emojimon.GameManager;
 import com.progark.emojimon.controller.GameBoardController;
 import com.progark.emojimon.model.Move;
-import com.progark.emojimon.model.Player;
 import com.progark.emojimon.model.Position;
 
 
@@ -67,17 +68,21 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     private TextureRegion greenHighDownWhite;
     private TextureRegion greenHighUpRed;
     private TextureRegion greenHighDownRed;
+
     // Board, goal textures
     private TextureRegion squareBoard;
     private TextureRegion squareBoardHighlighted;
     private TextureRegion squareBoardGreenHighlighted;
     private TextureRegion line;
+
     //Emoji textures
     private TextureRegion localPlayerEmoji;
     private TextureRegion otherPlayerEmoji;
 
-
     private Label debugLabel;
+    private TextButton throwDiceBtn;
+    private Table diceTable, diceTablePane;
+    private Table sideMenu;
 
     float sw = Gdx.graphics.getWidth();
     float sh = Gdx.graphics.getHeight();
@@ -187,7 +192,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         // Add bar
         Table barField = new Table();
 
-        Cell barCell = new Cell(squareBoard, squareBoardHighlighted, squareBoardGreenHighlighted, localPlayerEmoji, otherPlayerEmoji, 0, gameBoardController.getBoardPositions().get(0), true);
+        Cell barCell = new Cell(squareBoard, squareBoardHighlighted, squareBoardGreenHighlighted, localPlayerEmoji, otherPlayerEmoji, 0, true);
         barField.add(barCell).size(sw * 0.05f, sw * 0.05f);
         boardCells.set(0, barCell);
 
@@ -218,14 +223,17 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     }
 
     private Container createSideMenu() {
-        // Side Menu contains back button, emojiturn and throw dice button
-
+        // Side Menu contains back button, emojiturn, throw dice button, and dice
         Container sideMenuContainer = new Container();
         sideMenuContainer.setSize(sw * 0.1f, sh);
         sideMenuContainer.setPosition(0, 0);
         sideMenuContainer.fillY(); sideMenuContainer.fillX();
 
-        Table sideMenu = new Table();
+        sideMenu = new Table();
+        sideMenu.setSize(sw * 0.1f, sh);
+        Table throwDiceBtnTable = new Table();
+
+        sideMenu.align(Align.top).padTop(50);
 
         // Add leave button
         sideMenu.add(createButton("Back", new ClickListener() {
@@ -250,45 +258,53 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
             sideMenu.row().pad(10);
         }
 
-        // Add timer label wannabe, is used for debug for now
+
+/*        // Add timer label wannabe, is used for debug for now
         debugLabel = new Label("Debug:", style);
-        sideMenu.add(debugLabel); sideMenu.row().pad(10);
+        sideMenu.add(debugLabel); sideMenu.row().pad(10);*/
 
         // Add throw dice button
-        sideMenu.add(createButton("Throw\nDice", new ClickListener() {
+        throwDiceBtn =  createButton("Throw\nDice", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
                 if(GameManager.GetInstance().isItLocalPlayerTurn()){
                     gameBoardController.rollDice();
                     diceThrown = true;
+                    throwDiceBtn.setVisible(false); //hide button, when dice is thrown
+//                sideMenu.removeActor(throwDiceBtnTable); // remove button
                     highlightStartPositions();
-                    //gameBoardController.getDieList().get(0);
-                    debugLabel.setText(gameBoardController.getDieList().get(0).getValue() + " " + gameBoardController.getDieList().get(1).getValue());
+
+                    // add dices pane to screen
+                    ScrollPane diceSp = createDiceScrollPane();
+                    diceTablePane = new Table();
+                    float sph  = sh*0.5f; // scrollpane size = six dice
+                    diceTablePane.add(diceSp).pad(10).size(150,sph);
+                    sideMenu.row();
+                    sideMenu.add(diceTablePane);
                 }
                 return;
-
-                // TODO begrenes hvor mange ganger man kaster terning
             }
-        })).expand().uniform().width(sideMenuContainer.getWidth());
+        });
 
         sideMenu.row();
         // Add throw dice button
         sideMenu.add(createButton("End\nTurn", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gameBoardController.endTurn(GameManager.GetInstance().getLocalPlayer());
+                gameBoardController.endTurn();
             }
-        })).expand().uniform().width(sideMenuContainer.getWidth());
+        }));
 
         sideMenu.row();
         waitingForTurnLabel = new Label("WAITING", style);
         sideMenu.add(waitingForTurnLabel);
+        sideMenu.row();
+        throwDiceBtnTable.add(throwDiceBtn);
+        sideMenu.add(throwDiceBtnTable);
 
         sideMenuContainer.setActor(sideMenu);
         return sideMenuContainer;
     }
-
 
     private Container createPlayerGoals(){
         Container sideBoardContainer = new Container();
@@ -301,7 +317,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
         // Add player1's goal
         Position player1Goal = gameBoardController.getPlayerGoal(1);
-        Cell player1GoalCell = new Cell(squareBoard, squareBoardHighlighted, squareBoardGreenHighlighted, localPlayerEmoji, otherPlayerEmoji, player1Goal.getPositionIndex(), player1Goal, true);
+        Cell player1GoalCell = new Cell(squareBoard, squareBoardHighlighted, squareBoardGreenHighlighted, localPlayerEmoji, otherPlayerEmoji, player1Goal.getPositionIndex(), true);
         sideBoard.add(player1GoalCell).size(sw * 0.1f, sh/2).expand().center();
         boardCells.set(player1Goal.getPositionIndex(), player1GoalCell);
 
@@ -309,7 +325,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
         // Add player0's goal
         Position player0Goal = gameBoardController.getPlayerGoal(0);
-        Cell player0GoalCell = new Cell(squareBoard, squareBoardHighlighted, squareBoardGreenHighlighted, localPlayerEmoji, otherPlayerEmoji, player0Goal.getPositionIndex(), player0Goal, true);
+        Cell player0GoalCell = new Cell(squareBoard, squareBoardHighlighted, squareBoardGreenHighlighted, localPlayerEmoji, otherPlayerEmoji, player0Goal.getPositionIndex(), true);
         sideBoard.add(player0GoalCell).size(sw * 0.1f, sh/2).expand().center();
         boardCells.set(player0Goal.getPositionIndex(), player0GoalCell);
 
@@ -333,6 +349,32 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         return button;
     }
 
+    private ScrollPane createDiceScrollPane(){
+        BitmapFont font = new BitmapFont();
+        Label.LabelStyle style = new Label.LabelStyle(font, BLACK); // font colour
+
+        diceTable = new Table();
+        int diceNum = gameBoardController.getDieList().size(); // get dices from controller
+        TextureAtlas.AtlasRegion dieRegion = boardAtlas.findRegion("dice"); // get dice background
+        // add dice bcg with drawn number
+        for (int i = diceNum-1; i >= 0; i--){
+            Stack stackDiceImg = new Stack();
+            Image diceImg = new Image(dieRegion);
+
+            Label diceLabel = new Label(Integer.toString(gameBoardController.getDieList().get(i).getValue()), style); // add dice number
+            diceLabel.setAlignment(Align.center);
+            diceLabel.setFontScale(2);
+
+            stackDiceImg.add(diceImg);
+            stackDiceImg.add(diceLabel);
+
+            diceTable.add(stackDiceImg).size(150);
+            diceTable.row();
+        }
+
+        return new ScrollPane(diceTable);
+    }
+
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
@@ -341,7 +383,8 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         stage.addActor(createGameBoard());
         stage.addActor(createPlayerGoals());
 
-
+        //set cells to observe gameboard positions
+        addObserversToBoardPositions();
 
         //add listener for cell clicks
         stage.addListener(new CellClickEventListener() {
@@ -391,7 +434,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                 }
             }
 
-            boardCell = new Cell(chosenTriangle, chosenHighlightedTriangle, chosenGreenHighlightImage, localPlayerEmoji, otherPlayerEmoji, cellPositionIndex, positions.get(cellPositionIndex), rotationUp);
+            boardCell = new Cell(chosenTriangle, chosenHighlightedTriangle, chosenGreenHighlightImage, localPlayerEmoji, otherPlayerEmoji, cellPositionIndex, rotationUp);
 
             boardCells.set(cellPositionIndex, boardCell);
             t.add(boardCell).pad(10).size(120,400);
@@ -408,7 +451,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
             game.setScreen(new GameOverScreen(game, GameManager.GetInstance().getWinningPlayer() ));
         }
 
-        // Check if player if WAITING should be displayed.
+        // Check if player WAITING should be displayed.
         if (GameManager.GetInstance().isItLocalPlayerTurn()) {
             waitingForTurnLabel.setVisible(false);
         } else if (!GameManager.GetInstance().isItLocalPlayerTurn()) {
@@ -458,10 +501,11 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
             if(selectedTriangleIndex == -1){
                 //only accept clicks if triangle is highlighted
                 if(boardCells.get(clickedTriangleIndex).getHighlighted()){
+                    boardCells.get(clickedTriangleIndex).removeHighlight();
                     for(Move move : availableMoves){
                         //remove startposition highlights
                         boardCells.get(move.startPosition).removeHighlight();
-
+                        boardCells.get(move.startPosition).removeHighlight();
                         if(move.startPosition == clickedTriangleIndex){
                             //no triangle selected: select this triangle and highlight possible end positions
                             selectedTriangleIndex = clickedTriangleIndex;
@@ -482,24 +526,27 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                 //check for matching move
                 for(Move move : availableMoves){
                     if(move.startPosition == selectedTriangleIndex){
-                        if(move.endPosition < 1 || move.endPosition > gameBoardController.getBoardSize()){
-                            System.out.println(String.format("Move from %d to %d", move.startPosition, move.endPosition));
-                        }
-                        //remove all highlights
-                        boardCells.get(move.startPosition).removeHighlight();
-                        boardCells.get(move.endPosition).removeHighlight();
                         if(move.endPosition == clickedTriangleIndex){
                             //do move
                             gameBoardController.doMove(move, false);
-                            UpdatePiecesOnBoardCells();
+
+                            // graphic: removes dice when used in dice pane
+                            diceTable.removeActor(diceTable.getChildren().get(0));
+
+                            // graphic: if all dice are used, show 'throw dice' button
+                            if (diceTable.getChildren().size == 0) {
+                                throwDiceBtn.setVisible(true);
+                                // clears actor & cells
+                                diceTablePane.clearChildren();
+                                diceTable.clearChildren();
+                            }
                             break;
                         }
                     }
                 }
                 //deselect triangle
-
                 selectedTriangleIndex = -1;
-
+                clearHighlights();
                 highlightStartPositions();
             }
 
@@ -521,13 +568,21 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         }
     }
 
-    private void UpdatePiecesOnBoardCells(){
+    private void clearHighlights(){
         for(Cell cell : boardCells){
-            cell.updateEmojiGroup();
+            cell.removeHighlight();
         }
     }
 
-
-
+    private void addObserversToBoardPositions(){
+        List<Position> positions = gameBoardController.getBoardPositions();
+        for(int i = 0; i < positions.size(); i++){
+            positions.get(i).addNewObserver(boardCells.get(i));
+        }
+        Position player0Goal = gameBoardController.getPlayerGoal(0);
+        Position player1Goal = gameBoardController.getPlayerGoal(1);
+        player0Goal.addNewObserver(boardCells.get(player0Goal.getPositionIndex()));
+        player1Goal.addNewObserver(boardCells.get(player1Goal.getPositionIndex()));
+    }
 
 }

@@ -89,14 +89,17 @@ public class CreateRulesetScreen implements Screen {
         TextField diceSizeField = new TextField("", skin);
         diceSizeField.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
 
+        final TextField lobbyName = new TextField("Lobbyname", skin);
+
+
         final SelectBox<MoveValStrat> moveValidationStrategiesBox = new SelectBox<MoveValStrat>(skin);
-        moveValidationStrategiesBox.setItems(MoveValStrat.BASIC, MoveValStrat.MOVEBACKWARDS);
+        moveValidationStrategiesBox.setItems(MoveValStrat.values());
 
         final SelectBox<MoveSetStrat> moveSetStrategiesBox = new SelectBox<MoveSetStrat>(skin);
-        moveSetStrategiesBox.setItems(MoveSetStrat.BASIC);
+        moveSetStrategiesBox.setItems(MoveSetStrat.values());
 
         final SelectBox<CanClearStrat> canClearStrategiesBox = new SelectBox<CanClearStrat>(skin);
-        canClearStrategiesBox.setItems(CanClearStrat.BASIC);
+        canClearStrategiesBox.setItems(CanClearStrat.values());
 
         final SelectBox<String> boardSizeBox = new SelectBox<String>(skin);
         boardSizeBox.setItems("24","30");
@@ -132,6 +135,7 @@ public class CreateRulesetScreen implements Screen {
                 // Initiate GameBoardController
                 GameManager.GetInstance().setGameBoardController(new GameBoardController());
                 Settings settings = new Settings(
+                        lobbyName.getText(),
                         Integer.parseInt(boardSizeBox.getSelected()),
                         Integer.parseInt(numOfPiecesBox.getSelected()),
                         Integer.parseInt(diceAmountBox.getSelected()),
@@ -143,7 +147,7 @@ public class CreateRulesetScreen implements Screen {
                         PiecePlacementStrat.BASIC
                 );
                 GameManager.GetInstance().createNewGame(settings);
-                game.setScreen(new GameScreenStandard(game));
+                game.setScreen(new LobbyScreen(game));
             }
         });
 
@@ -152,7 +156,7 @@ public class CreateRulesetScreen implements Screen {
         mainTable.defaults().expandY();
 
         mainTable.add(backButton).height(Gdx.graphics.getHeight()*0.12f);
-        mainTable.add(screenLabel).colspan(5);
+        mainTable.add(lobbyName).colspan(5);
 
         mainTable.row();
         mainTable.add(moveValidationLabel);

@@ -1,6 +1,7 @@
 package com.progark.emojimon.desktop;
 
 import com.progark.emojimon.GameManager;
+import com.progark.emojimon.model.fireBaseData.GameData;
 import com.progark.emojimon.model.fireBaseData.Settings;
 import com.progark.emojimon.model.interfaces.FirebaseControllerInterface;
 import com.progark.emojimon.model.Player;
@@ -18,7 +19,7 @@ public class DesktopFirebaseController implements FirebaseControllerInterface {
     }
 
     @Override
-    public void addNewGame(String creatorPlayer, Settings strategies) {
+    public void createNewGame(String creatorPlayer, Settings strategies) {
 
     }
 
@@ -28,7 +29,7 @@ public class DesktopFirebaseController implements FirebaseControllerInterface {
     }
 
     @Override
-    public void addLastTurnByGameID(String gameID, boolean player, List<Integer> dices, List<List<Integer>> actions) {
+    public void updateLastTurn(String gameID, boolean player, List<Integer> dices, List<List<Integer>> actions) {
 
     }
 
@@ -54,6 +55,11 @@ public class DesktopFirebaseController implements FirebaseControllerInterface {
 
     @Override
     public void endGame(String gameId, boolean localPlayer) {
+
+    }
+
+    @Override
+    public void updateGameData(String gameId, GameData gameData) {
 
     }
 

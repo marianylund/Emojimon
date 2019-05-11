@@ -2,17 +2,16 @@ package com.progark.emojimon;
 
 import com.progark.emojimon.controller.FBC;
 import com.progark.emojimon.controller.GameBoardController;
-import com.progark.emojimon.gameScreens.CreateRulesetScreen;
-import com.progark.emojimon.gameScreens.GameOverScreen;
-import com.progark.emojimon.gameScreens.GameScreen;
-import com.progark.emojimon.gameScreens.GameScreenStandard;
-import com.progark.emojimon.gameScreens.MainMenuScreen;
-import com.progark.emojimon.gameScreens.SelectEmojiScreen;
 import com.progark.emojimon.model.Player;
+import com.progark.emojimon.model.fireBaseData.Converter;
 import com.progark.emojimon.model.fireBaseData.GameData;
 import com.progark.emojimon.model.fireBaseData.LastTurnData;
 import com.progark.emojimon.model.fireBaseData.Settings;
 import com.progark.emojimon.model.interfaces.SubscriberToFirebase;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class GameManager implements SubscriberToFirebase {
     //Implements Singleton pattern with lazy initialization
@@ -26,6 +25,7 @@ public class GameManager implements SubscriberToFirebase {
     Emojimon game;
     public boolean gameOver = false;
     private EmojimonPreferences preferences;
+    private HashMap<String, String> allWaitingGamesList;
 
     public enum GameStatus {
         WAITING,
@@ -93,6 +93,16 @@ public class GameManager implements SubscriberToFirebase {
     public void notifyOfGameData(String gameID, GameData gameData) {
         System.out.println("NEW GAMEDATA");
         this.gameData = gameData;
+        switch (getLocalPlayerIndex()) {
+            case 0:
+                this.localPlayerEmoji = gameData.getPlayer0emoji();
+                this.otherPlayerEmoji = gameData.getPlayer1emoji();
+                break;
+            case 1:
+                this.localPlayerEmoji = gameData.getPlayer1emoji();
+                this.otherPlayerEmoji = gameData.getPlayer0emoji();
+                break;
+        }
     }
 
     public boolean isItLocalPlayerTurn(){
@@ -156,13 +166,13 @@ public class GameManager implements SubscriberToFirebase {
     public int getWinningPlayer () {return gameData.getWinningPlayer();}
 
     public void createNewGame (Settings settings) {
-        FBC.I().get().addNewGame("TEST", settings); // Push GameData to Firebase
         gameBoardController = new GameBoardController();
         gameBoardController.createDynamicGameBoard(settings);
+        FBC.I().get().createNewGame("TEST", settings); // Push GameData to Firebase
     }
 
-    public void joinGame () {
-        FBC.I().get().joinGame();
+    public void findWaitingGames() {
+        FBC.I().get().getAllWaitingGames();
     }
 
     public void createGameFromFirebaseData (GameData gameData) {
@@ -180,5 +190,27 @@ public class GameManager implements SubscriberToFirebase {
 
     public EmojimonPreferences getPreferences(){
         return preferences;
+    }
+
+    public void endTurn () {
+        Player player = getLocalPlayer();
+        if(player.isDone()){
+            gameWon(player.isCreator());
+        }
+        // Push Last turn data
+        FBC.I().get().updateLastTurn(gameID, !player.isCreator(),
+                Converter.fromDiceToList(gameBoardController.getGameBoard().getDice().getDieList()),
+                Converter.fromMovesToList(gameBoardController.getGameBoard().getCurrentTurnMoves()));
+        gameBoardController.getGameBoard().emptyCurrentTurnMoves();
+        // Push new Game data
+        FBC.I().get().updateGameData(gameID, gameData);
+    }
+
+    public HashMap<String, String> getAllWaitingGamesList() {
+        return allWaitingGamesList;
+    }
+
+    public void setAllWaitingGamesList(HashMap setAllWaitingGamesList) {
+        this.allWaitingGamesList = setAllWaitingGamesList;
     }
 }

@@ -101,8 +101,8 @@ public class MainMenuScreen implements Screen {
         joinGameImage.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //((Game)Gdx.app.getApplicationListener()).setScreen(new ChooseGameScreen(game));
-                GameManager.GetInstance().joinGame();
+                GameManager.GetInstance().findWaitingGames();
+                game.setScreen(new GamesListScreen(game));
 
             }
         });
@@ -142,9 +142,9 @@ public class MainMenuScreen implements Screen {
         stage.act();
         stage.draw();
 
-        if (GameManager.GetInstance().getGameData() != null) {
+        /*if (GameManager.GetInstance().getGameData() != null) {
             game.setScreen(new GameScreenStandard(game));
-        }
+        }*/
     }
 
     @Override
