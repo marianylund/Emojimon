@@ -38,6 +38,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import static com.badlogic.gdx.graphics.Color.BLACK;
+
 public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
     private Stage stage;
@@ -86,6 +88,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
     float sw = Gdx.graphics.getWidth();
     float sh = Gdx.graphics.getHeight();
+    private float sph  = sh*0.5f; // scrollpane size
 
     private int fieldReference;
 
@@ -242,7 +245,8 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                 GameManager.GetInstance().clearGameData();
                 game.setScreen(new MainMenuScreen(game));
             }
-        })).expand().uniform().width(sideMenuContainer.getWidth()); sideMenu.row();
+        })).expand().uniform().width(sideMenuContainer.getWidth());
+        sideMenu.row();
 
 
         // Add Turn emoji
@@ -275,9 +279,9 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                     highlightStartPositions();
 
                     // add dices pane to screen
-                    ScrollPane diceSp = createDiceScrollPane();
+                    updateDiceList();
+                    ScrollPane diceSp = new ScrollPane(diceTable);
                     diceTablePane = new Table();
-                    float sph  = sh*0.5f; // scrollpane size = six dice
                     diceTablePane.add(diceSp).pad(10).size(150,sph);
                     sideMenu.row();
                     sideMenu.add(diceTablePane);
@@ -349,28 +353,35 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         return button;
     }
 
-    private ScrollPane createDiceScrollPane(){
+    private void updateDiceList(){
+        BitmapFont font = new BitmapFont();
+        Label.LabelStyle style = new Label.LabelStyle(font, BLACK); // font colour
 
+        // clear diceTable
         diceTable = new Table();
+
         int diceNum = gameBoardController.getDieList().size(); // get dices from controller
         TextureAtlas.AtlasRegion dieRegion = boardAtlas.findRegion("dice"); // get dice background
+
         // add dice bcg with drawn number
         for (int i = diceNum-1; i >= 0; i--){
-            Stack stackDiceImg = new Stack();
-            Image diceImg = new Image(dieRegion);
+            //add dice to table if not used
+            if (!gameBoardController.getDieList().get(i).getUsed()){
+                Stack stackDiceImg = new Stack();
+                Image diceImg = new Image(dieRegion);
 
-            Label diceLabel = new Label(Integer.toString(gameBoardController.getDieList().get(i).getValue()), style); // add dice number
-            diceLabel.setAlignment(Align.center);
-            diceLabel.setFontScale(2);
+                Label diceLabel = new Label(Integer.toString(gameBoardController.getDieList().get(i).getValue()), style); // add dice number
+                diceLabel.setAlignment(Align.center);
+                diceLabel.setFontScale(2);
 
-            stackDiceImg.add(diceImg);
-            stackDiceImg.add(diceLabel);
+                stackDiceImg.add(diceImg);
+                stackDiceImg.add(diceLabel);
 
-            diceTable.add(stackDiceImg).size(150);
-            diceTable.row();
+                diceTable.add(stackDiceImg).size(150);
+                diceTable.row();
+            }
+
         }
-
-        return new ScrollPane(diceTable);
     }
 
     @Override
@@ -528,8 +539,13 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                             //do move
                             gameBoardController.doMove(move, false);
 
-                            // graphic: removes dice when used in dice pane
-                            diceTable.removeActor(diceTable.getChildren().get(0));
+                            // graphic: remove used dice in dice pane
+                            // clear children
+                            diceTablePane.clearChildren();
+                            diceTable.clearChildren();
+                            // update dice list
+                            updateDiceList();
+                            diceTablePane.add(new ScrollPane(diceTable)).pad(10).size(150, sph);
 
                             // graphic: if all dice are used, show 'throw dice' button
                             if (diceTable.getChildren().size == 0) {
