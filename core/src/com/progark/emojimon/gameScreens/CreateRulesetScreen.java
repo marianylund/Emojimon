@@ -94,7 +94,7 @@ public class CreateRulesetScreen implements Screen {
         canClearStrategiesBox.setItems(CanClearStrat.values());
 
         final SelectBox<String> boardSizeBox = new SelectBox<String>(skin);
-        boardSizeBox.setItems("24","30");
+        boardSizeBox.setItems("24","28", "32");
 
         final SelectBox<String> numOfPiecesBox = new SelectBox<String>(skin);
         numOfPiecesBox.setItems("15","19");
