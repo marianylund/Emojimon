@@ -11,7 +11,7 @@ import java.util.List;
 
 //Eg. standard boardSize 24 and 15 pieces per player:
 //player0, positions: [24, 13, 8, 6]
-//player1, positions: [1, 12, 17, 19]
+//player1, p0ositions: [1, 12, 17, 19]
 
 public class BasicStartPiecePlacementStrategy implements StartPiecePlacementStrategy {
 

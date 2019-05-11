@@ -29,7 +29,7 @@ public class GameManager implements SubscriberToFirebase {
 
 
     //Set to true to play the game automatically  (TODO: Remove)
-    public boolean simulateGame = true;
+    public boolean simulateGame = false;
     public boolean simulateCurrentGame;
 
     public enum GameStatus {
