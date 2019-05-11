@@ -275,17 +275,19 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                 if(GameManager.GetInstance().isItLocalPlayerTurn()){
                     gameBoardController.rollDice();
                     diceThrown = true;
+                    // hide dice button
                     setDiceButtonVisible(false);
-//                sideMenu.removeActor(throwDiceBtnTable); // remove button
                     highlightStartPositions();
 
-                    // add dices pane to screen
-                    updateDiceList();
-                    ScrollPane diceSp = new ScrollPane(diceTable);
-                    diceTablePane = new Table();
-                    diceTablePane.add(diceSp).pad(10).size(150,sph);
-                    sideMenu.row();
-                    sideMenu.add(diceTablePane);
+                    // add dices pane to screen, if moves are available
+                    if (gameBoardController.getMoves(GameManager.GetInstance().getLocalPlayerIndex()).size() != 0) {
+                        updateDiceList();
+                        ScrollPane diceSp = new ScrollPane(diceTable);
+                        diceTablePane = new Table();
+                        diceTablePane.add(diceSp).pad(10).size(150,sph);
+                        sideMenu.row();
+                        sideMenu.add(diceTablePane);
+                    }
                 }
                 return;
             }
@@ -468,6 +470,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
             waitingForTurnLabel.setVisible(false);
         } else if (!GameManager.GetInstance().isItLocalPlayerTurn()) {
             waitingForTurnLabel.setVisible(true);
+            setDiceButtonVisible(false);
         }
 
 //        batch.begin();
@@ -550,10 +553,9 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                             updateDiceList();
                             diceTablePane.add(new ScrollPane(diceTable)).pad(10).size(150, sph);
 
-                            // graphic: if all dice are used, show 'throw dice' button
-                            if (diceTable.getChildren().size == 0) {
-                                throwDiceBtn.setVisible(true);
-                                // clears actor & cells
+                            // graphic: if all dice are used or there are no moves left, clear dice list
+                            if (diceTable.getChildren().size == 0 || gameBoardController.getMoves(GameManager.GetInstance().getLocalPlayerIndex()).size() == 0) {
+                                // clear actor & cells
                                 diceTablePane.clearChildren();
                                 diceTable.clearChildren();
                             }
