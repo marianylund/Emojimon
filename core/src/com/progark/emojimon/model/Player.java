@@ -138,11 +138,9 @@ public class Player {
         if(canClear(positions)){
             //allow removal of furthest piece in home area if no other move is valid
             if(moves.size() == 0){
-                int positionIndex = moveClockwise ? homeAreaEndIndex : homeAreaStartIndex;
+                int positionIndex = moveClockwise ?  homeAreaStartIndex : homeAreaEndIndex;
                 while(positionIndex >= homeAreaStartIndex && positionIndex <= homeAreaEndIndex){
-                    //update positionindex
-                    if(moveClockwise) positionIndex--;
-                    else positionIndex++;
+
 
                     Position p = positions.get(positionIndex);
                     if(p.getOwner() == this && p.getPieceCount() > 0){
@@ -166,6 +164,10 @@ public class Player {
                             break; //only one move should be added
                         }
                     }
+
+                    //update positionindex
+                    if(moveClockwise) positionIndex++;
+                    else positionIndex--;
                 }
             }
         }
@@ -208,6 +210,5 @@ public class Player {
     public boolean isCreator() {
         return creator;
     }
-
 
 }

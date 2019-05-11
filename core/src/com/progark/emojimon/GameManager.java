@@ -2,6 +2,7 @@ package com.progark.emojimon;
 
 import com.progark.emojimon.controller.FBC;
 import com.progark.emojimon.controller.GameBoardController;
+import com.progark.emojimon.model.Move;
 import com.progark.emojimon.model.Player;
 import com.progark.emojimon.model.fireBaseData.Converter;
 import com.progark.emojimon.model.fireBaseData.GameData;
@@ -9,7 +10,6 @@ import com.progark.emojimon.model.fireBaseData.LastTurnData;
 import com.progark.emojimon.model.fireBaseData.Settings;
 import com.progark.emojimon.model.interfaces.SubscriberToFirebase;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,6 +27,11 @@ public class GameManager implements SubscriberToFirebase {
     private EmojimonPreferences preferences;
     private HashMap<String, String> allWaitingGamesList;
 
+
+    //Set to true to play the game automatically  (TODO: Remove)
+    public boolean simulateGame = false;
+    public boolean simulateCurrentGame;
+
     public enum GameStatus {
         WAITING,
         STARTET,
@@ -39,6 +44,7 @@ public class GameManager implements SubscriberToFirebase {
     private boolean localPlayer;
 
     public GameManager(){
+        simulateCurrentGame = simulateGame;
     }
 
     public static GameManager GetInstance() {
@@ -61,6 +67,7 @@ public class GameManager implements SubscriberToFirebase {
     }
 
     public void clearGameData () {
+        gameOver = false;
         this.gameData = null;
     }
 
@@ -70,7 +77,7 @@ public class GameManager implements SubscriberToFirebase {
 
     @Override
     public void notifyOfNewLastTurn(String gameID, LastTurnData lastTurn) {
-        System.out.println("NEW LAST TURN");
+        //System.out.println("NEW LAST TURN");
         if (lastTurn != null) {
             gameBoardController.emptyLastTurnMoves();
             lastTurnData = lastTurn;
@@ -81,17 +88,34 @@ public class GameManager implements SubscriberToFirebase {
                     // Check if game is over
                     if(getWinningPlayer() == 0 || getWinningPlayer() == 1) {
                         gameOver = true;
+                        //TODO: Remove 90
+                        simulateCurrentGame = false;
                     }
                     // TODO: GUI: Start turn by enabling roll dice button for player
 
+                    //TODO: Remove (plays game automatically)
+                    if(simulateCurrentGame){
+                        gameBoardController.rollDice();
+                        while(true){
+                            List<Move> availableMoves = gameBoardController.getMoves(getLocalPlayerIndex());
+                            if(availableMoves.size() == 0){
+                                break;
+                            }
+                            int moveIndex = (int)(Math.random() * availableMoves.size());
+                            gameBoardController.doMove(availableMoves.get(moveIndex), false);
+                        }
+                    }
+
                 }
+
+                gameBoardController.onNewTurn();
             }
         }
     }
 
     @Override
     public void notifyOfGameData(String gameID, GameData gameData) {
-        System.out.println("NEW GAMEDATA");
+        //System.out.println("NEW GAMEDATA");
         this.gameData = gameData;
         switch (getLocalPlayerIndex()) {
             case 0:
@@ -156,6 +180,10 @@ public class GameManager implements SubscriberToFirebase {
     }
 
     public void gameWon(boolean isCreator) {
+        //TODO: Remove 181
+        simulateCurrentGame = false;
+        gameData.setWinningPlayer(getLocalPlayerIndex());
+        gameOver = true;
         FBC.I().get().endGame(gameData.getGameId(), isCreator);
     }
 
@@ -169,6 +197,8 @@ public class GameManager implements SubscriberToFirebase {
         gameBoardController = new GameBoardController();
         gameBoardController.createDynamicGameBoard(settings);
         FBC.I().get().createNewGame("TEST", settings); // Push GameData to Firebase
+
+        simulateCurrentGame = simulateGame;
     }
 
     public void findWaitingGames() {
@@ -212,5 +242,10 @@ public class GameManager implements SubscriberToFirebase {
 
     public void setAllWaitingGamesList(HashMap setAllWaitingGamesList) {
         this.allWaitingGamesList = setAllWaitingGamesList;
+    }
+
+    public void joinGame(String key){
+        simulateCurrentGame = simulateGame;
+        FBC.I().get().joinGameById(key);
     }
 }

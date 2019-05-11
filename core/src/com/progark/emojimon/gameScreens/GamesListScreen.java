@@ -142,7 +142,8 @@ public class GamesListScreen implements Screen {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     System.out.println("JOINED GAME");
-                    FBC.I().get().joinGameById(key);
+                    //FBC.I().get().joinGameById(key);
+                    GameManager.GetInstance().joinGame(key);
                     game.setScreen(new LobbyScreen(game));
                 }
             });

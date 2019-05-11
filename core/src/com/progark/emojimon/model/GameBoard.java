@@ -2,6 +2,7 @@ package com.progark.emojimon.model;
 
 import com.progark.emojimon.GameManager;
 import com.progark.emojimon.model.factories.CanClearStrategyFactory;
+import com.progark.emojimon.model.factories.DieFactory;
 import com.progark.emojimon.model.factories.MoveSetStrategyFactory;
 import com.progark.emojimon.model.factories.StartPiecePlacementStrategyFactory;
 import com.progark.emojimon.model.fireBaseData.Settings;
@@ -44,7 +45,7 @@ public class GameBoard {
     private StartPiecePlacementStrategy startPiecePlacementStrategy;
 
     //TODO: switch back to use basic canclear strategy as standard
-    private static Settings standardSettings = new Settings("TESTLOBBY", 24, 15, 2, 6, 2, MoveSetStrat.BASIC.BASIC, MoveValStrat.BASIC, CanClearStrat.ALWAYS, StartPiecePlacementStrategyFactory.PiecePlacementStrat.BASIC);
+    private static Settings standardSettings = new Settings("TESTLOBBY", 24, 15, 2, DieFactory.DieType.SIXSIDED, 2, MoveSetStrat.BASIC.BASIC, MoveValStrat.BASIC, CanClearStrat.ALWAYS, StartPiecePlacementStrategyFactory.PiecePlacementStrat.BASIC);
     //constructors
     //creates standard gameboard
     public GameBoard(){

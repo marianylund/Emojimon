@@ -105,6 +105,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         this.game = game;
         GameManager.GetInstance().createApp(game);
         this.gameBoardController = GameManager.GetInstance().getGameBoardController();
+        gameBoardController.setView(this);
 
         // Get UI skin
         atlas = new GameSkin().getAtlas();
@@ -276,7 +277,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
                 if(GameManager.GetInstance().isItLocalPlayerTurn()){
                     gameBoardController.rollDice();
                     diceThrown = true;
-                    throwDiceBtn.setVisible(false); //hide button, when dice is thrown
+                    setDiceButtonVisible(false);
 //                sideMenu.removeActor(throwDiceBtnTable); // remove button
                     highlightStartPositions();
 
@@ -293,13 +294,15 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         });
 
         sideMenu.row();
-        // Add throw dice button
+        // Add end turn button
+        /*
         sideMenu.add(createButton("End\nTurn", new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 gameBoardController.endTurn();
             }
         }));
+        */
 
         sideMenu.row();
         waitingForTurnLabel = new Label("WAITING", style);
@@ -603,6 +606,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     }
 
     private void addObserversToBoardPositions(){
+
         List<Position> positions = gameBoardController.getBoardPositions();
         for(int i = 0; i < positions.size(); i++){
             positions.get(i).addNewObserver(boardCells.get(i));
@@ -611,6 +615,11 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         Position player1Goal = gameBoardController.getPlayerGoal(1);
         player0Goal.addNewObserver(boardCells.get(player0Goal.getPositionIndex()));
         player1Goal.addNewObserver(boardCells.get(player1Goal.getPositionIndex()));
+
+    }
+
+    public void setDiceButtonVisible(boolean visible){
+        throwDiceBtn.setVisible(visible); //hide button, when dice is thrown
     }
 
 }
