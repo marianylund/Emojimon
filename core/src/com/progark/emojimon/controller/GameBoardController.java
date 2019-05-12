@@ -136,8 +136,8 @@ public class GameBoardController {
     }
 
     public void endTurn(){
-        GameManager.GetInstance().endTurn();
         view.setDiceButtonVisible(false);
+        GameManager.GetInstance().endTurn();
     }
 
     public Position getPlayerGoal(int index){
