@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -24,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -80,6 +82,9 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
     //Emoji textures
     private TextureRegion localPlayerEmoji;
     private TextureRegion otherPlayerEmoji;
+    private Image turnEmoji;
+
+    private Label messages;
 
     private Label debugLabel;
     private TextButton throwDiceBtn;
@@ -149,6 +154,7 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         //Find emoji regions
         localPlayerEmoji = emojiAtlas.findRegion(GameManager.GetInstance().getLocalPlayerEmoji());
         otherPlayerEmoji = emojiAtlas.findRegion(GameManager.GetInstance().getOtherPlayerEmoji());
+        turnEmoji = new Image();
 
         //initialize boardcells
         int boardSize = gameBoardController.getBoardSize();
@@ -249,20 +255,9 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         })).expand().uniform().width(sideMenuContainer.getWidth());
         sideMenu.row();
 
-
-        // Add Turn emoji
-        if(GameManager.GetInstance().isItLocalPlayerTurn()){
-            TextureAtlas.AtlasRegion emojiRegion = emojiAtlas.findRegion(GameManager.GetInstance().getLocalPlayerEmoji());
-            sideMenu.add(new Image(emojiRegion)).size(100);
-            sideMenu.row().pad(10);
-        }
-        else{
-            //todo
-            TextureAtlas.AtlasRegion emojiRegion = emojiAtlas.findRegion(GameManager.GetInstance().getOtherPlayerEmoji());
-            sideMenu.add(new Image(emojiRegion)).size(100);
-            sideMenu.row().pad(10);
-        }
-
+        updateTurnEmoji();
+        sideMenu.add(turnEmoji).size(100);
+        sideMenu.row().pad(10);
 
 /*        // Add timer label wannabe, is used for debug for now
         debugLabel = new Label("Debug:", style);
@@ -315,6 +310,14 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         return sideMenuContainer;
     }
 
+    private void updateTurnEmoji(){
+        if(GameManager.GetInstance().isItLocalPlayerTurn()) {
+            turnEmoji.setDrawable(new SpriteDrawable(new Sprite(localPlayerEmoji)));
+        } else {
+            turnEmoji.setDrawable(new SpriteDrawable(new Sprite(otherPlayerEmoji)));
+        }
+    }
+
     private Container createPlayerGoals(){
         Container sideBoardContainer = new Container();
 
@@ -358,6 +361,18 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
         return button;
     }
 
+    private void showMessage(String text){
+        messages = new Label(text, skin);
+
+        messages.setFontScale(5f,5f);
+        messages.setPosition(sw/2-messages.getWidth()*5/2,sh/2-messages.getHeight()*5/2);
+        messages.setZIndex(1);
+        stage.addActor(messages);
+    }
+
+    private void removeMessage() {
+        messages.remove();
+    }
     private void updateDiceList(){
         BitmapFont font = new BitmapFont();
         Label.LabelStyle style = new Label.LabelStyle(font, BLACK); // font colour
@@ -467,11 +482,14 @@ public class GameScreenStandard extends ApplicationAdapter implements Screen {
 
         // Check if player WAITING should be displayed.
         if (GameManager.GetInstance().isItLocalPlayerTurn()) {
+           // showMessage("Waiting for the opponent");
             waitingForTurnLabel.setVisible(false);
         } else if (!GameManager.GetInstance().isItLocalPlayerTurn()) {
+            //removeMessage();
             waitingForTurnLabel.setVisible(true);
             setDiceButtonVisible(false);
         }
+        updateTurnEmoji();
 
 //        batch.begin();
 //        batch.draw(spritesheet, 0, 0);

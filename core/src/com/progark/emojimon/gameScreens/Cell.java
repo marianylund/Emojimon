@@ -28,9 +28,6 @@ TODO: way of displaying emojis when position count exceeds emojiNumber
  */
 public class Cell extends Stack implements Observer {
 
-
-
-
     private Image currentImage;
     private TextureRegion standardTexture;
     private TextureRegion highlightedTexture;
