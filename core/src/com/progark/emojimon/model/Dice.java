@@ -10,9 +10,9 @@ public class Dice {
     private List<Die> dieList;
     private int baseNumberOfDice;
     private int diceMultiplier; //multiplier to be applied when throwing all equals
-    private int dieSides;
+    private DieFactory.DieType dieSides;
 
-    public Dice(int baseNumberOfDice, int diceMultiplier, int dieSides){
+    public Dice(int baseNumberOfDice, int diceMultiplier, DieFactory.DieType dieSides){
         this.baseNumberOfDice = baseNumberOfDice;
         this.diceMultiplier = diceMultiplier;
         this.dieSides = dieSides;
@@ -48,16 +48,22 @@ public class Dice {
     }
 
     public void rollDice(){
+        //revert dice include base number of die
+        revertDice();
+        
         boolean equalDice = true;
         int lastDieValue = 0;
         for(int i = 0; i < dieList.size(); i++){
             Die die = dieList.get(i);
             die.roll();
 
-            //keep track of whether all die have the same value
-            if(equalDice){
-                if(die.getValue() != lastDieValue){
-                    equalDice = false;
+            if(i == 0) lastDieValue = die.getValue();
+            else{
+                //keep track of whether all die have the same value
+                if(equalDice){
+                    if(die.getValue() != lastDieValue){
+                        equalDice = false;
+                    }
                 }
                 lastDieValue = die.getValue();
             }

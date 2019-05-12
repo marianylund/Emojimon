@@ -19,32 +19,39 @@ public class BasicMoveSetStrategy implements MoveSetStrategy {
         Position endPosition = boardPositions.get(move.endPosition);
         Position bar = boardPositions.get(0);
 
+
         // check if players piece can be moved
+        //System.out.print("STARTPOSITION: " + startPosition.getPositionIndex());
         if (startPosition.getOwner().isAvailableMove(startPosition, endPosition)){
 
             // throw opposite players piece
-            if (!endPosition.getOwner().equals(startPosition.getOwner())){
-                bar.addPieces(blot);
-                endPosition.removePieces(blot);
+            if(endPosition.getOwner() != null){
+                if (endPosition.getOwner() != startPosition.getOwner()){
+                    //move pieces from endposition to bar
+                    bar.addPieces(blot);
+                    endPosition.removePieces(blot);
 
-                // set bar owner
-                if (!bar.getOwner().equals(endPosition.getOwner())){
-                    bar.setOwner(endPosition.getOwner());
+                    // set bar owner
+                    if (bar.getOwner() == null || bar.getOwner() != (endPosition.getOwner())){
+                        bar.setOwner(endPosition.getOwner());
+                    }
                 }
             }
 
-            startPosition.addPieces(1);
             startPosition.removePieces(1);
             endPosition.addPieces(1);
 
-            //update owner of endposition if necessary
-            if(endPosition.getOwner() != startPosition.getOwner()){
-                endPosition.setOwner(startPosition.getOwner());
+            //update owners
+            endPosition.setOwner(startPosition.getOwner());
+            if(startPosition.getPieceCount() == 0){
+                startPosition.setOwner(null);
             }
 
-            // if the player has cleared their bar, set owner to null
-            if (bar.getPieceCount() == 0 && bar.getOwner().equals(endPosition.getOwner())) {
-                bar.setOwner(null);
+            if(bar.getOwner() != null){
+                // if the player has cleared their bar, set owner to null
+                if (bar.getPieceCount() == 0 && bar.getOwner().equals(endPosition.getOwner())) {
+                    bar.setOwner(null);
+                }
             }
 
             return true;

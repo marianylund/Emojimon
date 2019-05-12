@@ -1,10 +1,13 @@
 package com.progark.emojimon;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.progark.emojimon.controller.FBC;
+import com.progark.emojimon.gameScreens.GameOverScreen;
 import com.progark.emojimon.gameScreens.MainMenuScreen;
 import com.progark.emojimon.controller.GameBoardController;
 import com.progark.emojimon.model.fireBaseData.Converter;
@@ -14,58 +17,53 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 public class Emojimon extends Game {
 
-    public static final int WIDTH = 480;
-    public static final int HEIGHT = 880;
+    public static final int WIDTH = 1200;
+    public static final int HEIGHT = 600;
     SpriteBatch batch;
     Texture img;
     GameBoardController gameBoardController;
+    private Music music;
 
-    public Emojimon(FirebaseControllerInterface firebaseControllerInterface){
+    public Emojimon(FirebaseControllerInterface firebaseControllerInterface) {
         FBC.I().setFirebase(firebaseControllerInterface);
     }
 	
 	@Override
 	public void create () {
+        GameManager.GetInstance().createApp(this);
         setScreen(new MainMenuScreen(this));
-		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+        batch = new SpriteBatch();
+        img = new Texture("badlogic.jpg");
+        GameManager.GetInstance().createPreference();
+        if(!GameManager.GetInstance().getPreferences().isEmoji().isEmpty()){
+            GameManager.GetInstance().setLocalPlayerEmoji(GameManager.GetInstance().getPreferences().isEmoji());
+        }
+        //music credit: patrickdearteaga.com
+        music = Gdx.audio.newMusic(Gdx.files.internal("Music/Humble Match.ogg"));
+        music.setLooping(true);
+        music.play();
+    }
 
-		//Test creation of gameboard
-		gameBoardController = new GameBoardController();
-		gameBoardController.createStandardGameBoard();
+    //debugging
 
-
-		//test write to Firebase
-
-		/*
-		FBC.I().get().addNewGame("Player0Olala");
-		//tempLastTurn();
-		//FBC.I().get().joinGame();
-        String tempGameID = FBC.I().get().getGameIDs()[0].toString();
-        FBC.I().get().setGameBoardByGameID(tempGameID, createTempDoubleArrayList());
-        FBC.I().get().setGameStatusByGameID(tempGameID, "Playing");
-        */
-	}
-
-	//debugging
-
-    private List<List<Integer>> createTempDoubleArrayList(){
+    private List<List<Integer>> createTempDoubleArrayList() {
         List<Integer> action = new ArrayList<Integer>();
         //from;to;
-        action.add(2);action.add(3);
+        action.add(2);
+        action.add(3);
         List<List<Integer>> actions = new ArrayList<List<Integer>>();
         actions.add(action);
         return actions;
     }
 
-    private void tempLastTurn(){
+    private void tempLastTurn() {
         List<Integer> dices = new ArrayList<Integer>();
-        dices.add(5); dices.add(3);
+        dices.add(5);
+        dices.add(3);
 
-        //FBC.I().get().addLastTurnByGameID("GameID00", false, "12:35", dices, createTempDoubleArrayList());
+        //FBC.I().get().updateLastTurn("GameID00", false, "12:35", dices, createTempDoubleArrayList());
     }
 
 

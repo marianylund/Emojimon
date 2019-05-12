@@ -7,17 +7,17 @@ import com.progark.emojimon.model.strategyPattern.MoveValidationStrategy;
 public class MoveValidationStrategyFactory {
 
     public enum MoveValStrat {
-        BASIC,
-        MOVEBACKWARDS
+        BASIC
     }
 
     // Create a concrete strategy for validating a move
-    public static MoveValidationStrategy getMoveValidationStrategy(MoveValStrat moveValidation){
+
+    public static MoveValidationStrategy getMoveValidationStrategy(MoveValStrat moveValidation, int blot){
         if (moveValidation == null){
             return null;
         }
         if (moveValidation == MoveValStrat.BASIC){
-            return new BasicMoveValidationStrategy();
+            return new BasicMoveValidationStrategy(blot);
         }
         return null;
     }

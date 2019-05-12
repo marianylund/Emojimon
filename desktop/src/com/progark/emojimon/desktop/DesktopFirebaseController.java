@@ -1,5 +1,8 @@
 package com.progark.emojimon.desktop;
 
+import com.progark.emojimon.GameManager;
+import com.progark.emojimon.model.fireBaseData.GameData;
+import com.progark.emojimon.model.fireBaseData.Settings;
 import com.progark.emojimon.model.interfaces.FirebaseControllerInterface;
 import com.progark.emojimon.model.Player;
 import com.progark.emojimon.model.interfaces.SubscriberToFirebase;
@@ -9,14 +12,14 @@ import java.util.List;
 
 public class DesktopFirebaseController implements FirebaseControllerInterface {
 
+
     @Override
-    public ArrayList<List<Integer>> getGameStateByGameID(String id) { return new ArrayList<List<Integer>>();
+    public void testWrite(String testMessage) {
+
     }
 
-
-
     @Override
-    public void addNewGame(String creatorPlayer) {
+    public void createNewGame(String creatorPlayer, Settings strategies) {
 
     }
 
@@ -26,7 +29,7 @@ public class DesktopFirebaseController implements FirebaseControllerInterface {
     }
 
     @Override
-    public void addLastTurnByGameID(String gameID, boolean player, List<Integer> dices, List<List<Integer>> actions) {
+    public void updateLastTurn(String gameID, boolean player, List<Integer> dices, List<List<Integer>> actions) {
 
     }
 
@@ -36,7 +39,7 @@ public class DesktopFirebaseController implements FirebaseControllerInterface {
     }
 
     @Override
-    public void setGameStatusByGameID(String gameID, String newStatus) {
+    public void setGameStatusByGameID(String gameID, GameManager.GameStatus newStatus) {
 
     }
 
@@ -46,12 +49,22 @@ public class DesktopFirebaseController implements FirebaseControllerInterface {
     }
 
     @Override
-    public Object[] getGameIDs() {
-        return new Object[0];
+    public void addSubscriber(SubscriberToFirebase subscriber) {
+
     }
 
     @Override
-    public void addSubscriber(SubscriberToFirebase subscriber) {
+    public void endGame(String gameId, boolean localPlayer) {
 
+    }
+
+    @Override
+    public void updateGameData(String gameId, GameData gameData) {
+
+    }
+
+    @Override
+    public ArrayList getGameStateByGameID(String id) {
+        return null;
     }
 }

@@ -1,31 +1,35 @@
 package com.progark.emojimon.model.fireBaseData;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import com.progark.emojimon.GameManager.GameStatus;
 
 public class GameData {
-    private String status;
+    private GameStatus status;
     private String player0Key;
+    private String player0emoji;
     private String player1Key;
+    private String player1emoji;
     private List<List<Integer>> GameBoard;
     private Settings settings;
+    private String gameId;
+    private int winningPlayer = -1;
 
     public GameData(){} // Reguires for Firebase
 
     public GameData(String player0, Settings settings) {
-        this.status = "Waiting";
+        this.status = GameStatus.WAITING;
         this.settings = settings;
         // Convert Strings to ENUMS
         // The player who has created the game
         this.player0Key = player0;
+
     }
 
-    public String getStatus() {
+    public GameStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(GameStatus status) {
         this.status = status;
     }
 
@@ -53,8 +57,40 @@ public class GameData {
         this.GameBoard = gameBoard;
     }
 
+    public String getPlayer0emoji() {
+        return player0emoji;
+    }
+
+    public void setPlayer0emoji(String player0emoji) {
+        this.player0emoji = player0emoji;
+    }
+
+    public String getPlayer1emoji() {
+        return player1emoji;
+    }
+
+    public void setPlayer1emoji(String player1emoji) {
+        this.player1emoji = player1emoji;
+    }
+
     public Settings getSettings() {
         return settings;
+    }
+
+    public String getGameId() {
+        return gameId;
+    }
+
+    public void setGameId(String gameId) {
+        this.gameId = gameId;
+    }
+
+    public int getWinningPlayer() {
+        return winningPlayer;
+    }
+
+    public void setWinningPlayer(int winningPlayer) {
+        this.winningPlayer = winningPlayer;
     }
 
     @Override

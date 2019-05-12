@@ -1,20 +1,21 @@
 package com.progark.emojimon;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
-import com.badlogic.gdx.Game;
-import com.google.firebase.FirebaseApp;
+import com.badlogic.gdx.Gdx;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.progark.emojimon.gameScreens.GamesListScreen;
+import com.progark.emojimon.model.fireBaseData.Converter;
 import com.progark.emojimon.model.fireBaseData.Settings;
 import com.progark.emojimon.model.interfaces.FirebaseControllerInterface;
 import com.progark.emojimon.model.fireBaseData.GameData;
 import com.progark.emojimon.model.fireBaseData.LastTurnData;
 import com.progark.emojimon.model.interfaces.SubscriberToFirebase;
+import com.progark.emojimon.GameManager.GameStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,10 +36,9 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     private GameData gd;
-
-    private HashMap<String, GameData> gamesData = new HashMap<>();
-    private HashMap<String, LastTurnData> lastTurnData = new HashMap<>(); // the same key as the games id
     private List<SubscriberToFirebase> subscribers = new ArrayList<>();
+
+    private GameManager gameManager = GameManager.GetInstance();
 
     String gameId = null;
 
@@ -47,20 +47,51 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
         myRef.setValue(testMessage);
     }
 
-    //region NEW GAME
-    public void addNewGame(String creatorPlayer, Settings strategies){
+    public void createNewGame(String creatorPlayer, Settings strategies){
         GameData gd = new GameData(creatorPlayer, strategies);
-
+        gd.setPlayer0emoji(GameManager.GetInstance().getLocalPlayerEmoji());
+        gd.setPlayer1emoji(GameManager.GetInstance().getOtherPlayerEmoji());
+        gd.setGameBoard(Converter.fromBoardPositionsToList(GameManager.GetInstance().getGameBoardController().getBoardPositions()));
 
         String gameID = Games.push().getKey();
+        gd.setGameId(gameID);
         Games.child(gameID).setValue(gd);
-        gamesData.put(gameID, gd);
+        //gameManager.setGameData(gd);
+        GameManager.GetInstance().setGameData(gd);
 
-        GameManager.GetInstance().setLocalPlayer(false); // Player 0 if created the game
-        GameManager.GetInstance().setGameID(gameID);
-        addSubscriber(GameManager.GetInstance());
+        gameManager.setLocalPlayer(false); // Player 0 if created the game
+        gameManager.setGameID(gameID);
+        addSubscriber(gameManager);
 
         addGameDataChangeListener(gameID); // Listen to changes of that game
+        addLastTurnDataChangeListener(gameID);
+    }
+
+    public void joinGameById (String gameId) {
+        Games.child(gameId).addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                try {
+                    if(GameStatus.valueOf((String) dataSnapshot.child("status").getValue()) == (GameStatus.WAITING)) {
+                        Games.child(dataSnapshot.getKey()).child("status").setValue(GameStatus.STARTET);
+                        Games.child(dataSnapshot.getKey() + "/player1").setValue(true);
+                        Games.child(dataSnapshot.getKey() + "/player1emoji").setValue(gameManager.getLocalPlayerEmoji());
+                        gameManager.setGameID(dataSnapshot.getKey());
+                        gameManager.setLocalPlayer(true); // Player 1 if joined game
+                        addSubscriber(gameManager);
+
+                        System.out.println(dataSnapshot.getKey());
+                        addGameDataChangeListener(dataSnapshot.getKey());
+                        addLastTurnDataChangeListener(dataSnapshot.getKey());
+                    }
+                } catch (IllegalArgumentException e) {}
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        });
+
     }
 
     public void addGameDataChangeListener(final String gameID){
@@ -68,8 +99,13 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 GameData sm = dataSnapshot.getValue(GameData.class);
-                gamesData.put(gameID, sm); //Update that gameData class
-                System.out.println(gamesData);
+
+                // Creates a new GameBoardController and GameBoard if joining game
+                if (GameManager.GetInstance().getGameData() ==  null) {
+                    GameManager.GetInstance().createGameFromFirebaseData(sm);
+                }
+                GameManager.GetInstance().setGameData(sm); //Update that gameData class
+                System.out.println(sm.getSettings().toString());
                 notifyGameDataSubs(gameID, sm);
             }
 
@@ -80,29 +116,13 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
         });
     }
 
-    //endregion
-
-    //region NEW LAST TURN
-    public void addLastTurnByGameID(String gameID, boolean player, List<Integer> dices, List<List<Integer>> moves){
-        //TODO Better error handling on gameID
-
-        if(!gamesData.containsKey("gameID")){
-            Log.d("sondre", "There is no game with this GameID, jsyk");
-        }
-
-        LastTurnData ltd = new LastTurnData(player, dices, moves);
-        LastTurns.child(gameID).setValue(ltd);
-        lastTurnData.put(gameID, ltd);
-
-        addLastTurnDataChangeListener(gameID);
-    }
-
     public void addLastTurnDataChangeListener(final String gameID){
         LastTurns.child(gameID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 LastTurnData sm = dataSnapshot.getValue(LastTurnData.class);
-                lastTurnData.put(gameID, sm); //Update that LastTurnData class
+                //gameManager.setLastTurnData(sm); //Update that LastTurnData class
+                GameManager.GetInstance().setLastTurnData(sm); //Update that LastTurnData class
 
                 notifyLastTurnSubs(gameID,sm);
             }
@@ -114,65 +134,45 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
         });
     }
 
-    //endregion
+    // SETTERS
 
-    //region SETTERS
-
-    public void setGameStatusByGameID(String gameID, String newStatus){
+    public void setGameStatusByGameID(String gameID, GameStatus newStatus){
         //TODO Check if it is an allowed status to set
-        if(gamesData.containsKey(gameID)){
-            Games.child(gameID).child("status").setValue(newStatus);
-        }else{
-            throw new IllegalArgumentException("There is no game with the " + gameID + " ID");
-        }
+        Games.child(gameID).child("status").setValue(newStatus);
     }
 
     public void setGameBoardByGameID(String gameID, List<List<Integer>> gameBoard){
         //TODO Check if it is an allowed gameBoard format
-        if(gamesData.containsKey(gameID)){
-            Games.child(gameID).child("gameBoard").setValue(gameBoard);
-        }else{
-            throw new IllegalArgumentException("There is no game with the " + gameID + " ID");
-        }
+        Games.child(gameID).child("gameBoard").setValue(gameBoard);
     }
 
-    //end region
+    public void updateLastTurn(String gameID, boolean player, List<Integer> dices, List<List<Integer>> moves){
+        //TODO Better error handling on gameID
 
-    // Finds the first game with status == waiting.
-    // Sets player 1 to true and subscribes to the gamedata
-    public void joinGame() {
-        Games.addListenerForSingleValueEvent(new ValueEventListener() {
-
-                @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snap : dataSnapshot.getChildren()){
-                    if(snap.child("status").getValue().equals("Waiting")) {
-                        addPlayerToGame(snap.getKey());
-                        addGameDataChangeListener(snap.getKey());
-                        //addLastTurnDataChangeListener(snap.getKey());
-                        break;
-                    }
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {}
-        });
-
+        LastTurnData ltd = new LastTurnData(player, dices, moves);
+        System.out.println(ltd.toString());
+        LastTurns.child(gameID).setValue(ltd);
     }
 
-    void addPlayerToGame(String gameID) {
-        Games.child(gameID + "/player1").setValue(true);
-        GameManager.GetInstance().setGameID(gameID);
-        GameManager.GetInstance().setLocalPlayer(true); // Player 1 if joined game
-        addSubscriber(GameManager.GetInstance());
+    public void updateGameData (String gameId, GameData gameData) {
+        gameData.setGameBoard(Converter.fromBoardPositionsToList(GameManager.GetInstance().getGameBoardController().getBoardPositions()));
+        Games.child(gameId).setValue(gameData);
     }
-
-
 
     @Override
     public void addSubscriber(SubscriberToFirebase subscriber) {
         if(!subscribers.contains(subscriber)){
             subscribers.add(subscriber);
+        }
+    }
+
+    @Override
+    public void endGame(String gameId, boolean isCreator) {
+        setGameStatusByGameID(gameId, GameStatus.ENDED);
+        if (isCreator) {
+            Games.child(gameId).child("winningPlayer").setValue(0);
+        }else {
+            Games.child(gameId).child("winningPlayer").setValue(1);
         }
     }
 
@@ -193,7 +193,24 @@ public class AndroidFirebaseController implements FirebaseControllerInterface {
         }
     }
 
-    public Object[] getGameIDs(){
-        return gamesData.keySet().toArray();
+    public void getAllWaitingGames() {
+        Games.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                HashMap<String, String> gamesList = new HashMap<>();
+                for (DataSnapshot snap : dataSnapshot.getChildren()){
+                    try {
+                        if(GameStatus.valueOf((String) snap.child("status").getValue()) == (GameStatus.WAITING)) {
+                            gamesList.put(snap.getKey(), snap.child("settings").child("lobbyName").getValue().toString());
+                        }
+                    } catch (IllegalArgumentException e) {}
+                }
+                GameManager.GetInstance().setAllWaitingGamesList(gamesList);
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        });
     }
 }
